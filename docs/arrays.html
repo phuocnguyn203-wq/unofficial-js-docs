@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arrays & Array Methods — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class=" active">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Working with Data</p>
+<h1>Arrays &amp; Array Methods</h1>
+<p class="lede">Arrays are JavaScript's ordered lists — and one of the most reached-for data structures in the language. Under the hood an array is just an object with numeric keys and a self-updating <code>length</code>, but in practice, you'll live almost entirely in its rich set of built-in methods.</p>
+
+<h2 id="creating-and-accessing-arrays">Creating and accessing arrays<a href="#creating-and-accessing-arrays" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const fruits = ["apple", "banana", "cherry"];
+
+fruits[0];        // "apple"
+fruits[fruits.length - 1]; // "cherry" — last item
+fruits.length;    // 3
+
+fruits[3] = "date"; // arrays can grow simply by assigning past the end</code></pre></div>
+
+<h2 id="mutating-methods">Mutating methods<a href="#mutating-methods" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>These methods change the array in place, rather than returning a new one.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>push(item)</code></td><td>Adds to the end, returns the new length.</td></tr>
+    <tr><td><code>pop()</code></td><td>Removes and returns the last item.</td></tr>
+    <tr><td><code>unshift(item)</code></td><td>Adds to the start, returns the new length.</td></tr>
+    <tr><td><code>shift()</code></td><td>Removes and returns the first item.</td></tr>
+    <tr><td><code>splice(start, count, ...items)</code></td><td>Removes/inserts items anywhere in the array.</td></tr>
+    <tr><td><code>sort(compareFn)</code></td><td>Sorts in place (see gotcha below).</td></tr>
+    <tr><td><code>reverse()</code></td><td>Reverses the array in place.</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const nums = [3, 1, 2];
+
+nums.push(4);       // nums is now [3, 1, 2, 4]
+nums.pop();          // returns 4; nums is now [3, 1, 2]
+nums.splice(1, 1);   // removes 1 item starting at index 1; nums is now [3, 2]
+nums.splice(1, 0, 9); // inserts 9 at index 1; nums is now [3, 9, 2]</code></pre></div>
+<div class="admonition warning">
+  <p class="admonition-title">Warning</p>
+  <p><code>array.sort()</code> converts items to strings and sorts alphabetically by default — <code>[10, 2, 1].sort()</code> gives <code>[1, 10, 2]</code>, not <code>[1, 2, 10]</code>. For numbers, always pass a compare function: <code>array.sort((a, b) => a - b)</code>.</p>
+</div>
+
+<h2 id="transformation-methods-map-filter-reduce">Transformation methods: map, filter, reduce<a href="#transformation-methods-map-filter-reduce" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>These three methods are the workhorses of everyday JavaScript. None of them mutate the original array — each returns something new, which makes code easier to reason about.</p>
+
+<h3 id="map-transform-each-item">map — transform each item<a href="#map-transform-each-item" class="heading-anchor" aria-label="Link to this section">#</a></h3>
+<p><code>map()</code> returns a <strong>new array</strong> the same length as the original, with every item passed through a function.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const prices = [10, 20, 30];
+const withTax = prices.map(price =&gt; price * 1.1);
+// [11, 22, 33] — prices itself is unchanged</code></pre></div>
+
+<h3 id="filter-keep-some-items">filter — keep some items<a href="#filter-keep-some-items" class="heading-anchor" aria-label="Link to this section">#</a></h3>
+<p><code>filter()</code> returns a new array containing only the items where the callback returned truthy.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const numbers = [1, 2, 3, 4, 5, 6];
+const evens = numbers.filter(n =&gt; n % 2 === 0);
+// [2, 4, 6]</code></pre></div>
+
+<h3 id="reduce-combine-into-a-single-value">reduce — combine into a single value<a href="#reduce-combine-into-a-single-value" class="heading-anchor" aria-label="Link to this section">#</a></h3>
+<p><code>reduce()</code> is the most flexible (and, at first, most confusing) of the three: it walks through the array building up one accumulated value.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const cart = [10, 20, 30];
+const total = cart.reduce((sum, price) =&gt; sum + price, 0);
+// sum starts at 0 (the second argument), then becomes 10, 30, 60
+// total === 60</code></pre></div>
+<p>Think of <code>reduce</code>'s callback as running once per item, each time receiving the running total so far (the <strong>accumulator</strong>) and the current item, and returning the new accumulator for the next round. It can build anything — a sum, an object, even another array:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const words = ["a", "b", "c"];
+const counts = words.reduce((acc, word) =&gt; {
+  acc[word] = (acc[word] || 0) + 1;
+  return acc;
+}, {});
+// { a: 1, b: 1, c: 1 }</code></pre></div>
+<p>These three are commonly chained together:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const orders = [
+  { item: "Book", price: 15, paid: true },
+  { item: "Pen", price: 2, paid: false },
+  { item: "Laptop", price: 900, paid: true },
+];
+
+const totalPaid = orders
+  .filter(order =&gt; order.paid)
+  .map(order =&gt; order.price)
+  .reduce((sum, price) =&gt; sum + price, 0);
+// 915</code></pre></div>
+
+<h2 id="finding-amp-testing-items">Finding &amp; testing items<a href="#finding-amp-testing-items" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>Returns</th></tr></thead>
+  <tbody>
+    <tr><td><code>find(fn)</code></td><td>The first matching item, or <code>undefined</code>.</td></tr>
+    <tr><td><code>findIndex(fn)</code></td><td>The index of the first match, or <code>-1</code>.</td></tr>
+    <tr><td><code>includes(value)</code></td><td><code>true</code>/<code>false</code> — is this exact value present?</td></tr>
+    <tr><td><code>some(fn)</code></td><td><code>true</code> if <em>any</em> item matches.</td></tr>
+    <tr><td><code>every(fn)</code></td><td><code>true</code> if <em>all</em> items match.</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const users = [
+  { id: 1, name: "Ava", admin: true },
+  { id: 2, name: "Noah", admin: false },
+];
+
+users.find(u =&gt; u.id === 2);        // { id: 2, name: "Noah", admin: false }
+users.some(u =&gt; u.admin);           // true — at least one admin
+users.every(u =&gt; u.admin);          // false — not all are admins
+[3, 6, 9].includes(6);               // true</code></pre></div>
+
+<h2 id="reading-without-mutating-slice-concat-join">Reading without mutating: slice, concat, join<a href="#reading-without-mutating-slice-concat-join" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const letters = ["a", "b", "c", "d"];
+
+letters.slice(1, 3);   // ["b", "c"] — copies a range, doesn't touch letters
+letters.concat(["e"]); // ["a", "b", "c", "d", "e"] — returns a new, combined array
+letters.join("-");     // "a-b-c-d" — turns the array into a string</code></pre></div>
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p><code>slice</code> (no mutation, takes a range) is easy to confuse with <code>splice</code> (mutates, inserts/removes). If you're not sure which you used, check whether the original array changed.</p>
+</div>
+
+<h2 id="iterating-an-array">Iterating an array<a href="#iterating-an-array" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Besides <code>for...of</code> (see <a href="control-flow.html">Control Flow</a>), arrays have their own <code>forEach</code>:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>["a", "b", "c"].forEach((item, index) =&gt; {
+  console.log(index, item);
+});
+// 0 "a"
+// 1 "b"
+// 2 "c"</code></pre></div>
+<p><code>forEach</code> always returns <code>undefined</code> — it's for side effects (like logging), not for building a new value. If you find yourself pushing into an outside array inside a <code>forEach</code>, that's usually a sign <code>map</code> or <code>filter</code> is the better tool.</p>
+
+<h2 id="checking-for-an-array">Checking for an array<a href="#checking-for-an-array" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p><code>typeof</code> reports arrays as <code>"object"</code> (see <a href="variables-data-types.html">Variables &amp; Data Types</a>), so use <code>Array.isArray()</code> instead:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>Array.isArray([1, 2, 3]); // true
+Array.isArray("hello");   // false</code></pre></div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li><code>map</code> transforms every item into a new array; <code>filter</code> keeps only matching items; <code>reduce</code> combines everything into one value.</li>
+    <li>Mutating methods (<code>push</code>, <code>splice</code>, <code>sort</code>) change the array in place; <code>slice</code>, <code>concat</code>, <code>map</code>, and <code>filter</code> return new arrays and leave the original alone.</li>
+    <li>Always pass a compare function to <code>sort()</code> when sorting numbers.</li>
+    <li>Use <code>Array.isArray()</code>, not <code>typeof</code>, to check if a value is an array.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/this-keyword.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">The this Keyword</span></a><a class="prev-next-link next" href="../docs/strings.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Strings &amp; Template Literals</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#creating-and-accessing-arrays" data-toc-link="creating-and-accessing-arrays">Creating and accessing arrays</a></li><li class="toc-level-2"><a href="#mutating-methods" data-toc-link="mutating-methods">Mutating methods</a></li><li class="toc-level-2"><a href="#transformation-methods-map-filter-reduce" data-toc-link="transformation-methods-map-filter-reduce">Transformation methods: map, filter, reduce</a></li><li class="toc-level-3"><a href="#map-transform-each-item" data-toc-link="map-transform-each-item">map — transform each item</a></li><li class="toc-level-3"><a href="#filter-keep-some-items" data-toc-link="filter-keep-some-items">filter — keep some items</a></li><li class="toc-level-3"><a href="#reduce-combine-into-a-single-value" data-toc-link="reduce-combine-into-a-single-value">reduce — combine into a single value</a></li><li class="toc-level-2"><a href="#finding-amp-testing-items" data-toc-link="finding-amp-testing-items">Finding &amp;amp; testing items</a></li><li class="toc-level-2"><a href="#reading-without-mutating-slice-concat-join" data-toc-link="reading-without-mutating-slice-concat-join">Reading without mutating: slice, concat, join</a></li><li class="toc-level-2"><a href="#iterating-an-array" data-toc-link="iterating-an-array">Iterating an array</a></li><li class="toc-level-2"><a href="#checking-for-an-array" data-toc-link="checking-for-an-array">Checking for an array</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

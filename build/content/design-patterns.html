@@ -1,0 +1,104 @@
+<p class="page-kicker">Advanced Topics</p>
+<h1>Design Patterns</h1>
+<p class="lede">Design patterns are named, reusable solutions to problems that come up again and again. You've actually already met the ideas behind several of these in earlier chapters — this page names them explicitly and shows the classic shape of each.</p>
+
+<h2>The module pattern</h2>
+<p>You met this exact idea in <a href="closures.html">Closures</a>: use a function's scope to keep some state private, exposing only a curated public interface. Before native ES modules existed, this was wrapped in an <strong>IIFE</strong> (Immediately Invoked Function Expression) to run once and produce a single object.</p>
+[[code lang="js"]]
+const counterModule = (function () {
+  let count = 0; // private — inaccessible from outside
+
+  return {
+    increment() { return ++count; },
+    reset() { count = 0; },
+  };
+})(); // <- invoked immediately
+
+counterModule.increment(); // 1
+counterModule.increment(); // 2
+counterModule.count;        // undefined — truly private
+[[/code]]
+<p>Native <code>export</code>/<code>import</code> modules (see <a href="modules.html">Modules</a>) have mostly replaced the IIFE version for organizing files, but the underlying idea — closures for privacy — is exactly the same one used inside class private fields and countless libraries.</p>
+
+<h2>The singleton pattern</h2>
+<p>Ensures a piece of state or functionality has exactly one shared instance across your whole app, instead of being recreated everywhere it's needed.</p>
+[[code lang="js"]]
+const AppConfig = (function () {
+  let instance;
+
+  function createInstance() {
+    return { theme: "dark", version: "1.0" };
+  }
+
+  return {
+    getInstance() {
+      if (!instance) instance = createInstance();
+      return instance;
+    },
+  };
+})();
+
+const config1 = AppConfig.getInstance();
+const config2 = AppConfig.getInstance();
+config1 === config2; // true — the exact same object, created only once
+[[/code]]
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>In practice, a module's top-level state often <em>is</em> a singleton already — since a given module only runs once and every import shares the same exported values, you rarely need to hand-write this pattern explicitly in modern JavaScript.</p>
+</div>
+
+<h2>The factory pattern</h2>
+<p>A function that creates and returns objects, hiding the setup details behind a simple call — you've seen this shape already in <a href="closures.html">Closures</a> with <code>createBankAccount</code>.</p>
+[[code lang="js"]]
+function createUser(name, role) {
+  return {
+    name,
+    role,
+    isAdmin: role === "admin",
+    greet() {
+      console.log(`Hi, I'm ${name}`);
+    },
+  };
+}
+
+const ava = createUser("Ava", "admin");
+const noah = createUser("Noah", "member");
+[[/code]]
+<p>Factories are a lightweight alternative to classes when you don't need inheritance — just plain objects with a consistent shape, built by a single function.</p>
+
+<h2>The observer pattern (pub/sub)</h2>
+<p>One piece of code ("the subject") maintains a list of interested listeners ("observers") and notifies all of them when something happens. This is exactly how DOM events work (see <a href="events.html">Events &amp; Delegation</a>) — this pattern is that same idea, generalized to any kind of event, not just browser ones.</p>
+[[code lang="js"]]
+function createEmitter() {
+  const listeners = {};
+
+  return {
+    on(event, callback) {
+      (listeners[event] ??= []).push(callback);
+    },
+    emit(event, data) {
+      (listeners[event] || []).forEach(callback => callback(data));
+    },
+  };
+}
+
+const emitter = createEmitter();
+
+emitter.on("userLoggedIn", user => console.log(`Welcome, ${user.name}`));
+emitter.on("userLoggedIn", user => console.log(`Logging analytics for ${user.name}`));
+
+emitter.emit("userLoggedIn", { name: "Ava" });
+// "Welcome, Ava"
+// "Logging analytics for Ava"
+[[/code]]
+<p>This pattern decouples the code that triggers an event from the code that reacts to it — the emitter doesn't need to know or care who's listening, or how many listeners there are.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>The module pattern uses a closure to keep state private while exposing a small public interface — the same idea behind native ES modules.</li>
+    <li>A singleton guarantees exactly one shared instance; native modules often give you this automatically.</li>
+    <li>A factory function builds and returns objects with a consistent shape, without needing a class or inheritance.</li>
+    <li>The observer (pub/sub) pattern decouples an event source from its listeners — the same model DOM events use.</li>
+  </ul>
+</div>

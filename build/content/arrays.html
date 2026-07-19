@@ -1,0 +1,161 @@
+<p class="page-kicker">Working with Data</p>
+<h1>Arrays &amp; Array Methods</h1>
+<p class="lede">Arrays are JavaScript's ordered lists — and one of the most reached-for data structures in the language. Under the hood an array is just an object with numeric keys and a self-updating <code>length</code>, but in practice, you'll live almost entirely in its rich set of built-in methods.</p>
+
+<h2>Creating and accessing arrays</h2>
+[[code lang="js"]]
+const fruits = ["apple", "banana", "cherry"];
+
+fruits[0];        // "apple"
+fruits[fruits.length - 1]; // "cherry" — last item
+fruits.length;    // 3
+
+fruits[3] = "date"; // arrays can grow simply by assigning past the end
+[[/code]]
+
+<h2>Mutating methods</h2>
+<p>These methods change the array in place, rather than returning a new one.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>push(item)</code></td><td>Adds to the end, returns the new length.</td></tr>
+    <tr><td><code>pop()</code></td><td>Removes and returns the last item.</td></tr>
+    <tr><td><code>unshift(item)</code></td><td>Adds to the start, returns the new length.</td></tr>
+    <tr><td><code>shift()</code></td><td>Removes and returns the first item.</td></tr>
+    <tr><td><code>splice(start, count, ...items)</code></td><td>Removes/inserts items anywhere in the array.</td></tr>
+    <tr><td><code>sort(compareFn)</code></td><td>Sorts in place (see gotcha below).</td></tr>
+    <tr><td><code>reverse()</code></td><td>Reverses the array in place.</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+const nums = [3, 1, 2];
+
+nums.push(4);       // nums is now [3, 1, 2, 4]
+nums.pop();          // returns 4; nums is now [3, 1, 2]
+nums.splice(1, 1);   // removes 1 item starting at index 1; nums is now [3, 2]
+nums.splice(1, 0, 9); // inserts 9 at index 1; nums is now [3, 9, 2]
+[[/code]]
+<div class="admonition warning">
+  <p class="admonition-title">Warning</p>
+  <p><code>array.sort()</code> converts items to strings and sorts alphabetically by default — <code>[10, 2, 1].sort()</code> gives <code>[1, 10, 2]</code>, not <code>[1, 2, 10]</code>. For numbers, always pass a compare function: <code>array.sort((a, b) => a - b)</code>.</p>
+</div>
+
+<h2>Transformation methods: map, filter, reduce</h2>
+<p>These three methods are the workhorses of everyday JavaScript. None of them mutate the original array — each returns something new, which makes code easier to reason about.</p>
+
+<h3>map — transform each item</h3>
+<p><code>map()</code> returns a <strong>new array</strong> the same length as the original, with every item passed through a function.</p>
+[[code lang="js"]]
+const prices = [10, 20, 30];
+const withTax = prices.map(price => price * 1.1);
+// [11, 22, 33] — prices itself is unchanged
+[[/code]]
+
+<h3>filter — keep some items</h3>
+<p><code>filter()</code> returns a new array containing only the items where the callback returned truthy.</p>
+[[code lang="js"]]
+const numbers = [1, 2, 3, 4, 5, 6];
+const evens = numbers.filter(n => n % 2 === 0);
+// [2, 4, 6]
+[[/code]]
+
+<h3>reduce — combine into a single value</h3>
+<p><code>reduce()</code> is the most flexible (and, at first, most confusing) of the three: it walks through the array building up one accumulated value.</p>
+[[code lang="js"]]
+const cart = [10, 20, 30];
+const total = cart.reduce((sum, price) => sum + price, 0);
+// sum starts at 0 (the second argument), then becomes 10, 30, 60
+// total === 60
+[[/code]]
+<p>Think of <code>reduce</code>'s callback as running once per item, each time receiving the running total so far (the <strong>accumulator</strong>) and the current item, and returning the new accumulator for the next round. It can build anything — a sum, an object, even another array:</p>
+[[code lang="js"]]
+const words = ["a", "b", "c"];
+const counts = words.reduce((acc, word) => {
+  acc[word] = (acc[word] || 0) + 1;
+  return acc;
+}, {});
+// { a: 1, b: 1, c: 1 }
+[[/code]]
+<p>These three are commonly chained together:</p>
+[[code lang="js"]]
+const orders = [
+  { item: "Book", price: 15, paid: true },
+  { item: "Pen", price: 2, paid: false },
+  { item: "Laptop", price: 900, paid: true },
+];
+
+const totalPaid = orders
+  .filter(order => order.paid)
+  .map(order => order.price)
+  .reduce((sum, price) => sum + price, 0);
+// 915
+[[/code]]
+
+<h2>Finding &amp; testing items</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>Returns</th></tr></thead>
+  <tbody>
+    <tr><td><code>find(fn)</code></td><td>The first matching item, or <code>undefined</code>.</td></tr>
+    <tr><td><code>findIndex(fn)</code></td><td>The index of the first match, or <code>-1</code>.</td></tr>
+    <tr><td><code>includes(value)</code></td><td><code>true</code>/<code>false</code> — is this exact value present?</td></tr>
+    <tr><td><code>some(fn)</code></td><td><code>true</code> if <em>any</em> item matches.</td></tr>
+    <tr><td><code>every(fn)</code></td><td><code>true</code> if <em>all</em> items match.</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+const users = [
+  { id: 1, name: "Ava", admin: true },
+  { id: 2, name: "Noah", admin: false },
+];
+
+users.find(u => u.id === 2);        // { id: 2, name: "Noah", admin: false }
+users.some(u => u.admin);           // true — at least one admin
+users.every(u => u.admin);          // false — not all are admins
+[3, 6, 9].includes(6);               // true
+[[/code]]
+
+<h2>Reading without mutating: slice, concat, join</h2>
+[[code lang="js"]]
+const letters = ["a", "b", "c", "d"];
+
+letters.slice(1, 3);   // ["b", "c"] — copies a range, doesn't touch letters
+letters.concat(["e"]); // ["a", "b", "c", "d", "e"] — returns a new, combined array
+letters.join("-");     // "a-b-c-d" — turns the array into a string
+[[/code]]
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p><code>slice</code> (no mutation, takes a range) is easy to confuse with <code>splice</code> (mutates, inserts/removes). If you're not sure which you used, check whether the original array changed.</p>
+</div>
+
+<h2>Iterating an array</h2>
+<p>Besides <code>for...of</code> (see <a href="control-flow.html">Control Flow</a>), arrays have their own <code>forEach</code>:</p>
+[[code lang="js"]]
+["a", "b", "c"].forEach((item, index) => {
+  console.log(index, item);
+});
+// 0 "a"
+// 1 "b"
+// 2 "c"
+[[/code]]
+<p><code>forEach</code> always returns <code>undefined</code> — it's for side effects (like logging), not for building a new value. If you find yourself pushing into an outside array inside a <code>forEach</code>, that's usually a sign <code>map</code> or <code>filter</code> is the better tool.</p>
+
+<h2>Checking for an array</h2>
+<p><code>typeof</code> reports arrays as <code>"object"</code> (see <a href="variables-data-types.html">Variables &amp; Data Types</a>), so use <code>Array.isArray()</code> instead:</p>
+[[code lang="js"]]
+Array.isArray([1, 2, 3]); // true
+Array.isArray("hello");   // false
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li><code>map</code> transforms every item into a new array; <code>filter</code> keeps only matching items; <code>reduce</code> combines everything into one value.</li>
+    <li>Mutating methods (<code>push</code>, <code>splice</code>, <code>sort</code>) change the array in place; <code>slice</code>, <code>concat</code>, <code>map</code>, and <code>filter</code> return new arrays and leave the original alone.</li>
+    <li>Always pass a compare function to <code>sort()</code> when sorting numbers.</li>
+    <li>Use <code>Array.isArray()</code>, not <code>typeof</code>, to check if a value is an array.</li>
+  </ul>
+</div>

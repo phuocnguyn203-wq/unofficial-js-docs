@@ -1,0 +1,96 @@
+{
+  "site": {
+    "title": "JS Docs",
+    "tagline": "A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.",
+    "githubUrl": "https://github.com/your-username/your-repo",
+    "year": "2026"
+  },
+  "home": { "id": "home", "title": "JS Docs", "file": "index.html" },
+  "sections": [
+    {
+      "label": "Get Started",
+      "pages": [
+        { "id": "introduction", "title": "Introduction", "file": "introduction.html" },
+        { "id": "getting-started", "title": "Your First Script", "file": "getting-started.html" }
+      ]
+    },
+    {
+      "label": "Language Basics",
+      "pages": [
+        { "id": "variables-data-types", "title": "Variables & Data Types", "file": "variables-data-types.html" },
+        { "id": "operators-expressions", "title": "Operators & Expressions", "file": "operators-expressions.html" },
+        { "id": "control-flow", "title": "Control Flow", "file": "control-flow.html" },
+        { "id": "functions", "title": "Functions", "file": "functions.html" }
+      ]
+    },
+    {
+      "label": "Scope, Closures & this",
+      "pages": [
+        { "id": "scope-hoisting", "title": "Scope & Hoisting", "file": "scope-hoisting.html" },
+        { "id": "closures", "title": "Closures", "file": "closures.html" },
+        { "id": "this-keyword", "title": "The this Keyword", "file": "this-keyword.html" }
+      ]
+    },
+    {
+      "label": "Working with Data",
+      "pages": [
+        { "id": "arrays", "title": "Arrays & Array Methods", "file": "arrays.html" },
+        { "id": "strings", "title": "Strings & Template Literals", "file": "strings.html" },
+        { "id": "objects", "title": "Objects Deep Dive", "file": "objects.html" },
+        { "id": "destructuring-spread-rest", "title": "Destructuring, Spread & Rest", "file": "destructuring-spread-rest.html" },
+        { "id": "json", "title": "Working with JSON", "file": "json.html" }
+      ]
+    },
+    {
+      "label": "Object-Oriented JS",
+      "pages": [
+        { "id": "prototypes", "title": "Prototypes & Inheritance", "file": "prototypes.html" },
+        { "id": "classes", "title": "Classes", "file": "classes.html" }
+      ]
+    },
+    {
+      "label": "Asynchronous JavaScript",
+      "pages": [
+        { "id": "event-loop", "title": "The Event Loop", "file": "event-loop.html" },
+        { "id": "callbacks-promises", "title": "Callbacks & Promises", "file": "callbacks-promises.html" },
+        { "id": "async-await", "title": "Async/Await", "file": "async-await.html" }
+      ]
+    },
+    {
+      "label": "Browser & Web APIs",
+      "pages": [
+        { "id": "dom", "title": "The DOM", "file": "dom.html" },
+        { "id": "events", "title": "Events & Delegation", "file": "events.html" },
+        { "id": "fetch-forms-storage", "title": "Fetch, Forms & Storage", "file": "fetch-forms-storage.html" }
+      ]
+    },
+    {
+      "label": "Modern JavaScript (ES6+)",
+      "pages": [
+        { "id": "modules", "title": "Modules", "file": "modules.html" },
+        { "id": "iterators-generators-collections", "title": "Iterators, Generators & Collections", "file": "iterators-generators-collections.html" }
+      ]
+    },
+    {
+      "label": "Errors & Debugging",
+      "pages": [
+        { "id": "errors-debugging", "title": "Error Handling & Debugging", "file": "errors-debugging.html" }
+      ]
+    },
+    {
+      "label": "Advanced Topics",
+      "pages": [
+        { "id": "functional-programming", "title": "Functional Programming", "file": "functional-programming.html" },
+        { "id": "design-patterns", "title": "Design Patterns", "file": "design-patterns.html" },
+        { "id": "memory-performance", "title": "Memory & Performance", "file": "memory-performance.html" },
+        { "id": "regular-expressions", "title": "Regular Expressions", "file": "regular-expressions.html" }
+      ]
+    },
+    {
+      "label": "Beyond the Basics",
+      "pages": [
+        { "id": "ecosystem-next-steps", "title": "The Ecosystem & Next Steps", "file": "ecosystem-next-steps.html" }
+      ]
+    }
+  ]
+}

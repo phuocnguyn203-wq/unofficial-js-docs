@@ -1,0 +1,101 @@
+<p class="page-kicker">Advanced Topics</p>
+<h1>Memory &amp; Performance</h1>
+<p class="lede">Most everyday JavaScript never requires thinking about memory directly — the engine handles it. But knowing roughly how it works helps you recognize the handful of situations where it doesn't, and picks up two small techniques that solve a very common performance problem.</p>
+
+<h2>How JavaScript manages memory</h2>
+<p>JavaScript allocates memory for every value you create, and automatically frees it later through a background process called <strong>garbage collection</strong>. The core idea it uses is <strong>reachability</strong>: a value is kept in memory as long as something can still get to it, starting from a set of always-reachable "roots" (global variables, and anything currently on the call stack).</p>
+[[code lang="js"]]
+let user = { name: "Ava" }; // reachable — referenced by `user`
+user = null;                 // the object is now unreachable — nothing points to it
+// the garbage collector will eventually free that memory
+[[/code]]
+<p>This is also exactly why closures (see <a href="closures.html">Closures</a>) can keep variables alive long after their outer function has returned — as long as an inner function still references them, they're still reachable, so they aren't collected.</p>
+
+<h2>Common ways to accidentally leak memory</h2>
+<p>A "leak" happens when something stays reachable that you actually meant to be done with. A few classic causes:</p>
+<ul>
+  <li><strong>Forgotten timers or listeners.</strong> A <code>setInterval</code> or an event listener that's never cleared keeps referencing everything its callback closes over, indefinitely.</li>
+  <li><strong>Growing caches with no eviction.</strong> An object or <code>Map</code> used as a cache that only ever grows, never removing old entries.</li>
+  <li><strong>Detached DOM nodes.</strong> Removing an element from the page with <code>.remove()</code> but still holding a reference to it in a variable — the DOM node is gone visually, but not memory-wise.</li>
+</ul>
+[[code lang="js"]]
+function startPolling() {
+  const id = setInterval(() => {
+    console.log("polling...");
+  }, 1000);
+  // if `id` is never passed to clearInterval, this runs forever,
+  // keeping everything the callback references alive too
+}
+[[/code]]
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Whenever you create a timer or add an event listener, ask where it gets cleaned up — <code>clearInterval</code>/<code>clearTimeout</code>, or <code>removeEventListener</code> (see <a href="events.html">Events &amp; Delegation</a>). If the answer is "nowhere," that's worth a second look.</p>
+</div>
+
+<h2>Debouncing: waiting for a pause</h2>
+<p>Some events fire far more often than you actually need to react to — <code>input</code> on every keystroke, <code>resize</code> dozens of times a second. <strong>Debouncing</strong> delays running a function until a pause of silence has passed, canceling any earlier scheduled run.</p>
+[[code lang="js"]]
+function debounce(fn, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId); // cancel the previous pending call
+    timeoutId = setTimeout(() => fn(...args), delay);
+  };
+}
+
+const search = debounce(function (query) {
+  console.log("Searching for:", query);
+}, 300);
+
+// Rapid calls while typing only actually run `search` once,
+// 300ms after the user stops typing
+input.addEventListener("input", e => search(e.target.value));
+[[/code]]
+
+<h2>Throttling: at most once per interval</h2>
+<p><strong>Throttling</strong> is similar but different: instead of waiting for silence, it guarantees a function runs at most once every fixed interval, no matter how often it's triggered.</p>
+[[code lang="js"]]
+function throttle(fn, interval) {
+  let lastRun = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - lastRun >= interval) {
+      lastRun = now;
+      fn(...args);
+    }
+  };
+}
+
+const onScroll = throttle(function () {
+  console.log("scroll position:", window.scrollY);
+}, 200);
+
+window.addEventListener("scroll", onScroll); // runs at most every 200ms
+[[/code]]
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>Debounce = "wait until they stop" (search-as-you-type). Throttle = "run regularly, but not too often" (scroll position tracking). Picking the wrong one is a common source of janky UI.</p>
+</div>
+
+<h2>Minimizing unnecessary DOM work</h2>
+<p>Reading and writing to the DOM (see <a href="dom.html">The DOM</a>) is far slower than plain JavaScript operations, because the browser may need to recalculate layout and repaint the screen. Batch your changes instead of interleaving many small reads and writes:</p>
+[[code lang="js"]]
+// Slower — forces the browser to recalculate layout on every iteration
+items.forEach(item => {
+  list.innerHTML += `<li>${item}</li>`;
+});
+
+// Faster — build the full string once, touch the DOM a single time
+const html = items.map(item => `<li>${item}</li>`).join("");
+list.innerHTML = html;
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JavaScript frees memory automatically based on reachability — a value is kept alive only as long as something can still reference it.</li>
+    <li>Forgotten timers, listeners, and unbounded caches are the most common real-world memory leaks.</li>
+    <li>Debounce delays a function until activity pauses (search input); throttle caps it to run at most once per interval (scroll handlers).</li>
+    <li>Batch DOM reads/writes together instead of interleaving many small ones inside a loop.</li>
+  </ul>
+</div>

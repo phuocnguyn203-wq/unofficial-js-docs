@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Functions — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class=" active">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Language Basics</p>
+<h1>Functions</h1>
+<p class="lede">Functions are reusable blocks of code — and in JavaScript, they're also values you can store, pass around, and return, just like a number or a string. That second part is one of the most important ideas in the whole language.</p>
+
+<h2 id="function-declarations">Function declarations<a href="#function-declarations" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function greet(name) {
+  return `Hello, ${name}!`;
+}
+
+greet("Ava"); // "Hello, Ava!"</code></pre></div>
+<p>A function declaration is <strong>hoisted</strong> — you can call it before its definition appears in the file, because the engine registers the whole function before running any code. (Full explanation in <a href="scope-hoisting.html">Scope &amp; Hoisting</a>.)</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>sayHi(); // works, even though sayHi is defined below
+
+function sayHi() {
+  console.log("Hi!");
+}</code></pre></div>
+
+<h2 id="function-expressions">Function expressions<a href="#function-expressions" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>You can also store a function in a variable. Unlike a declaration, a function expression is <em>not</em> hoisted in a usable way — the variable exists, but isn't assigned the function yet until that line runs.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const greet = function (name) {
+  return `Hello, ${name}!`;
+};
+
+greet("Ava"); // "Hello, Ava!"</code></pre></div>
+
+<h2 id="arrow-functions">Arrow functions<a href="#arrow-functions" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Introduced in ES6, arrow functions are a more compact syntax for function expressions — and they handle the <code>this</code> keyword differently, which matters a lot in practice (see <a href="this-keyword.html">The this Keyword</a>).</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// Full form
+const add = (a, b) =&gt; {
+  return a + b;
+};
+
+// Implicit return — no braces means the expression is the return value
+const add2 = (a, b) =&gt; a + b;
+
+// A single parameter doesn't need parentheses
+const double = n =&gt; n * 2;
+
+// No parameters still need empty parentheses
+const sayHi = () =&gt; console.log("Hi!");</code></pre></div>
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>Arrow functions are extremely common for short callbacks (like inside <code>.map()</code> or <code>.filter()</code> — see <a href="arrays.html">Arrays &amp; Array Methods</a>), but they aren't a full replacement for regular functions everywhere. They don't get their own <code>this</code>, can't be used as constructors, and don't have an <code>arguments</code> object.</p>
+</div>
+
+<h2 id="parameters-amp-arguments">Parameters &amp; arguments<a href="#parameters-amp-arguments" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+
+<h3 id="default-parameters">Default parameters<a href="#default-parameters" class="heading-anchor" aria-label="Link to this section">#</a></h3>
+<p>Give a parameter a fallback value used when the caller doesn't provide one (or passes <code>undefined</code>):</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function greet(name = "friend") {
+  return `Hello, ${name}!`;
+}
+
+greet();        // "Hello, friend!"
+greet("Ava");   // "Hello, Ava!"</code></pre></div>
+
+<h3 id="rest-parameters">Rest parameters<a href="#rest-parameters" class="heading-anchor" aria-label="Link to this section">#</a></h3>
+<p>Collect any number of remaining arguments into a real array using <code>...</code>:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function sum(...numbers) {
+  return numbers.reduce((total, n) =&gt; total + n, 0);
+}
+
+sum(1, 2, 3);       // 6
+sum(10, 20, 30, 40); // 100</code></pre></div>
+<p>Rest parameters must come last, and there can only be one. (This same <code>...</code> syntax is also used for <em>spreading</em> values — the opposite operation — covered in <a href="destructuring-spread-rest.html">Destructuring, Spread &amp; Rest</a>.)</p>
+
+<h2 id="return-values">Return values<a href="#return-values" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>A function without an explicit <code>return</code> returns <code>undefined</code>. <code>return</code> also exits the function immediately — any code after it in the same block never runs.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function isEven(n) {
+  if (n % 2 === 0) {
+    return true;
+  }
+  return false;
+}
+
+function noReturn() {
+  console.log("did something");
+}
+
+console.log(noReturn()); // logs "did something", then undefined</code></pre></div>
+
+<h2 id="functions-as-values">Functions as values<a href="#functions-as-values" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>This is the idea that makes JavaScript feel different from many other languages: a function is a value, so you can pass one function into another, or return a function from a function.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function applyTwice(fn, value) {
+  return fn(fn(value));
+}
+
+const double = n =&gt; n * 2;
+applyTwice(double, 3); // 12  -&gt;  double(double(3))</code></pre></div>
+<p>A function that takes another function as an argument (or returns one) is called a <strong>higher-order function</strong>. You've likely already used one without the label — every array method that takes a callback, like <code>.map()</code> or <code>.filter()</code>, is a higher-order function. This idea comes back in force in <a href="functional-programming.html">Functional Programming</a>.</p>
+
+<h2 id="anonymous-vs-named-functions">Anonymous vs named functions<a href="#anonymous-vs-named-functions" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>A function expression doesn't need a name — it's "anonymous." Naming it anyway helps with debugging, since the name shows up in stack traces:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const handlers = {
+  onClick: function handleClick() {  // named, even as an expression
+    /* ... */
+  },
+};</code></pre></div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>Function declarations are hoisted (callable before their definition); function expressions and arrow functions are not.</li>
+    <li>Arrow functions are compact and don't bind their own <code>this</code> — great for callbacks, not a universal replacement.</li>
+    <li>Default parameters supply fallback values; rest parameters (<code>...args</code>) gather extra arguments into an array.</li>
+    <li>Functions are values in JavaScript — they can be stored, passed as arguments, and returned from other functions (higher-order functions).</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/control-flow.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">Control Flow</span></a><a class="prev-next-link next" href="../docs/scope-hoisting.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Scope &amp; Hoisting</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#function-declarations" data-toc-link="function-declarations">Function declarations</a></li><li class="toc-level-2"><a href="#function-expressions" data-toc-link="function-expressions">Function expressions</a></li><li class="toc-level-2"><a href="#arrow-functions" data-toc-link="arrow-functions">Arrow functions</a></li><li class="toc-level-2"><a href="#parameters-amp-arguments" data-toc-link="parameters-amp-arguments">Parameters &amp;amp; arguments</a></li><li class="toc-level-3"><a href="#default-parameters" data-toc-link="default-parameters">Default parameters</a></li><li class="toc-level-3"><a href="#rest-parameters" data-toc-link="rest-parameters">Rest parameters</a></li><li class="toc-level-2"><a href="#return-values" data-toc-link="return-values">Return values</a></li><li class="toc-level-2"><a href="#functions-as-values" data-toc-link="functions-as-values">Functions as values</a></li><li class="toc-level-2"><a href="#anonymous-vs-named-functions" data-toc-link="anonymous-vs-named-functions">Anonymous vs named functions</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

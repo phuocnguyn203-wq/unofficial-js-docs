@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Event Loop — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class=" active">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Asynchronous JavaScript</p>
+<h1>The Event Loop</h1>
+<p class="lede">JavaScript runs on a single thread — it can only do one thing at a time. Yet it downloads data, runs timers, and responds to clicks without ever freezing the page. The event loop is the mechanism that makes that possible, and understanding it makes every async pattern in this guide click into place.</p>
+
+<h2 id="the-call-stack">The call stack<a href="#the-call-stack" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>The <strong>call stack</strong> is where JavaScript tracks what function is currently running. Every time a function is called, a frame is pushed onto the stack; when it returns, its frame is popped off. JavaScript can only ever execute the function on top of the stack — this is what "single-threaded" actually means in practice.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function multiply(a, b) {
+  return a * b;
+}
+function square(n) {
+  return multiply(n, n);
+}
+function printSquare(n) {
+  console.log(square(n));
+}
+
+printSquare(5);
+// stack grows: printSquare -&gt; square -&gt; multiply
+// then unwinds as each function returns its result</code></pre></div>
+<p>If code keeps calling deeper and deeper without returning (like a function that calls itself forever), the stack fills up and the engine throws a <code>RangeError: Maximum call stack size exceeded</code> — a stack overflow.</p>
+
+<h2 id="so-how-does-javascript-avoid-blocking">So how does JavaScript avoid blocking?<a href="#so-how-does-javascript-avoid-blocking" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>If the call stack is busy, nothing else can run — including things like a <code>setTimeout</code> callback or the response to a network request. Slow operations (timers, network requests, file access, user events) aren't handled by the JavaScript engine itself at all. They're handed off to APIs provided by the <strong>environment</strong> — the browser or Node.js — which run them in the background, completely outside the call stack.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>console.log("1: start");
+
+setTimeout(() =&gt; {
+  console.log("2: timeout finished");
+}, 1000);
+
+console.log("3: end");
+
+// Logs, in order:
+// "1: start"
+// "3: end"
+// "2: timeout finished"   &lt;- appears ~1 second later</code></pre></div>
+<p><code>setTimeout</code> doesn't pause anything. It hands the timer off to the browser, and immediately continues to the next line. A second later, once the timer finishes in the background, its callback needs to run — but it can't just interrupt the stack. It waits in line.</p>
+
+<h2 id="the-callback-queue-and-the-event-loop">The callback queue and the event loop<a href="#the-callback-queue-and-the-event-loop" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>When a background task (a timer, a finished network request) completes, its callback is placed in a <strong>queue</strong>, not run immediately. The <strong>event loop</strong> is a simple, continuously running check:</p>
+<ol>
+  <li>Is the call stack completely empty?</li>
+  <li>If yes, take the first callback waiting in the queue and push it onto the stack to run.</li>
+  <li>Repeat, forever.</li>
+</ol>
+<p>This is why, in the example above, <code>"3: end"</code> always logs before <code>"2: timeout finished"</code> — even with a timeout of <code>0</code>. The queued callback can only run once the stack is empty, which means <em>after</em> all currently running synchronous code has finished.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>console.log("first");
+setTimeout(() =&gt; console.log("third"), 0);
+console.log("second");
+// "first", "second", "third" — even a 0ms timeout waits for the stack to clear</code></pre></div>
+
+<h2 id="microtasks-vs-macrotasks">Microtasks vs. macrotasks<a href="#microtasks-vs-macrotasks" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>There isn't just one queue — there are two, with different priority. <strong>Promises</strong> (see <a href="callbacks-promises.html">Callbacks &amp; Promises</a>) schedule their callbacks on the <strong>microtask queue</strong>, which the event loop always fully drains before touching the regular <strong>macrotask queue</strong> that <code>setTimeout</code> and DOM events use.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>console.log("1: sync");
+
+setTimeout(() =&gt; console.log("2: macrotask (setTimeout)"), 0);
+
+Promise.resolve().then(() =&gt; console.log("3: microtask (promise)"));
+
+console.log("4: sync");
+
+// Order:
+// "1: sync"
+// "4: sync"
+// "3: microtask (promise)"    &lt;- microtasks run before the next macrotask
+// "2: macrotask (setTimeout)"</code></pre></div>
+<p>The rule: after each piece of synchronous code finishes, the event loop empties the <em>entire</em> microtask queue before it processes even one macrotask. This is why promise callbacks reliably run sooner than <code>setTimeout</code> callbacks, even a <code>0ms</code> one.</p>
+
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p><code>async</code>/<code>await</code> (covered two chapters from now) is built entirely on promises, so everything on this page applies to it too — an <code>await</code> point is, under the hood, a microtask.</p>
+</div>
+
+<h2 id="putting-it-all-together">Putting it all together<a href="#putting-it-all-together" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>console.log("A");
+
+setTimeout(() =&gt; console.log("B"), 0);
+
+Promise.resolve()
+  .then(() =&gt; console.log("C"))
+  .then(() =&gt; console.log("D"));
+
+console.log("E");
+
+// A, E   — synchronous code runs first, top to bottom
+// C, D   — then the whole microtask queue drains (even chained .then calls)
+// B      — only then does the event loop move on to the macrotask queue</code></pre></div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JavaScript runs on one call stack and can only execute one thing at a time.</li>
+    <li>Slow operations (timers, network requests) are handled outside the engine by the browser/Node, which queues their callbacks instead of running them immediately.</li>
+    <li>The event loop moves queued callbacks onto the stack only once the stack is completely empty.</li>
+    <li>Promise callbacks (microtasks) always run before the next timer or event callback (macrotask) — the whole microtask queue drains first.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/classes.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">Classes</span></a><a class="prev-next-link next" href="../docs/callbacks-promises.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Callbacks &amp; Promises</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#the-call-stack" data-toc-link="the-call-stack">The call stack</a></li><li class="toc-level-2"><a href="#so-how-does-javascript-avoid-blocking" data-toc-link="so-how-does-javascript-avoid-blocking">So how does JavaScript avoid blocking?</a></li><li class="toc-level-2"><a href="#the-callback-queue-and-the-event-loop" data-toc-link="the-callback-queue-and-the-event-loop">The callback queue and the event loop</a></li><li class="toc-level-2"><a href="#microtasks-vs-macrotasks" data-toc-link="microtasks-vs-macrotasks">Microtasks vs. macrotasks</a></li><li class="toc-level-2"><a href="#putting-it-all-together" data-toc-link="putting-it-all-together">Putting it all together</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

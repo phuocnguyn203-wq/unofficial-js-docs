@@ -1,0 +1,104 @@
+<p class="page-kicker">Scope, Closures &amp; this</p>
+<h1>Scope &amp; Hoisting</h1>
+<p class="lede">Scope answers one question: from any given line of code, which variables can you see? Hoisting answers another: when does a variable start existing? Together they explain some of JavaScript's most confusing-looking behavior — and they're the foundation for closures, the next chapter.</p>
+
+<h2>What is scope?</h2>
+<p>Scope is the region of code where a variable is accessible. JavaScript has three kinds:</p>
+<ul>
+  <li><strong>Global scope</strong> — declared outside any function or block; accessible everywhere.</li>
+  <li><strong>Function scope</strong> — declared inside a function; accessible only within it (and functions nested inside it).</li>
+  <li><strong>Block scope</strong> — declared inside <code>{ }</code> (an <code>if</code>, a <code>for</code> loop, or a bare block); accessible only within that block.</li>
+</ul>
+[[code lang="js"]]
+const globalVar = "I'm everywhere";
+
+function outer() {
+  const functionVar = "I only exist inside outer()";
+
+  if (true) {
+    const blockVar = "I only exist inside this if-block";
+    console.log(globalVar, functionVar, blockVar); // all visible here
+  }
+
+  console.log(blockVar); // ReferenceError: blockVar is not defined
+}
+[[/code]]
+
+<h2>var is function-scoped; let/const are block-scoped</h2>
+<p>This is the single biggest practical difference between <code>var</code> and <code>let</code>/<code>const</code>, and the main reason modern code avoids <code>var</code>.</p>
+[[code lang="js"]]
+if (true) {
+  var leaked = "I escape the block";
+  let contained = "I stay inside the block";
+}
+
+console.log(leaked);    // "I escape the block" — var ignores block boundaries
+console.log(contained); // ReferenceError: contained is not defined
+[[/code]]
+<p><code>var</code> only respects function boundaries, not block boundaries — so a <code>var</code> declared inside an <code>if</code> or a <code>for</code> loop "leaks" into the surrounding function. This has caused real bugs for decades, which is exactly why <code>let</code> and <code>const</code> were introduced in ES6.</p>
+
+<h2>Hoisting</h2>
+<p>Before running your code, the JavaScript engine scans the current scope and registers every declaration it finds — as if it "hoists" them to the top. But <em>what</em> gets hoisted, and in what state, differs by keyword:</p>
+[[code lang="js"]]
+console.log(hoistedVar);  // undefined (not an error!)
+var hoistedVar = "value";
+
+sayHi(); // "Hi!" — works fine
+function sayHi() {
+  console.log("Hi!");
+}
+[[/code]]
+<p><code>var</code> declarations are hoisted and initialized to <code>undefined</code> immediately — so reading one before its assignment gives <code>undefined</code> rather than an error. Function <em>declarations</em> are hoisted completely, body and all, so you can call them before they appear in the file.</p>
+
+<h3>The Temporal Dead Zone (TDZ)</h3>
+<p><code>let</code> and <code>const</code> are hoisted too, technically — but they're not initialized. Accessing them before their declaration line throws an error instead of silently giving <code>undefined</code>. The span between the start of the scope and the actual declaration is called the <strong>temporal dead zone</strong>.</p>
+[[code lang="js"]]
+console.log(value); // ReferenceError: Cannot access 'value' before initialization
+let value = "hello";
+[[/code]]
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>The TDZ isn't a design flaw — it's a safety net. It turns a whole class of "used a variable before it had a sensible value" bugs into loud, immediate errors instead of silent <code>undefined</code>s.</p>
+</div>
+
+<h2>Function expressions are not hoisted like declarations</h2>
+<p>Only function <em>declarations</em> get the full hoisting treatment. A function stored in a <code>const</code>/<code>let</code>/<code>var</code> follows that variable's own hoisting rules instead:</p>
+[[code lang="js"]]
+sayHi(); // TypeError: sayHi is not a function (it's undefined at this point)
+
+var sayHi = function () {
+  console.log("Hi!");
+};
+[[/code]]
+
+<h2>The scope chain</h2>
+<p>When JavaScript looks up a variable, it checks the current scope first, then the scope it's nested inside, then that scope's parent, and so on out to the global scope. This chain of lookups is called the <strong>scope chain</strong>.</p>
+[[code lang="js"]]
+const level1 = "top";
+
+function outer() {
+  const level2 = "middle";
+
+  function inner() {
+    const level3 = "bottom";
+    // inner() can see all three, by walking up the scope chain
+    console.log(level1, level2, level3);
+  }
+
+  inner();
+}
+
+outer(); // "top middle bottom"
+[[/code]]
+<p>Notice the lookup only goes <em>outward</em> — <code>outer()</code> can't see <code>level3</code>, because <code>inner()</code>'s scope is nested inside <code>outer()</code>, not the other way around.</p>
+<p>This "remembering the scope a function was created in" is exactly the mechanism behind <strong>closures</strong> — covered next.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JavaScript has global, function, and block scope; <code>let</code>/<code>const</code> respect block scope, <code>var</code> does not.</li>
+    <li>Declarations are hoisted: <code>var</code> becomes <code>undefined</code> until assigned; function declarations are fully usable immediately.</li>
+    <li><code>let</code>/<code>const</code> are hoisted but unusable until their declaration line runs — the Temporal Dead Zone.</li>
+    <li>Variable lookups walk outward through the scope chain: current scope → enclosing scope → ... → global.</li>
+  </ul>
+</div>

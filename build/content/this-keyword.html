@@ -1,0 +1,127 @@
+<p class="page-kicker">Scope, Closures &amp; this</p>
+<h1>The this Keyword</h1>
+<p class="lede">this is probably the single most confusing keyword in JavaScript — not because the rule is complicated, but because it's determined by <em>how a function is called</em>, not where it's written. Learn the call-site rule once, and most of the confusion disappears.</p>
+
+<h2>The core rule</h2>
+<p>Forget any assumptions from other languages. In a regular JavaScript function, <code>this</code> is decided fresh, every time, by looking at the <strong>call site</strong> — the exact way the function was invoked. The same function can have a different <code>this</code> every time it's called.</p>
+[[code lang="js"]]
+function whoAmI() {
+  console.log(this);
+}
+
+whoAmI();               // called plainly
+const obj = { whoAmI };
+obj.whoAmI();            // called as a method
+[[/code]]
+<p>Same function, two very different values of <code>this</code> — because it was <em>called</em> differently each time. There are four patterns that cover almost every case.</p>
+
+<h2>1. Plain function call</h2>
+<p>Calling a function with no context gives <code>this</code> as <code>undefined</code> in strict mode (including inside classes and modules), or the global object in old-style non-strict code.</p>
+[[code lang="js"]]
+"use strict";
+function show() {
+  console.log(this);
+}
+show(); // undefined
+[[/code]]
+
+<h2>2. Method call (implicit binding)</h2>
+<p>When a function is called <em>as a property of an object</em>, <code>this</code> is that object.</p>
+[[code lang="js"]]
+const user = {
+  name: "Ava",
+  greet() {
+    console.log(`Hi, I'm ${this.name}`);
+  },
+};
+
+user.greet(); // "Hi, I'm Ava" — this === user
+[[/code]]
+
+<h2>3. Explicit binding: call, apply, bind</h2>
+<p>You can set <code>this</code> yourself using three built-in function methods:</p>
+[[code lang="js"]]
+function greet() {
+  console.log(`Hi, I'm ${this.name}`);
+}
+
+const ava = { name: "Ava" };
+const noah = { name: "Noah" };
+
+greet.call(ava);          // "Hi, I'm Ava" — calls immediately, this = ava
+greet.apply(noah);        // "Hi, I'm Noah" — same as call, but takes args as an array
+
+const greetAva = greet.bind(ava); // returns a NEW function, permanently bound to ava
+greetAva();                // "Hi, I'm Ava" — can be called anytime, this never changes
+[[/code]]
+<p><code>call</code> and <code>apply</code> invoke the function right away with a chosen <code>this</code> — they only differ in how they pass extra arguments (<code>call(thisArg, a, b)</code> vs <code>apply(thisArg, [a, b])</code>). <code>bind</code> doesn't call the function at all — it returns a new function permanently locked to the <code>this</code> you gave it, which is perfect for callbacks that will be invoked later by someone else's code.</p>
+
+<h2>4. new binding (constructors)</h2>
+<p>When a function is called with <code>new</code>, JavaScript creates a brand-new object and sets <code>this</code> to it inside the function.</p>
+[[code lang="js"]]
+function Person(name) {
+  this.name = name; // this === the new object being constructed
+}
+
+const ava = new Person("Ava");
+ava.name; // "Ava"
+[[/code]]
+<p>This is the mechanism the <code>class</code> syntax builds on top of — see <a href="classes.html">Classes</a>.</p>
+
+<h2>Arrow functions: no binding of their own</h2>
+<p>Arrow functions break the call-site rule on purpose. They don't have their own <code>this</code> at all — they capture <code>this</code> lexically, from the scope they were <em>defined</em> in, exactly like a closure captures a variable.</p>
+[[code lang="js"]]
+const user = {
+  name: "Ava",
+  regularGreet: function () {
+    console.log(this.name); // "Ava" — this is user, called as a method
+  },
+  arrowGreet: () => {
+    console.log(this.name); // undefined — arrow ignores the call site entirely
+  },
+};
+
+user.regularGreet(); // "Ava"
+user.arrowGreet();   // undefined — `this` here came from the outer (module/global) scope
+[[/code]]
+<p>This makes arrow functions the wrong choice for object methods that need <code>this</code> — but the <em>right</em> choice for callbacks nested inside a method, where you want to keep the surrounding <code>this</code>.</p>
+
+<h2>The classic pitfall: losing this</h2>
+<p>This is the single most common <code>this</code>-related bug. It happens whenever a method gets separated from its object — passed as a callback, assigned to a variable, and so on.</p>
+[[code lang="js"]]
+const user = {
+  name: "Ava",
+  greet() {
+    console.log(`Hi, I'm ${this.name}`);
+  },
+};
+
+setTimeout(user.greet, 1000);
+// "Hi, I'm undefined" — greet was extracted and called plainly,
+// losing its connection to `user` entirely
+[[/code]]
+<p>Two common fixes:</p>
+[[code lang="js"]]
+// Fix 1: bind it
+setTimeout(user.greet.bind(user), 1000);
+
+// Fix 2: wrap it in an arrow function, which captures `this` from here
+setTimeout(() => user.greet(), 1000);
+[[/code]]
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>When you see <code>this.something</code> unexpectedly <code>undefined</code>, the first thing to check is <em>how the function was called</em> — was it detached from its object at some point? That's almost always the cause.</p>
+</div>
+
+<h2>Precedence, if you need it</h2>
+<p>When more than one rule could apply, this is the order of priority: <code>new</code> binding wins first, then explicit binding (<code>call</code>/<code>apply</code>/<code>bind</code>), then implicit (method call), and plain function calls come last. Arrow functions ignore all of this and always use their lexical <code>this</code>.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li><code>this</code> is set by how a function is called (the call site), not where it's defined.</li>
+    <li>Method calls set <code>this</code> to the object before the dot; plain calls give <code>undefined</code> in strict mode.</li>
+    <li><code>call</code>/<code>apply</code> invoke a function with a chosen <code>this</code> immediately; <code>bind</code> returns a new function permanently bound to one.</li>
+    <li>Arrow functions have no <code>this</code> of their own — they inherit it lexically from their surrounding scope, which is why they're safe for nested callbacks but wrong for object methods.</li>
+  </ul>
+</div>

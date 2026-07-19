@@ -1,0 +1,91 @@
+<p class="page-kicker">Advanced Topics</p>
+<h1>Functional Programming</h1>
+<p class="lede">Functional programming isn't a separate language feature — it's a style, built entirely on ideas you've already met: functions as values (see <a href="functions.html">Functions</a>) and non-mutating array methods (see <a href="arrays.html">Arrays &amp; Array Methods</a>). This page names the underlying principles so you can apply them deliberately.</p>
+
+<h2>Pure functions</h2>
+<p>A function is <strong>pure</strong> if it always returns the same output for the same input, and causes no observable side effects (no modifying external variables, no logging, no network calls).</p>
+[[code lang="js"]]
+// Impure — depends on and mutates external state
+let total = 0;
+function addToTotal(amount) {
+  total += amount; // side effect: modifies a variable outside itself
+  return total;
+}
+
+// Pure — same input always gives the same output, nothing outside is touched
+function add(a, b) {
+  return a + b;
+}
+[[/code]]
+<p>Pure functions are easier to test (no setup or mocking required), easier to reason about (you can understand one in isolation), and safe to run in any order — which matters a lot once code becomes concurrent or gets cached/memoized.</p>
+
+<h2>Immutability</h2>
+<p>Rather than modifying data in place, functional style creates and returns new data, leaving the original untouched — the same principle behind <code>map</code>/<code>filter</code> and object/array spreading.</p>
+[[code lang="js"]]
+// Mutating — changes the original array
+function addItemMutating(cart, item) {
+  cart.push(item);
+  return cart;
+}
+
+// Immutable — returns a new array, original is untouched
+function addItem(cart, item) {
+  return [...cart, item];
+}
+
+const cart = ["apple"];
+const newCart = addItem(cart, "banana");
+cart;    // ["apple"] — unchanged
+newCart; // ["apple", "banana"]
+[[/code]]
+<p>This matters most when several parts of a program hold a reference to the same object (see <a href="variables-data-types.html">Variables &amp; Data Types</a>) — immutability guarantees nobody else's copy changes out from under them.</p>
+
+<h2>Function composition</h2>
+<p>Building a complex operation by combining small, single-purpose functions, where each one's output feeds the next one's input.</p>
+[[code lang="js"]]
+const trim = str => str.trim();
+const lowercase = str => str.toLowerCase();
+const removeSpaces = str => str.replace(/\s+/g, "-");
+
+function slugify(str) {
+  return removeSpaces(lowercase(trim(str)));
+}
+
+slugify("  Hello World  "); // "hello-world"
+[[/code]]
+<p>Each helper does exactly one thing and can be tested and reused independently — <code>lowercase</code> and <code>trim</code> are obviously useful elsewhere too, unlike one large function that did all three steps inline.</p>
+
+<h2>Currying</h2>
+<p>Currying transforms a function that takes multiple arguments into a chain of functions that each take one argument — enabling the function-factory pattern from <a href="closures.html">Closures</a>, formalized.</p>
+[[code lang="js"]]
+// Normal function
+function add(a, b) {
+  return a + b;
+}
+
+// Curried version
+function curriedAdd(a) {
+  return function (b) {
+    return a + b;
+  };
+}
+
+curriedAdd(2)(3); // 5
+
+const add5 = curriedAdd(5); // a specialized function, "waiting" for one more argument
+add5(10); // 15
+[[/code]]
+<p>This is most useful for pre-configuring a general function into a specific one, like <code>multiplyBy(2)</code> from the closures chapter — currying is that same pattern, just applied consistently.</p>
+
+<h2>Why this matters</h2>
+<p>You don't need to write 100% pure, immutable code everywhere — JavaScript isn't a purely functional language, and plenty of real-world code (DOM manipulation, for instance) is inherently about side effects. But leaning on these ideas where you can — especially pure functions for data transformations — tends to produce code that's easier to test, easier to debug (no hidden state to track down), and safer to reuse.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>A pure function returns the same output for the same input and has no side effects — easier to test and reason about.</li>
+    <li>Prefer returning new data over mutating existing data, especially for values shared across your program.</li>
+    <li>Function composition builds complex behavior from small, single-purpose, independently testable functions.</li>
+    <li>Currying turns a multi-argument function into a chain of single-argument functions, useful for pre-configuring specialized versions.</li>
+  </ul>
+</div>

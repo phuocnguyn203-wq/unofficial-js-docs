@@ -1,0 +1,139 @@
+<p class="page-kicker">Scope, Closures &amp; this</p>
+<h1>Closures</h1>
+<p class="lede">A closure is what you get when a function "remembers" the variables from where it was created, even after that outer code has already finished running. It sounds abstract, but you've almost certainly used one already — this page makes the mechanism concrete.</p>
+
+<h2>A first example</h2>
+[[code lang="js"]]
+function makeCounter() {
+  let count = 0;
+
+  return function () {
+    count++;
+    return count;
+  };
+}
+
+const counter = makeCounter();
+counter(); // 1
+counter(); // 2
+counter(); // 3
+[[/code]]
+<p>Look closely at what's happening: <code>makeCounter()</code> runs and returns. Normally, <code>count</code> would be thrown away the moment the function finishes — it's a local variable, out of scope. But the inner function that got returned still references <code>count</code>, so JavaScript keeps it alive. Every time you call <code>counter()</code>, it's reading and updating that same, private <code>count</code> variable.</p>
+<p>That inner function, bundled together with the variables it needs from its birthplace, <em>is</em> the closure.</p>
+
+<h2>Why this happens: it's just the scope chain</h2>
+<p>This isn't a special case bolted onto the language — it falls directly out of the scope chain from the previous chapter. A function always keeps a live link to the scope it was <em>defined</em> in (not the scope it's <em>called</em> from). As long as anything — anywhere — still holds a reference to that inner function, the outer variables it depends on can't be garbage collected.</p>
+[[code lang="js"]]
+function outer() {
+  const secret = "shh";
+
+  function inner() {
+    console.log(secret); // inner "closes over" secret
+  }
+
+  return inner;
+}
+
+const revealed = outer(); // outer() has already finished running
+revealed(); // "shh" — the closure kept `secret` alive
+[[/code]]
+
+<h2>Practical use case: private state</h2>
+<p>Closures are the main way JavaScript achieves privacy without a dedicated <code>private</code> keyword (before class private fields — see <a href="classes.html">Classes</a>). Anything not returned from the outer function is completely inaccessible from the outside.</p>
+[[code lang="js"]]
+function createBankAccount(initialBalance) {
+  let balance = initialBalance; // not accessible from outside
+
+  return {
+    deposit(amount) {
+      balance += amount;
+      return balance;
+    },
+    withdraw(amount) {
+      if (amount > balance) throw new Error("Insufficient funds");
+      balance -= amount;
+      return balance;
+    },
+    getBalance() {
+      return balance;
+    },
+  };
+}
+
+const account = createBankAccount(100);
+account.deposit(50);   // 150
+account.getBalance();  // 150
+account.balance;       // undefined — there's no direct access at all
+[[/code]]
+
+<h2>Practical use case: function factories</h2>
+<p>A closure can "pre-fill" some arguments and hand back a more specific function — useful for configuration-style code.</p>
+[[code lang="js"]]
+function multiplyBy(factor) {
+  return function (n) {
+    return n * factor;
+  };
+}
+
+const double = multiplyBy(2);
+const triple = multiplyBy(3);
+
+double(5); // 10
+triple(5); // 15
+[[/code]]
+
+<h2>Practical use case: event handlers that remember context</h2>
+[[code lang="js"]]
+function setupButton(label) {
+  const button = document.createElement("button");
+  button.textContent = label;
+
+  button.addEventListener("click", function () {
+    // this callback closes over `label`, long after setupButton() returned
+    console.log(`${label} was clicked`);
+  });
+
+  return button;
+}
+[[/code]]
+
+<h2>A classic pitfall: closures inside loops</h2>
+<p>This is one of the most common closure-related bugs, and a favorite interview question. What does this log?</p>
+[[code lang="js"]]
+for (var i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 100);
+}
+// 3
+// 3
+// 3   <- probably not what you expected
+[[/code]]
+<p>Because <code>var</code> is function-scoped (see <a href="scope-hoisting.html">Scope &amp; Hoisting</a>), there's only <em>one</em> <code>i</code> shared by all three callbacks. By the time the timers fire, the loop has already finished and <code>i</code> is <code>3</code>. All three closures point at the same variable, and it now holds its final value.</p>
+<p>The fix is almost embarrassingly simple: use <code>let</code>.</p>
+[[code lang="js"]]
+for (let i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 100);
+}
+// 0
+// 1
+// 2
+[[/code]]
+<p>Because <code>let</code> is block-scoped, JavaScript creates a <em>fresh</em> <code>i</code> for each pass through the loop. Each closure captures its own separate copy instead of sharing one variable.</p>
+
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>This is one of the strongest real-world arguments for preferring <code>let</code> over <code>var</code>: it makes closures inside loops behave the way most people intuitively expect.</p>
+</div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>A closure is a function plus a live reference to the variables from the scope where it was created.</li>
+    <li>Closures keep outer variables alive after the outer function has returned — this is normal, not a memory leak, as long as it's intentional.</li>
+    <li>Closures are how JavaScript implements private state, function factories, and callbacks that need to remember context.</li>
+    <li>Looping with <code>var</code> shares one variable across every closure created in the loop; <code>let</code> gives each iteration its own copy.</li>
+  </ul>
+</div>

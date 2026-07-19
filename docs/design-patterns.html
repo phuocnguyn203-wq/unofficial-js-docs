@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Patterns — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class=" active">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Advanced Topics</p>
+<h1>Design Patterns</h1>
+<p class="lede">Design patterns are named, reusable solutions to problems that come up again and again. You've actually already met the ideas behind several of these in earlier chapters — this page names them explicitly and shows the classic shape of each.</p>
+
+<h2 id="the-module-pattern">The module pattern<a href="#the-module-pattern" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>You met this exact idea in <a href="closures.html">Closures</a>: use a function's scope to keep some state private, exposing only a curated public interface. Before native ES modules existed, this was wrapped in an <strong>IIFE</strong> (Immediately Invoked Function Expression) to run once and produce a single object.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const counterModule = (function () {
+  let count = 0; // private — inaccessible from outside
+
+  return {
+    increment() { return ++count; },
+    reset() { count = 0; },
+  };
+})(); // &lt;- invoked immediately
+
+counterModule.increment(); // 1
+counterModule.increment(); // 2
+counterModule.count;        // undefined — truly private</code></pre></div>
+<p>Native <code>export</code>/<code>import</code> modules (see <a href="modules.html">Modules</a>) have mostly replaced the IIFE version for organizing files, but the underlying idea — closures for privacy — is exactly the same one used inside class private fields and countless libraries.</p>
+
+<h2 id="the-singleton-pattern">The singleton pattern<a href="#the-singleton-pattern" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Ensures a piece of state or functionality has exactly one shared instance across your whole app, instead of being recreated everywhere it's needed.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const AppConfig = (function () {
+  let instance;
+
+  function createInstance() {
+    return { theme: "dark", version: "1.0" };
+  }
+
+  return {
+    getInstance() {
+      if (!instance) instance = createInstance();
+      return instance;
+    },
+  };
+})();
+
+const config1 = AppConfig.getInstance();
+const config2 = AppConfig.getInstance();
+config1 === config2; // true — the exact same object, created only once</code></pre></div>
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>In practice, a module's top-level state often <em>is</em> a singleton already — since a given module only runs once and every import shares the same exported values, you rarely need to hand-write this pattern explicitly in modern JavaScript.</p>
+</div>
+
+<h2 id="the-factory-pattern">The factory pattern<a href="#the-factory-pattern" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>A function that creates and returns objects, hiding the setup details behind a simple call — you've seen this shape already in <a href="closures.html">Closures</a> with <code>createBankAccount</code>.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function createUser(name, role) {
+  return {
+    name,
+    role,
+    isAdmin: role === "admin",
+    greet() {
+      console.log(`Hi, I'm ${name}`);
+    },
+  };
+}
+
+const ava = createUser("Ava", "admin");
+const noah = createUser("Noah", "member");</code></pre></div>
+<p>Factories are a lightweight alternative to classes when you don't need inheritance — just plain objects with a consistent shape, built by a single function.</p>
+
+<h2 id="the-observer-pattern-pubsub">The observer pattern (pub/sub)<a href="#the-observer-pattern-pubsub" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>One piece of code ("the subject") maintains a list of interested listeners ("observers") and notifies all of them when something happens. This is exactly how DOM events work (see <a href="events.html">Events &amp; Delegation</a>) — this pattern is that same idea, generalized to any kind of event, not just browser ones.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function createEmitter() {
+  const listeners = {};
+
+  return {
+    on(event, callback) {
+      (listeners[event] ??= []).push(callback);
+    },
+    emit(event, data) {
+      (listeners[event] || []).forEach(callback =&gt; callback(data));
+    },
+  };
+}
+
+const emitter = createEmitter();
+
+emitter.on("userLoggedIn", user =&gt; console.log(`Welcome, ${user.name}`));
+emitter.on("userLoggedIn", user =&gt; console.log(`Logging analytics for ${user.name}`));
+
+emitter.emit("userLoggedIn", { name: "Ava" });
+// "Welcome, Ava"
+// "Logging analytics for Ava"</code></pre></div>
+<p>This pattern decouples the code that triggers an event from the code that reacts to it — the emitter doesn't need to know or care who's listening, or how many listeners there are.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>The module pattern uses a closure to keep state private while exposing a small public interface — the same idea behind native ES modules.</li>
+    <li>A singleton guarantees exactly one shared instance; native modules often give you this automatically.</li>
+    <li>A factory function builds and returns objects with a consistent shape, without needing a class or inheritance.</li>
+    <li>The observer (pub/sub) pattern decouples an event source from its listeners — the same model DOM events use.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/functional-programming.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">Functional Programming</span></a><a class="prev-next-link next" href="../docs/memory-performance.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Memory &amp; Performance</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#the-module-pattern" data-toc-link="the-module-pattern">The module pattern</a></li><li class="toc-level-2"><a href="#the-singleton-pattern" data-toc-link="the-singleton-pattern">The singleton pattern</a></li><li class="toc-level-2"><a href="#the-factory-pattern" data-toc-link="the-factory-pattern">The factory pattern</a></li><li class="toc-level-2"><a href="#the-observer-pattern-pubsub" data-toc-link="the-observer-pattern-pubsub">The observer pattern (pub/sub)</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

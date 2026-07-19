@@ -1,0 +1,96 @@
+<p class="page-kicker">Browser &amp; Web APIs</p>
+<h1>Events &amp; Delegation</h1>
+<p class="lede">The browser fires an event for almost everything that happens on a page — clicks, key presses, form submissions, even the page finishing loading. Listening for these events is how JavaScript turns a static page into an interactive one.</p>
+
+<h2>Adding an event listener</h2>
+[[code lang="js"]]
+const button = document.querySelector("#save-btn");
+
+button.addEventListener("click", function (event) {
+  console.log("Button was clicked!");
+});
+[[/code]]
+<p>Some of the events you'll reach for constantly:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Event</th><th>Fires when&hellip;</th></tr></thead>
+  <tbody>
+    <tr><td><code>click</code></td><td>An element is clicked (or tapped).</td></tr>
+    <tr><td><code>submit</code></td><td>A <code>&lt;form&gt;</code> is submitted.</td></tr>
+    <tr><td><code>input</code></td><td>An input's value changes, on every keystroke.</td></tr>
+    <tr><td><code>change</code></td><td>An input's value changes and loses focus (or for checkboxes/selects, immediately).</td></tr>
+    <tr><td><code>keydown</code></td><td>A key is pressed.</td></tr>
+    <tr><td><code>DOMContentLoaded</code></td><td>The HTML has been fully parsed (fired on <code>document</code>).</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>The event object</h2>
+<p>Every listener receives an <strong>event object</strong> describing what happened — which element triggered it, what key was pressed, and so on.</p>
+[[code lang="js"]]
+const form = document.querySelector("form");
+
+form.addEventListener("submit", function (event) {
+  event.preventDefault(); // stop the browser's default full-page reload
+  console.log("Submitted by:", event.target); // the element the event fired on
+});
+[[/code]]
+<p><code>event.preventDefault()</code> is one of the most commonly used methods here — it stops the browser's built-in behavior for that event (following a link, submitting a form the traditional way) so your JavaScript can handle it instead.</p>
+
+<h2>Event bubbling</h2>
+<p>When an event fires on an element, it doesn't just run listeners on that exact element — it "bubbles" upward, triggering listeners on every ancestor too, all the way up to <code>document</code>.</p>
+[[code lang="js"]]
+// <div id="outer"><button id="inner">Click me</button></div>
+
+document.querySelector("#outer").addEventListener("click", () => {
+  console.log("outer div handler ran");
+});
+document.querySelector("#inner").addEventListener("click", () => {
+  console.log("inner button handler ran");
+});
+
+// Clicking the button logs both, in this order:
+// "inner button handler ran"
+// "outer div handler ran"
+[[/code]]
+<p>Call <code>event.stopPropagation()</code> inside a handler if you specifically need to stop this upward bubbling — but it's needed far less often than you'd expect.</p>
+
+<h2>Event delegation</h2>
+<p>Bubbling isn't just a quirk to work around — it enables a genuinely useful pattern. Instead of attaching a listener to every single item in a list (especially one that changes over time), attach <strong>one</strong> listener to their shared parent, and check <code>event.target</code> to see which child was actually clicked.</p>
+[[code lang="js"]]
+const list = document.querySelector("#todo-list");
+
+list.addEventListener("click", function (event) {
+  if (event.target.matches(".delete-btn")) {
+    event.target.closest("li").remove();
+  }
+});
+
+// Works even for <li> items added to the list AFTER this listener was attached —
+// there's only ever one listener, on the parent, not one per item.
+[[/code]]
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Delegation is the standard solution for lists where items are added or removed dynamically. Attaching individual listeners to each item means new items silently have no listener at all — delegating to a stable parent element sidesteps that completely.</p>
+</div>
+
+<h2>Removing a listener</h2>
+<p><code>removeEventListener</code> needs a reference to the exact same function that was added — which means an anonymous inline function can never be removed. Use a named function if you'll need to remove it later.</p>
+[[code lang="js"]]
+function handleClick() {
+  console.log("clicked");
+}
+
+button.addEventListener("click", handleClick);
+button.removeEventListener("click", handleClick); // works — same function reference
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li><code>addEventListener(type, handler)</code> reacts to browser events; the handler receives an event object describing what happened.</li>
+    <li><code>event.preventDefault()</code> cancels a default browser behavior (like a form's page reload); <code>event.stopPropagation()</code> stops bubbling.</li>
+    <li>Events bubble from the target element up through every ancestor to <code>document</code>.</li>
+    <li>Event delegation — one listener on a parent, checking <code>event.target</code> — handles dynamic lists better than per-item listeners.</li>
+  </ul>
+</div>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Events & Delegation — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class=" active">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Browser &amp; Web APIs</p>
+<h1>Events &amp; Delegation</h1>
+<p class="lede">The browser fires an event for almost everything that happens on a page — clicks, key presses, form submissions, even the page finishing loading. Listening for these events is how JavaScript turns a static page into an interactive one.</p>
+
+<h2 id="adding-an-event-listener">Adding an event listener<a href="#adding-an-event-listener" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const button = document.querySelector("#save-btn");
+
+button.addEventListener("click", function (event) {
+  console.log("Button was clicked!");
+});</code></pre></div>
+<p>Some of the events you'll reach for constantly:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Event</th><th>Fires when&hellip;</th></tr></thead>
+  <tbody>
+    <tr><td><code>click</code></td><td>An element is clicked (or tapped).</td></tr>
+    <tr><td><code>submit</code></td><td>A <code>&lt;form&gt;</code> is submitted.</td></tr>
+    <tr><td><code>input</code></td><td>An input's value changes, on every keystroke.</td></tr>
+    <tr><td><code>change</code></td><td>An input's value changes and loses focus (or for checkboxes/selects, immediately).</td></tr>
+    <tr><td><code>keydown</code></td><td>A key is pressed.</td></tr>
+    <tr><td><code>DOMContentLoaded</code></td><td>The HTML has been fully parsed (fired on <code>document</code>).</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="the-event-object">The event object<a href="#the-event-object" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Every listener receives an <strong>event object</strong> describing what happened — which element triggered it, what key was pressed, and so on.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const form = document.querySelector("form");
+
+form.addEventListener("submit", function (event) {
+  event.preventDefault(); // stop the browser's default full-page reload
+  console.log("Submitted by:", event.target); // the element the event fired on
+});</code></pre></div>
+<p><code>event.preventDefault()</code> is one of the most commonly used methods here — it stops the browser's built-in behavior for that event (following a link, submitting a form the traditional way) so your JavaScript can handle it instead.</p>
+
+<h2 id="event-bubbling">Event bubbling<a href="#event-bubbling" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>When an event fires on an element, it doesn't just run listeners on that exact element — it "bubbles" upward, triggering listeners on every ancestor too, all the way up to <code>document</code>.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// &lt;div id="outer"&gt;&lt;button id="inner"&gt;Click me&lt;/button&gt;&lt;/div&gt;
+
+document.querySelector("#outer").addEventListener("click", () =&gt; {
+  console.log("outer div handler ran");
+});
+document.querySelector("#inner").addEventListener("click", () =&gt; {
+  console.log("inner button handler ran");
+});
+
+// Clicking the button logs both, in this order:
+// "inner button handler ran"
+// "outer div handler ran"</code></pre></div>
+<p>Call <code>event.stopPropagation()</code> inside a handler if you specifically need to stop this upward bubbling — but it's needed far less often than you'd expect.</p>
+
+<h2 id="event-delegation">Event delegation<a href="#event-delegation" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Bubbling isn't just a quirk to work around — it enables a genuinely useful pattern. Instead of attaching a listener to every single item in a list (especially one that changes over time), attach <strong>one</strong> listener to their shared parent, and check <code>event.target</code> to see which child was actually clicked.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const list = document.querySelector("#todo-list");
+
+list.addEventListener("click", function (event) {
+  if (event.target.matches(".delete-btn")) {
+    event.target.closest("li").remove();
+  }
+});
+
+// Works even for &lt;li&gt; items added to the list AFTER this listener was attached —
+// there's only ever one listener, on the parent, not one per item.</code></pre></div>
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Delegation is the standard solution for lists where items are added or removed dynamically. Attaching individual listeners to each item means new items silently have no listener at all — delegating to a stable parent element sidesteps that completely.</p>
+</div>
+
+<h2 id="removing-a-listener">Removing a listener<a href="#removing-a-listener" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p><code>removeEventListener</code> needs a reference to the exact same function that was added — which means an anonymous inline function can never be removed. Use a named function if you'll need to remove it later.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function handleClick() {
+  console.log("clicked");
+}
+
+button.addEventListener("click", handleClick);
+button.removeEventListener("click", handleClick); // works — same function reference</code></pre></div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li><code>addEventListener(type, handler)</code> reacts to browser events; the handler receives an event object describing what happened.</li>
+    <li><code>event.preventDefault()</code> cancels a default browser behavior (like a form's page reload); <code>event.stopPropagation()</code> stops bubbling.</li>
+    <li>Events bubble from the target element up through every ancestor to <code>document</code>.</li>
+    <li>Event delegation — one listener on a parent, checking <code>event.target</code> — handles dynamic lists better than per-item listeners.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/dom.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">The DOM</span></a><a class="prev-next-link next" href="../docs/fetch-forms-storage.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Fetch, Forms &amp; Storage</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#adding-an-event-listener" data-toc-link="adding-an-event-listener">Adding an event listener</a></li><li class="toc-level-2"><a href="#the-event-object" data-toc-link="the-event-object">The event object</a></li><li class="toc-level-2"><a href="#event-bubbling" data-toc-link="event-bubbling">Event bubbling</a></li><li class="toc-level-2"><a href="#event-delegation" data-toc-link="event-delegation">Event delegation</a></li><li class="toc-level-2"><a href="#removing-a-listener" data-toc-link="removing-a-listener">Removing a listener</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

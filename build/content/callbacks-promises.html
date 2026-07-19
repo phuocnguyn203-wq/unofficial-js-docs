@@ -1,0 +1,122 @@
+<p class="page-kicker">Asynchronous JavaScript</p>
+<h1>Callbacks &amp; Promises</h1>
+<p class="lede">Now that you know why JavaScript needs to handle things asynchronously (see <a href="event-loop.html">The Event Loop</a>), this page covers the two patterns for actually writing async code: the original callback pattern, and the promise that replaced it for most use cases.</p>
+
+<h2>What is a callback?</h2>
+<p>A callback is simply a function passed into another function, to be called later — usually once some operation finishes. You've already used this idea with array methods (see <a href="arrays.html">Arrays &amp; Array Methods</a>); async callbacks are the same concept, just triggered by time or I/O instead of a loop.</p>
+[[code lang="js"]]
+function fetchUserName(id, callback) {
+  setTimeout(() => {
+    // pretend this took time — a network request, a database lookup
+    callback({ id, name: "Ava" });
+  }, 1000);
+}
+
+fetchUserName(1, function (user) {
+  console.log(`Got user: ${user.name}`);
+});
+console.log("Fetching..."); // logs first — fetchUserName doesn't block
+[[/code]]
+
+<h2>The problem: callback hell</h2>
+<p>Callbacks work fine for one async step. The trouble starts when several async steps depend on each other — each one has to be nested inside the previous one's callback, producing a growing pyramid of indentation that's hard to read and even harder to add error handling to.</p>
+[[code lang="js"]]
+getUser(1, function (user) {
+  getPosts(user.id, function (posts) {
+    getComments(posts[0].id, function (comments) {
+      console.log(comments);
+      // and it keeps going, one level deeper each time...
+    }, handleError);
+  }, handleError);
+}, handleError);
+[[/code]]
+<p>This shape earned its own nickname: <strong>callback hell</strong> (or "the pyramid of doom"). Promises were introduced in ES6 specifically to fix this.</p>
+
+<h2>What is a Promise?</h2>
+<p>A <strong>promise</strong> is an object representing a value that isn't available yet, but will be at some point — either successfully (<strong>fulfilled</strong>) or with an error (<strong>rejected</strong>). Every promise is in exactly one of three states:</p>
+<ul>
+  <li><strong>pending</strong> — still working, no result yet.</li>
+  <li><strong>fulfilled</strong> — completed successfully, with a value.</li>
+  <li><strong>rejected</strong> — failed, with a reason (usually an <code>Error</code>).</li>
+</ul>
+<p>Once a promise settles (fulfills or rejects), it stays that way forever — it can't change state again.</p>
+
+<h2>Creating a promise</h2>
+<p>Most of the time you'll <em>consume</em> promises returned by built-in functions like <code>fetch()</code>, not create your own. But knowing how they're built removes the mystery:</p>
+[[code lang="js"]]
+function fetchUserName(id) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (id > 0) {
+        resolve({ id, name: "Ava" }); // success
+      } else {
+        reject(new Error("Invalid id")); // failure
+      }
+    }, 1000);
+  });
+}
+[[/code]]
+<p>The function passed to <code>new Promise()</code> is called the <strong>executor</strong> — it runs immediately, and receives two functions: call <code>resolve(value)</code> on success, or <code>reject(error)</code> on failure.</p>
+
+<h2>Consuming a promise: then, catch, finally</h2>
+[[code lang="js"]]
+fetchUserName(1)
+  .then(user => console.log(`Got user: ${user.name}`))
+  .catch(error => console.error("Failed:", error.message))
+  .finally(() => console.log("Done, either way"));
+[[/code]]
+<p><code>.then()</code> runs when the promise fulfills; <code>.catch()</code> runs when it rejects (or when an earlier <code>.then()</code> throws); <code>.finally()</code> runs regardless of the outcome — perfect for cleanup like hiding a loading spinner.</p>
+
+<h2>Chaining: solving callback hell</h2>
+<p>The real payoff: each <code>.then()</code> returns a <em>new</em> promise, so you can chain steps in a flat, readable sequence instead of nesting them.</p>
+[[code lang="js"]]
+getUser(1)
+  .then(user => getPosts(user.id))
+  .then(posts => getComments(posts[0].id))
+  .then(comments => console.log(comments))
+  .catch(error => console.error("Something failed:", error.message));
+[[/code]]
+<p>One <code>.catch()</code> at the end handles a failure from <em>any</em> step in the chain — if <code>getUser</code>, <code>getPosts</code>, or <code>getComments</code> rejects, execution skips straight to it. That single flat chain replaces the entire nested pyramid from before.</p>
+
+<h2>Running promises together</h2>
+<p>Four static methods handle common multi-promise situations:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>Resolves when&hellip;</th><th>Use it for</th></tr></thead>
+  <tbody>
+    <tr><td><code>Promise.all()</code></td><td>every promise fulfills (or any one rejects, immediately)</td><td>Run several independent requests in parallel, need all results.</td></tr>
+    <tr><td><code>Promise.allSettled()</code></td><td>every promise finishes, fulfilled or rejected</td><td>Run several requests, and you want every result even if some fail.</td></tr>
+    <tr><td><code>Promise.race()</code></td><td>the first promise to settle, wins</td><td>A timeout race, or "whichever finishes first."</td></tr>
+    <tr><td><code>Promise.any()</code></td><td>the first promise to fulfill (ignores rejections unless all reject)</td><td>Try several sources, take the first success.</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+const requests = [fetchUser(1), fetchUser(2), fetchUser(3)];
+
+Promise.all(requests)
+  .then(users => console.log("All loaded:", users))
+  .catch(error => console.error("At least one failed:", error));
+
+Promise.allSettled(requests).then(results => {
+  results.forEach(result => {
+    if (result.status === "fulfilled") console.log(result.value);
+    else console.log("failed:", result.reason);
+  });
+});
+[[/code]]
+
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p><code>Promise.all()</code> is fast but fragile — one rejection cancels the whole batch. <code>Promise.allSettled()</code> is slower to react but never short-circuits, which is usually what you want when the requests are independent of each other.</p>
+</div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>A callback is a function invoked later; deeply nested callbacks for sequential async steps produce hard-to-read "callback hell."</li>
+    <li>A promise represents a future value with exactly one of three states: pending, fulfilled, or rejected — and it settles only once.</li>
+    <li><code>.then()</code>/<code>.catch()</code>/<code>.finally()</code> consume a promise; chaining <code>.then()</code> calls replaces nested callbacks with a flat sequence.</li>
+    <li><code>Promise.all</code>, <code>.allSettled</code>, <code>.race</code>, and <code>.any</code> each combine multiple promises with different failure behavior.</li>
+  </ul>
+</div>

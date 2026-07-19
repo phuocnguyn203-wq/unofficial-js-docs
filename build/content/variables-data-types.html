@@ -1,0 +1,143 @@
+<p class="page-kicker">Language Basics</p>
+<h1>Variables &amp; Data Types</h1>
+<p class="lede">Variables are named boxes for values. JavaScript decides what <em>kind</em> of value is inside the box at runtime, not when you declare it — that single fact shapes a lot of how the language feels.</p>
+
+<h2>Declaring variables: var, let, const</h2>
+<p>JavaScript has three ways to declare a variable. In modern code, you'll reach for <code>const</code> by default, <code>let</code> when you need to reassign, and almost never <code>var</code>.</p>
+[[code lang="js"]]
+const name = "Ava";     // cannot be reassigned
+let age = 29;           // can be reassigned
+age = 30;               // OK
+
+var legacy = "old style"; // works, but avoid in new code
+[[/code]]
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Keyword</th><th>Reassignable?</th><th>Scope</th><th>Use it when&hellip;</th></tr></thead>
+  <tbody>
+    <tr><td><code>const</code></td><td>No</td><td>Block</td><td>Always, unless you know you'll reassign.</td></tr>
+    <tr><td><code>let</code></td><td>Yes</td><td>Block</td><td>The value needs to change (a counter, an accumulator).</td></tr>
+    <tr><td><code>var</code></td><td>Yes</td><td>Function</td><td>Rarely — mostly seen in older codebases.</td></tr>
+  </tbody>
+</table>
+</div>
+<p><code>const</code> doesn't mean "constant value" — it means "this name can't be reassigned." An object or array declared with <code>const</code> can still have its contents changed:</p>
+[[code lang="js"]]
+const user = { name: "Ava" };
+user.name = "Nora"; // fine — we're mutating the object, not reassigning `user`
+// user = {};       // TypeError — this would be a reassignment
+[[/code]]
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p><code>var</code> behaves quite differently from <code>let</code>/<code>const</code> when it comes to scope and hoisting. The full comparison lives in <a href="scope-hoisting.html">Scope &amp; Hoisting</a> — for now, just default to <code>const</code>/<code>let</code>.</p>
+</div>
+
+<h2>The primitive data types</h2>
+<p>JavaScript has seven <strong>primitive</strong> types — simple, immutable values that aren't objects.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Type</th><th>Example</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>string</code></td><td><code>"hello"</code></td><td>Text, wrapped in quotes or backticks.</td></tr>
+    <tr><td><code>number</code></td><td><code>42</code>, <code>3.14</code></td><td>Both integers and decimals — there's only one number type.</td></tr>
+    <tr><td><code>boolean</code></td><td><code>true</code>, <code>false</code></td><td>A binary yes/no value.</td></tr>
+    <tr><td><code>undefined</code></td><td><code>undefined</code></td><td>A variable that's been declared but has no value yet.</td></tr>
+    <tr><td><code>null</code></td><td><code>null</code></td><td>An intentional "no value," set explicitly by you.</td></tr>
+    <tr><td><code>bigint</code></td><td><code>10n</code></td><td>Integers larger than <code>Number</code> can safely represent.</td></tr>
+    <tr><td><code>symbol</code></td><td><code>Symbol("id")</code></td><td>A guaranteed-unique value, often used as an object key.</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+let city = "Tokyo";        // string
+let population = 13960000; // number
+let isCapital = true;      // boolean
+let nickname;              // undefined — declared, not assigned
+let middleName = null;     // null — explicitly "nothing"
+[[/code]]
+
+<h2>Checking a type: typeof</h2>
+<p>The <code>typeof</code> operator returns a string naming a value's type — useful for quick checks and debugging.</p>
+[[code lang="js"]]
+typeof "hello";     // "string"
+typeof 42;           // "number"
+typeof true;         // "boolean"
+typeof undefined;    // "undefined"
+typeof Symbol();     // "symbol"
+typeof 10n;          // "bigint"
+
+typeof null;         // "object"  <- a famous, decades-old bug in the language
+typeof {};           // "object"
+typeof [];           // "object" (arrays are a kind of object — see below)
+typeof function(){}; // "function"
+[[/code]]
+<div class="admonition warning">
+  <p class="admonition-title">Warning</p>
+  <p><code>typeof null</code> returning <code>"object"</code> is a mistake baked into JavaScript since 1995 that can never be fixed without breaking the web. To check for <code>null</code> specifically, compare directly: <code>value === null</code>.</p>
+</div>
+
+<h2>Dynamic typing and type coercion</h2>
+<p>A variable isn't locked to a type — you can reassign it to hold something completely different:</p>
+[[code lang="js"]]
+let value = 42;
+value = "now I'm a string";
+value = true;
+[[/code]]
+<p>JavaScript will also automatically convert (<strong>coerce</strong>) values between types when an operator expects a particular type. This is convenient, but it's also the source of JavaScript's most infamous quirks:</p>
+[[code lang="js"]]
+"5" + 1;      // "51"  — number is coerced to a string, then concatenated
+"5" - 1;      // 4     — string is coerced to a number for subtraction
+"5" * "2";    // 10    — both strings coerced to numbers
+1 + true;     // 2     — true becomes 1
+1 + null;     // 1     — null becomes 0
+1 + undefined;// NaN   — undefined can't become a useful number
+[[/code]]
+<p>The rule of thumb: <code>+</code> prefers strings (if either side is a string, it concatenates), while <code>-</code>, <code>*</code>, and <code>/</code> prefer numbers (they'll try to convert both sides to numbers).</p>
+
+<h3>=== vs ==</h3>
+<p>Because of coercion, JavaScript has two equality operators:</p>
+[[code lang="js"]]
+"5" == 5;   // true  — coerces types before comparing
+"5" === 5;  // false — no coercion; different types, so not equal
+
+0 == false;  // true
+0 === false; // false
+[[/code]]
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Use <code>===</code> and <code>!==</code> by default. They compare value <em>and</em> type, which avoids an entire category of confusing bugs. Reach for <code>==</code> only when you deliberately want coercion (rare).</p>
+</div>
+
+<h2>Objects: everything else</h2>
+<p>Anything that isn't one of the seven primitives is an <strong>object</strong> — plain objects, arrays, functions, dates, and more. The key practical difference: primitives are compared and copied <strong>by value</strong>, while objects are compared and copied <strong>by reference</strong>.</p>
+[[code lang="js"]]
+let a = 5;
+let b = a;   // b gets a copy of the value 5
+b = 10;
+console.log(a); // 5 — unaffected
+
+let obj1 = { count: 5 };
+let obj2 = obj1;  // obj2 points to the SAME object as obj1
+obj2.count = 10;
+console.log(obj1.count); // 10 — both names point to one object
+[[/code]]
+<p>This distinction explains a lot of behavior you'll meet later — especially when passing values into functions. It's covered in depth in <a href="objects.html">Objects Deep Dive</a> and <a href="arrays.html">Arrays &amp; Array Methods</a>.</p>
+
+<h2>Naming variables</h2>
+<ul>
+  <li>Names can contain letters, digits, <code>$</code> and <code>_</code>, but can't start with a digit.</li>
+  <li>JavaScript is case-sensitive: <code>age</code> and <code>Age</code> are different variables.</li>
+  <li>The convention is <strong>camelCase</strong>: <code>firstName</code>, <code>totalPrice</code>, <code>isLoggedIn</code>.</li>
+  <li>Reserved words (<code>let</code>, <code>class</code>, <code>return</code>, etc.) can't be used as variable names.</li>
+</ul>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>Default to <code>const</code>; use <code>let</code> when a value needs to change; avoid <code>var</code> in new code.</li>
+    <li>JavaScript has seven primitive types, plus objects for everything else.</li>
+    <li><code>typeof</code> checks a value's type, but has one famous quirk: <code>typeof null === "object"</code>.</li>
+    <li>JavaScript coerces types automatically with <code>==</code>, <code>+</code>, <code>-</code>, etc. — use <code>===</code> to compare without coercion.</li>
+    <li>Primitives copy by value; objects (including arrays and functions) copy by reference.</li>
+  </ul>
+</div>

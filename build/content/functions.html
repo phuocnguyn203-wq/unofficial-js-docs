@@ -1,0 +1,126 @@
+<p class="page-kicker">Language Basics</p>
+<h1>Functions</h1>
+<p class="lede">Functions are reusable blocks of code — and in JavaScript, they're also values you can store, pass around, and return, just like a number or a string. That second part is one of the most important ideas in the whole language.</p>
+
+<h2>Function declarations</h2>
+[[code lang="js"]]
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+
+greet("Ava"); // "Hello, Ava!"
+[[/code]]
+<p>A function declaration is <strong>hoisted</strong> — you can call it before its definition appears in the file, because the engine registers the whole function before running any code. (Full explanation in <a href="scope-hoisting.html">Scope &amp; Hoisting</a>.)</p>
+[[code lang="js"]]
+sayHi(); // works, even though sayHi is defined below
+
+function sayHi() {
+  console.log("Hi!");
+}
+[[/code]]
+
+<h2>Function expressions</h2>
+<p>You can also store a function in a variable. Unlike a declaration, a function expression is <em>not</em> hoisted in a usable way — the variable exists, but isn't assigned the function yet until that line runs.</p>
+[[code lang="js"]]
+const greet = function (name) {
+  return `Hello, ${name}!`;
+};
+
+greet("Ava"); // "Hello, Ava!"
+[[/code]]
+
+<h2>Arrow functions</h2>
+<p>Introduced in ES6, arrow functions are a more compact syntax for function expressions — and they handle the <code>this</code> keyword differently, which matters a lot in practice (see <a href="this-keyword.html">The this Keyword</a>).</p>
+[[code lang="js"]]
+// Full form
+const add = (a, b) => {
+  return a + b;
+};
+
+// Implicit return — no braces means the expression is the return value
+const add2 = (a, b) => a + b;
+
+// A single parameter doesn't need parentheses
+const double = n => n * 2;
+
+// No parameters still need empty parentheses
+const sayHi = () => console.log("Hi!");
+[[/code]]
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>Arrow functions are extremely common for short callbacks (like inside <code>.map()</code> or <code>.filter()</code> — see <a href="arrays.html">Arrays &amp; Array Methods</a>), but they aren't a full replacement for regular functions everywhere. They don't get their own <code>this</code>, can't be used as constructors, and don't have an <code>arguments</code> object.</p>
+</div>
+
+<h2>Parameters &amp; arguments</h2>
+
+<h3>Default parameters</h3>
+<p>Give a parameter a fallback value used when the caller doesn't provide one (or passes <code>undefined</code>):</p>
+[[code lang="js"]]
+function greet(name = "friend") {
+  return `Hello, ${name}!`;
+}
+
+greet();        // "Hello, friend!"
+greet("Ava");   // "Hello, Ava!"
+[[/code]]
+
+<h3>Rest parameters</h3>
+<p>Collect any number of remaining arguments into a real array using <code>...</code>:</p>
+[[code lang="js"]]
+function sum(...numbers) {
+  return numbers.reduce((total, n) => total + n, 0);
+}
+
+sum(1, 2, 3);       // 6
+sum(10, 20, 30, 40); // 100
+[[/code]]
+<p>Rest parameters must come last, and there can only be one. (This same <code>...</code> syntax is also used for <em>spreading</em> values — the opposite operation — covered in <a href="destructuring-spread-rest.html">Destructuring, Spread &amp; Rest</a>.)</p>
+
+<h2>Return values</h2>
+<p>A function without an explicit <code>return</code> returns <code>undefined</code>. <code>return</code> also exits the function immediately — any code after it in the same block never runs.</p>
+[[code lang="js"]]
+function isEven(n) {
+  if (n % 2 === 0) {
+    return true;
+  }
+  return false;
+}
+
+function noReturn() {
+  console.log("did something");
+}
+
+console.log(noReturn()); // logs "did something", then undefined
+[[/code]]
+
+<h2>Functions as values</h2>
+<p>This is the idea that makes JavaScript feel different from many other languages: a function is a value, so you can pass one function into another, or return a function from a function.</p>
+[[code lang="js"]]
+function applyTwice(fn, value) {
+  return fn(fn(value));
+}
+
+const double = n => n * 2;
+applyTwice(double, 3); // 12  ->  double(double(3))
+[[/code]]
+<p>A function that takes another function as an argument (or returns one) is called a <strong>higher-order function</strong>. You've likely already used one without the label — every array method that takes a callback, like <code>.map()</code> or <code>.filter()</code>, is a higher-order function. This idea comes back in force in <a href="functional-programming.html">Functional Programming</a>.</p>
+
+<h2>Anonymous vs named functions</h2>
+<p>A function expression doesn't need a name — it's "anonymous." Naming it anyway helps with debugging, since the name shows up in stack traces:</p>
+[[code lang="js"]]
+const handlers = {
+  onClick: function handleClick() {  // named, even as an expression
+    /* ... */
+  },
+};
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>Function declarations are hoisted (callable before their definition); function expressions and arrow functions are not.</li>
+    <li>Arrow functions are compact and don't bind their own <code>this</code> — great for callbacks, not a universal replacement.</li>
+    <li>Default parameters supply fallback values; rest parameters (<code>...args</code>) gather extra arguments into an array.</li>
+    <li>Functions are values in JavaScript — they can be stored, passed as arguments, and returned from other functions (higher-order functions).</li>
+  </ul>
+</div>

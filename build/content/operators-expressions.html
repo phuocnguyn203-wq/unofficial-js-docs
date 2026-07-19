@@ -1,0 +1,125 @@
+<p class="page-kicker">Language Basics</p>
+<h1>Operators &amp; Expressions</h1>
+<p class="lede">An expression is any piece of code that produces a value. Operators are how you combine, compare, and transform those values. This page is a tour of the operators you'll use every day.</p>
+
+<h2>Arithmetic operators</h2>
+[[code lang="js"]]
+10 + 3;   // 13  addition
+10 - 3;   // 7   subtraction
+10 * 3;   // 30  multiplication
+10 / 3;   // 3.3333333333333335  division
+10 % 3;   // 1   remainder (modulo)
+10 ** 3;  // 1000 exponent (10 to the power of 3)
+
+let count = 5;
+count++;  // count is now 6 (post-increment)
+count--;  // count is now 5 again (post-decrement)
+[[/code]]
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>JavaScript has only one number type, so division always uses floating-point math. <code>10 / 3</code> doesn't truncate like it does in some languages — it gives you the full decimal.</p>
+</div>
+
+<h2>Assignment operators</h2>
+<p>Beyond the basic <code>=</code>, JavaScript has shorthand operators that combine an operation with assignment:</p>
+[[code lang="js"]]
+let total = 10;
+total += 5;   // same as: total = total + 5   -> 15
+total -= 3;   // total = total - 3            -> 12
+total *= 2;   // total = total * 2            -> 24
+total /= 4;   // total = total / 4            -> 6
+
+let items = null;
+items ??= [];  // assign [] only if items is null or undefined
+[[/code]]
+
+<h2>Comparison operators</h2>
+[[code lang="js"]]
+5 > 3;    // true
+5 < 3;    // false
+5 >= 5;   // true
+5 <= 4;   // false
+
+5 === "5"; // false — strict equality, checks type too
+5 == "5";  // true  — loose equality, coerces types
+5 !== "5"; // true
+[[/code]]
+<p>See <a href="variables-data-types.html">Variables &amp; Data Types</a> for why <code>===</code> is almost always the better choice over <code>==</code>.</p>
+
+<h2>Logical operators &amp; truthy/falsy values</h2>
+<p>Before logical operators make sense, you need to know that every value in JavaScript is either <strong>truthy</strong> or <strong>falsy</strong> when used in a boolean context (like an <code>if</code> condition).</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Falsy values (only these six)</th><th>Everything else is truthy</th></tr></thead>
+  <tbody>
+    <tr><td><code>false</code>, <code>0</code>, <code>""</code>, <code>null</code>, <code>undefined</code>, <code>NaN</code></td><td><code>"0"</code>, <code>"false"</code>, <code>[]</code>, <code>{}</code>, any non-empty string, any object</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+Boolean(0);        // false
+Boolean("");       // false
+Boolean("0");       // true  — a non-empty string is truthy, even "0"
+Boolean([]);        // true  — an empty array is still an object, and truthy
+Boolean(null);       // false
+[[/code]]
+<p>With that in mind, the three logical operators are:</p>
+[[code lang="js"]]
+true && false;   // false — AND: true only if both sides are true
+true || false;   // true  — OR: true if either side is true
+!true;           // false — NOT: flips the boolean
+[[/code]]
+<p><code>&&</code> and <code>||</code> don't just produce <code>true</code>/<code>false</code> though — they return one of their original operands, thanks to <strong>short-circuiting</strong>:</p>
+[[code lang="js"]]
+// && returns the first falsy value, or the last value if all are truthy
+"" && "hello";        // "" (stops at the first falsy value)
+"hi" && "hello";      // "hello" (both truthy, returns the last one)
+
+// || returns the first truthy value, or the last value if all are falsy
+null || "default";    // "default"
+"set" || "default";   // "set"
+[[/code]]
+<p>This is why you'll often see patterns like <code>options || {}</code> (fall back to an empty object) or <code>user && user.name</code> (only read <code>.name</code> if <code>user</code> exists).</p>
+
+<h2>The ternary operator</h2>
+<p>A compact one-line <code>if</code>/<code>else</code> that produces a value:</p>
+[[code lang="js"]]
+const age = 20;
+const status = age >= 18 ? "adult" : "minor";
+console.log(status); // "adult"
+[[/code]]
+<p>Read it as: <code>condition ? valueIfTrue : valueIfFalse</code>. It's great for a simple either/or value — for anything more complex, a full <code>if</code>/<code>else</code> (see <a href="control-flow.html">Control Flow</a>) is more readable.</p>
+
+<h2>Nullish coalescing (??) and optional chaining (?.)</h2>
+<p>Two operators added in ES2020 solve a very common annoyance: safely reading values that might be <code>null</code> or <code>undefined</code>.</p>
+[[code lang="js"]]
+// ?? only falls back on null/undefined — NOT on other falsy values like 0 or ""
+const votes = 0;
+votes || 10;   // 10   — oops, 0 is falsy, so this "falls back" unintentionally
+votes ?? 10;   // 0    — 0 is neither null nor undefined, so it's kept
+
+// ?. reads a property, but short-circuits to undefined instead of throwing
+const user = { profile: null };
+user.profile.bio;    // TypeError: Cannot read properties of null
+user.profile?.bio;   // undefined — no error
+user?.profile?.bio;  // undefined — safe even if `user` itself were missing
+[[/code]]
+<p><code>??</code> is the fix for <code>||</code>'s biggest flaw: telling apart "no value" from "a real, falsy value" like <code>0</code> or <code>""</code>.</p>
+
+<h2>A note on operator precedence</h2>
+<p>Just like in math, some operators bind tighter than others (<code>*</code> before <code>+</code>, for example). You don't need to memorize the full table — when in doubt, use parentheses to make the order explicit:</p>
+[[code lang="js"]]
+2 + 3 * 4;     // 14 — multiplication happens first
+(2 + 3) * 4;   // 20 — parentheses force addition first
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>Only six values are falsy: <code>false</code>, <code>0</code>, <code>""</code>, <code>null</code>, <code>undefined</code>, <code>NaN</code> — everything else is truthy.</li>
+    <li><code>&&</code> and <code>||</code> return one of their operands, not just <code>true</code>/<code>false</code> — this powers common default-value patterns.</li>
+    <li><code>??</code> is like <code>||</code> but only triggers on <code>null</code>/<code>undefined</code>, not other falsy values.</li>
+    <li><code>?.</code> safely reads nested properties without throwing when something in the chain is missing.</li>
+    <li>When operator precedence gets confusing, add parentheses — clarity beats cleverness.</li>
+  </ul>
+</div>

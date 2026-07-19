@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Objects Deep Dive — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class=" active">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Working with Data</p>
+<h1>Objects Deep Dive</h1>
+<p class="lede">Objects are JavaScript's core way of grouping related data and behavior together under one value — key/value pairs, where a value can be anything, including another object or a function.</p>
+
+<h2 id="object-literals">Object literals<a href="#object-literals" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const user = {
+  name: "Ava",
+  age: 29,
+  isAdmin: false,
+  address: {
+    city: "Tokyo",
+    country: "Japan",
+  },
+};</code></pre></div>
+
+<h2 id="accessing-and-updating-properties">Accessing and updating properties<a href="#accessing-and-updating-properties" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Two ways to read or write a property: dot notation and bracket notation.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>user.name;          // "Ava" — dot notation, most common
+user["name"];       // "Ava" — bracket notation, needed for dynamic keys
+
+user.age = 30;       // update
+user.email = "ava@example.com"; // add a brand-new property
+
+const key = "age";
+user[key];           // 30 — bracket notation lets the key be a variable</code></pre></div>
+<p>Dot notation is more readable and is the default choice. Bracket notation is required whenever the key is stored in a variable, computed, or contains characters that aren't valid in an identifier (like a space or a hyphen).</p>
+
+<h2 id="shorthand-syntax">Shorthand syntax<a href="#shorthand-syntax" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Two conveniences added in ES6 that you'll see everywhere:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const name = "Ava";
+const age = 29;
+
+// Property shorthand: when the variable name matches the key name
+const user = { name, age }; // same as { name: name, age: age }
+
+// Method shorthand: skip `function` for methods
+const calculator = {
+  add(a, b) {       // same as add: function(a, b) { ... }
+    return a + b;
+  },
+};</code></pre></div>
+
+<h2 id="computed-property-names">Computed property names<a href="#computed-property-names" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Wrap an expression in <code>[ ]</code> as a key to compute it dynamically at creation time:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const field = "email";
+const user = {
+  name: "Ava",
+  [field]: "ava@example.com", // key becomes "email"
+};
+// { name: "Ava", email: "ava@example.com" }</code></pre></div>
+
+<h2 id="objectkeys-values-and-entries">Object.keys, values, and entries<a href="#objectkeys-values-and-entries" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Three static methods for turning an object into an array you can loop over with familiar array methods:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const user = { name: "Ava", age: 29, admin: true };
+
+Object.keys(user);    // ["name", "age", "admin"]
+Object.values(user);  // ["Ava", 29, true]
+Object.entries(user); // [["name", "Ava"], ["age", 29], ["admin", true]]
+
+// entries() pairs nicely with destructuring in a for...of loop
+for (const [key, value] of Object.entries(user)) {
+  console.log(`${key}: ${value}`);
+}</code></pre></div>
+
+<h2 id="checking-if-a-property-exists">Checking if a property exists<a href="#checking-if-a-property-exists" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const user = { name: "Ava", age: undefined };
+
+"name" in user;               // true
+"age" in user;                // true — the key exists, even though its value is undefined
+"email" in user;               // false
+
+user.hasOwnProperty("name");   // true — ignores inherited properties (see Prototypes)
+user.age !== undefined;        // false — unreliable if a value can legitimately be undefined</code></pre></div>
+<p>Prefer <code>in</code> or <code>hasOwnProperty</code> over checking <code>!== undefined</code> when you specifically care whether the key exists, not just whether it currently holds a value.</p>
+
+<h2 id="copying-objects">Copying objects<a href="#copying-objects" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Assigning an object to a new variable copies the <em>reference</em>, not the object (see <a href="variables-data-types.html">Variables &amp; Data Types</a>). To actually copy the properties, use the spread operator or <code>Object.assign</code>:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const original = { name: "Ava", age: 29 };
+
+const copy = { ...original };     // spread — the modern, common way
+const copy2 = Object.assign({}, original); // older, equivalent approach
+
+copy.name = "Nora";
+original.name; // "Ava" — unaffected, copy is a separate object</code></pre></div>
+<div class="admonition warning">
+  <p class="admonition-title">Warning</p>
+  <p>Both approaches only make a <strong>shallow</strong> copy — nested objects are still shared by reference. If <code>original.address</code> is an object, <code>copy.address</code> points at the exact same nested object. For a true deep copy, you'd copy each nested level yourself, use <code>structuredClone(original)</code> (available in modern browsers), or a library.</p>
+</div>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const original = { name: "Ava", address: { city: "Tokyo" } };
+const copy = { ...original };
+
+copy.address.city = "Osaka";
+original.address.city; // "Osaka" — changed! address was shared, not copied</code></pre></div>
+
+<h2 id="merging-objects">Merging objects<a href="#merging-objects" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Spreading multiple objects together merges them, with later keys overwriting earlier ones:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const defaults = { theme: "light", fontSize: 14 };
+const userPrefs = { fontSize: 18 };
+
+const settings = { ...defaults, ...userPrefs };
+// { theme: "light", fontSize: 18 }</code></pre></div>
+
+<h2 id="deleting-a-property">Deleting a property<a href="#deleting-a-property" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const user = { name: "Ava", temp: "remove me" };
+delete user.temp;
+user; // { name: "Ava" }</code></pre></div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>Dot notation is the default; bracket notation is required for dynamic or non-identifier keys.</li>
+    <li>Property/method shorthand and computed property names are standard ES6+ conveniences.</li>
+    <li><code>Object.keys()</code>, <code>.values()</code>, and <code>.entries()</code> turn an object into an array for iteration.</li>
+    <li>Spreading (<code>{ ...obj }</code>) or <code>Object.assign</code> copies an object, but only shallowly — nested objects are still shared.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/strings.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">Strings &amp; Template Literals</span></a><a class="prev-next-link next" href="../docs/destructuring-spread-rest.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Destructuring, Spread &amp; Rest</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#object-literals" data-toc-link="object-literals">Object literals</a></li><li class="toc-level-2"><a href="#accessing-and-updating-properties" data-toc-link="accessing-and-updating-properties">Accessing and updating properties</a></li><li class="toc-level-2"><a href="#shorthand-syntax" data-toc-link="shorthand-syntax">Shorthand syntax</a></li><li class="toc-level-2"><a href="#computed-property-names" data-toc-link="computed-property-names">Computed property names</a></li><li class="toc-level-2"><a href="#objectkeys-values-and-entries" data-toc-link="objectkeys-values-and-entries">Object.keys, values, and entries</a></li><li class="toc-level-2"><a href="#checking-if-a-property-exists" data-toc-link="checking-if-a-property-exists">Checking if a property exists</a></li><li class="toc-level-2"><a href="#copying-objects" data-toc-link="copying-objects">Copying objects</a></li><li class="toc-level-2"><a href="#merging-objects" data-toc-link="merging-objects">Merging objects</a></li><li class="toc-level-2"><a href="#deleting-a-property" data-toc-link="deleting-a-property">Deleting a property</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

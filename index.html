@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JS Docs — A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="page-home">
+<script>window.ROOT_PREFIX = "";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="index.html" class="active">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="docs/introduction.html" class="">Introduction</a></li><li><a href="docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="docs/control-flow.html" class="">Control Flow</a></li><li><a href="docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="docs/closures.html" class="">Closures</a></li><li><a href="docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="docs/event-loop.html" class="">The Event Loop</a></li><li><a href="docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="docs/dom.html" class="">The DOM</a></li><li><a href="docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="docs/modules.html" class="">Modules</a></li><li><a href="docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<section class="hero">
+  <span class="hero-badge"><span class="dot"></span> Free &middot; Open &middot; No sign-up</span>
+  <h1>Learn JavaScript,<br>the way it actually works.</h1>
+  <p class="hero-sub">A complete, dark-themed guide that takes you from your very first <code>console.log()</code> to closures, prototypes, the event loop, and the patterns that power real apps &mdash; explaining <em>why</em>, not just <em>how</em>.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="docs/introduction.html">Start Learning &rarr;</a>
+    <a class="btn btn-secondary" href="#roadmap">Browse the Roadmap</a>
+  </div>
+</section>
+
+<section class="home-section">
+  <div class="home-section-head">
+    <h2 id="why-this-guide-is-different">Why this guide is different<a href="#why-this-guide-is-different" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+    <p>Most references tell you the syntax. This guide also builds the mental model underneath it, so new concepts click instead of piling up.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="fc-icon">&#8226;</div>
+      <p class="card-title">Big picture first</p>
+      <p>Every topic opens with the concept and the "why" &mdash; how the JavaScript engine actually behaves &mdash; before it shows syntax.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">&lt;/&gt;</div>
+      <p class="card-title">Runnable examples</p>
+      <p>Every idea is backed by a short, realistic code sample you can paste straight into your browser console.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">&#8593;</div>
+      <p class="card-title">Zero to advanced</p>
+      <p>One continuous path from variables and loops to closures, prototypes, async patterns, and performance.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">&#9889;</div>
+      <p class="card-title">Modern JavaScript</p>
+      <p>Covers ES6+ features &mdash; destructuring, modules, generators, optional chaining &mdash; the JavaScript you'll actually see in 2026 codebases.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">&#9678;</div>
+      <p class="card-title">No noise</p>
+      <p>Each page covers its topic thoroughly and stops &mdash; no filler, no 40-page detours into edge cases you'll never hit.</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon">&#9733;</div>
+      <p class="card-title">Static &amp; free forever</p>
+      <p>Plain HTML, CSS and JavaScript. No account, no tracking, no backend &mdash; just open it and read.</p>
+    </div>
+  </div>
+</section>
+
+<section class="home-section" id="roadmap">
+  <div class="home-section-head">
+    <h2 id="the-learning-path">The learning path<a href="#the-learning-path" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+    <p>30 pages across 11 sections. Read them in order for a full course, or jump straight to what you need.</p>
+  </div>
+  <div class="path-grid">
+    <a class="path-card" href="docs/introduction.html">
+      <span class="pc-num">01</span>
+      <p class="card-title">Get Started</p>
+      <p>What JavaScript is, where it runs, and how to write and execute your first script.</p>
+      <span class="pc-count">2 pages</span>
+    </a>
+    <a class="path-card" href="docs/variables-data-types.html">
+      <span class="pc-num">02</span>
+      <p class="card-title">Language Basics</p>
+      <p>Variables, types, operators, control flow, and functions &mdash; the vocabulary of the language.</p>
+      <span class="pc-count">4 pages</span>
+    </a>
+    <a class="path-card" href="docs/scope-hoisting.html">
+      <span class="pc-num">03</span>
+      <p class="card-title">Scope, Closures &amp; this</p>
+      <p>The concepts beginners find hardest &mdash; explained through how the engine actually tracks variables.</p>
+      <span class="pc-count">3 pages</span>
+    </a>
+    <a class="path-card" href="docs/arrays.html">
+      <span class="pc-num">04</span>
+      <p class="card-title">Working with Data</p>
+      <p>Arrays, strings, objects, destructuring, and JSON &mdash; the data you'll manipulate every day.</p>
+      <span class="pc-count">5 pages</span>
+    </a>
+    <a class="path-card" href="docs/prototypes.html">
+      <span class="pc-num">05</span>
+      <p class="card-title">Object-Oriented JS</p>
+      <p>Prototypal inheritance and the class syntax built on top of it.</p>
+      <span class="pc-count">2 pages</span>
+    </a>
+    <a class="path-card" href="docs/event-loop.html">
+      <span class="pc-num">06</span>
+      <p class="card-title">Asynchronous JavaScript</p>
+      <p>The event loop, callbacks, promises and async/await &mdash; how JS does two things "at once."</p>
+      <span class="pc-count">3 pages</span>
+    </a>
+    <a class="path-card" href="docs/dom.html">
+      <span class="pc-num">07</span>
+      <p class="card-title">Browser &amp; Web APIs</p>
+      <p>The DOM, events, and talking to servers with fetch &mdash; JavaScript's home turf.</p>
+      <span class="pc-count">3 pages</span>
+    </a>
+    <a class="path-card" href="docs/modules.html">
+      <span class="pc-num">08</span>
+      <p class="card-title">Modern JavaScript (ES6+)</p>
+      <p>Modules, iterators, generators, and the modern collection types.</p>
+      <span class="pc-count">2 pages</span>
+    </a>
+    <a class="path-card" href="docs/errors-debugging.html">
+      <span class="pc-num">09</span>
+      <p class="card-title">Errors &amp; Debugging</p>
+      <p>Handling failure gracefully and finding bugs fast with devtools.</p>
+      <span class="pc-count">1 page</span>
+    </a>
+    <a class="path-card" href="docs/functional-programming.html">
+      <span class="pc-num">10</span>
+      <p class="card-title">Advanced Topics</p>
+      <p>Functional programming, design patterns, memory &amp; performance, and regular expressions.</p>
+      <span class="pc-count">4 pages</span>
+    </a>
+    <a class="path-card" href="docs/ecosystem-next-steps.html">
+      <span class="pc-num">11</span>
+      <p class="card-title">Beyond the Basics</p>
+      <p>npm, bundlers, Node.js, TypeScript, and frameworks &mdash; the landscape around the language.</p>
+      <span class="pc-count">1 page</span>
+    </a>
+  </div>
+</section>
+
+<section class="home-section">
+  <div class="home-section-head">
+    <h2 id="a-taste-of-whats-inside">A taste of what's inside<a href="#a-taste-of-whats-inside" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+    <p>Every concept is paired with a small, realistic example &mdash; like this one from the Asynchronous JavaScript section.</p>
+  </div>
+  <div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>async function getUser(id) {
+  const response = await fetch(`/api/users/${id}`);
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+  return response.json();
+}
+
+try {
+  const user = await getUser(42);
+  console.log(`Hello, ${user.name}!`);
+} catch (error) {
+  console.error("Could not load user:", error.message);
+}</code></pre></div>
+</section>
+
+<section class="home-cta">
+  <h2 id="ready-to-start">Ready to start?<a href="#ready-to-start" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+  <p>Begin with the big picture: what JavaScript is and how it fits into the web.</p>
+  <a class="btn btn-primary" href="docs/introduction.html">Read the Introduction &rarr;</a>
+</section>
+
+
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#why-this-guide-is-different" data-toc-link="why-this-guide-is-different">Why this guide is different</a></li><li class="toc-level-2"><a href="#the-learning-path" data-toc-link="the-learning-path">The learning path</a></li><li class="toc-level-2"><a href="#a-taste-of-whats-inside" data-toc-link="a-taste-of-whats-inside">A taste of what's inside</a></li><li class="toc-level-2"><a href="#ready-to-start" data-toc-link="ready-to-start">Ready to start?</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="assets/js/search-index.js"></script>
+<script src="assets/js/highlight.js"></script>
+<script src="assets/js/search.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

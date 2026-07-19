@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Working with JSON — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class=" active">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Working with Data</p>
+<h1>Working with JSON</h1>
+<p class="lede">JSON (JavaScript Object Notation) is a lightweight, text-based data format. It was inspired by JavaScript's object syntax, but it's language-independent — nearly every programming language can read and write it, which is exactly why it's the default format for APIs and config files.</p>
+
+<h2 id="what-json-looks-like">What JSON looks like<a href="#what-json-looks-like" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>JSON looks almost like a JavaScript object literal, but it's stricter:</p>
+<div class="code-block" data-lang="json"><div class="code-block-header"><span class="code-lang">JSON</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>{
+  "name": "Ava",
+  "age": 29,
+  "isAdmin": false,
+  "tags": ["admin", "editor"],
+  "address": {
+    "city": "Tokyo"
+  }
+}</code></pre></div>
+<p>The rules that make it stricter than a JS object literal:</p>
+<ul>
+  <li>Property names <strong>must</strong> be double-quoted strings — <code>name</code> alone or <code>'name'</code> is invalid.</li>
+  <li>No trailing commas after the last item.</li>
+  <li>No comments.</li>
+  <li>Values can only be: strings, numbers, booleans, <code>null</code>, arrays, or other JSON objects — no functions, no <code>undefined</code>, no <code>Symbol</code>.</li>
+</ul>
+
+<h2 id="jsonstringify-javascript-value-json-text">JSON.stringify — JavaScript value → JSON text<a href="#jsonstringify-javascript-value-json-text" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Use <code>JSON.stringify()</code> whenever you need to send a JavaScript value somewhere that only understands text — an HTTP request body, <code>localStorage</code>, a file.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const user = { name: "Ava", age: 29, isAdmin: false };
+
+JSON.stringify(user);
+// '{"name":"Ava","age":29,"isAdmin":false}'  &lt;- this is now a plain string</code></pre></div>
+<p>A third argument adds indentation, which is invaluable for logging or writing readable config files:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>JSON.stringify(user, null, 2);
+// {
+//   "name": "Ava",
+//   "age": 29,
+//   "isAdmin": false
+// }</code></pre></div>
+
+<h2 id="jsonparse-json-text-javascript-value">JSON.parse — JSON text → JavaScript value<a href="#jsonparse-json-text-javascript-value" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>The reverse operation: turn a JSON-formatted string back into a real, usable JavaScript object.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const raw = '{"name":"Ava","age":29}';
+const user = JSON.parse(raw);
+
+user.name; // "Ava" — a real object now, not a string</code></pre></div>
+<div class="admonition warning">
+  <p class="admonition-title">Warning</p>
+  <p><code>JSON.parse</code> throws a <code>SyntaxError</code> if the string isn't valid JSON — always wrap it in a <code>try</code>/<code>catch</code> when parsing data you don't fully control (like a server response or user input). See <a href="errors-debugging.html">Error Handling &amp; Debugging</a>.</p>
+</div>
+
+<h2 id="what-doesnt-survive-the-round-trip">What doesn't survive the round trip<a href="#what-doesnt-survive-the-round-trip" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Because JSON is a smaller format than JavaScript's full type system, some things are dropped or transformed silently by <code>JSON.stringify</code>:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const data = {
+  name: "Ava",
+  greet: function () { },   // functions are dropped entirely
+  missing: undefined,        // undefined properties are dropped entirely
+  when: new Date(),          // Date objects become ISO date strings
+  id: Symbol("id"),          // symbols are dropped entirely
+};
+
+JSON.stringify(data);
+// '{"name":"Ava","when":"2026-07-19T00:00:00.000Z"}'</code></pre></div>
+<p>This is worth remembering: if you serialize an object and parse it back, you get a <em>plain data</em> copy — no functions, no <code>Date</code> instances (just strings that look like dates), no class instances with their prototype intact (see <a href="prototypes.html">Prototypes &amp; Inheritance</a>).</p>
+
+<h2 id="a-common-use-case-persisting-data">A common use case: persisting data<a href="#a-common-use-case-persisting-data" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p><code>localStorage</code> can only store strings, so JSON is the standard way to save structured data in the browser:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const cart = [{ item: "Book", price: 15 }];
+
+localStorage.setItem("cart", JSON.stringify(cart));
+
+const restored = JSON.parse(localStorage.getItem("cart"));
+// restored is a real array again, equal in content to the original cart</code></pre></div>
+<p>This exact pattern — <code>stringify</code> to save, <code>parse</code> to restore — is covered in context in <a href="fetch-forms-storage.html">Fetch, Forms &amp; Storage</a>, alongside sending JSON to a server with <code>fetch</code>.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JSON is a text format for data — it looks like a JS object literal but requires double-quoted keys and allows only a limited set of value types.</li>
+    <li><code>JSON.stringify()</code> turns a JS value into a JSON string; <code>JSON.parse()</code> turns it back.</li>
+    <li>Functions, <code>undefined</code>, and symbols are silently dropped during <code>stringify</code>; <code>Date</code> objects become plain strings.</li>
+    <li>Always <code>try</code>/<code>catch</code> around <code>JSON.parse()</code> for data you don't fully trust — malformed JSON throws.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/destructuring-spread-rest.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">Destructuring, Spread &amp; Rest</span></a><a class="prev-next-link next" href="../docs/prototypes.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Prototypes &amp; Inheritance</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#what-json-looks-like" data-toc-link="what-json-looks-like">What JSON looks like</a></li><li class="toc-level-2"><a href="#jsonstringify-javascript-value-json-text" data-toc-link="jsonstringify-javascript-value-json-text">JSON.stringify — JavaScript value → JSON text</a></li><li class="toc-level-2"><a href="#jsonparse-json-text-javascript-value" data-toc-link="jsonparse-json-text-javascript-value">JSON.parse — JSON text → JavaScript value</a></li><li class="toc-level-2"><a href="#what-doesnt-survive-the-round-trip" data-toc-link="what-doesnt-survive-the-round-trip">What doesn't survive the round trip</a></li><li class="toc-level-2"><a href="#a-common-use-case-persisting-data" data-toc-link="a-common-use-case-persisting-data">A common use case: persisting data</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

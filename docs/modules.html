@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modules — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class=" active">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Modern JavaScript (ES6+)</p>
+<h1>Modules</h1>
+<p class="lede">As a project grows past one script file, you need a way to split code up while still letting different files share functions and values safely. ES6 modules are the standardized answer, replacing a decade of ad-hoc workarounds.</p>
+
+<h2 id="the-problem-one-shared-global-scope">The problem: one shared global scope<a href="#the-problem-one-shared-global-scope" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Before modules, every <code>&lt;script&gt;</code> tag on a page shared one single global scope. Two scripts that happened to declare a variable with the same name would silently clash and overwrite each other.</p>
+<div class="code-block" data-lang="html"><div class="code-block-header"><span class="code-lang">HTML</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>&lt;script src="a.js"&gt;&lt;/script&gt;
+&lt;script src="b.js"&gt;&lt;/script&gt;</code></pre></div>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// a.js
+var user = "Ava";
+
+// b.js
+var user = "Noah"; // silently overwrites a.js's variable — same global scope</code></pre></div>
+<p>Modules fix this by giving <strong>every file its own scope</strong>. Nothing is shared between files unless it's explicitly exported and imported.</p>
+
+<h2 id="exporting">Exporting<a href="#exporting" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>A module shares values using <code>export</code>. A file can have any number of <strong>named exports</strong>, plus at most one <strong>default export</strong>.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// math.js
+export const PI = 3.14159;
+
+export function add(a, b) {
+  return a + b;
+}
+
+export default function multiply(a, b) {  // the default export
+  return a * b;
+}</code></pre></div>
+
+<h2 id="importing">Importing<a href="#importing" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// app.js
+import multiply, { PI, add } from "./math.js";
+
+add(2, 3);       // 5
+multiply(2, 3);   // 6
+PI;               // 3.14159</code></pre></div>
+<p>Named exports are imported with <code>{ }</code> and must match the exported name exactly (though they can be renamed — see below). A default export is imported without braces, and the importing file can call it whatever it wants.</p>
+
+<h2 id="using-modules-in-the-browser">Using modules in the browser<a href="#using-modules-in-the-browser" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Add <code>type="module"</code> to your script tag to opt into module behavior:</p>
+<div class="code-block" data-lang="html"><div class="code-block-header"><span class="code-lang">HTML</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>&lt;script type="module" src="app.js"&gt;&lt;/script&gt;</code></pre></div>
+<p>Module scripts get a few automatic behaviors worth knowing:</p>
+<ul>
+  <li>They always run in strict mode.</li>
+  <li>They're deferred automatically — no need for the <code>defer</code> attribute (see <a href="getting-started.html">Your First Script</a>).</li>
+  <li>Top-level <code>await</code> is allowed directly in a module, outside any <code>async</code> function.</li>
+  <li>They must be served over <code>http(s)://</code> — opening an HTML file directly from disk (<code>file://</code>) will block module imports due to browser security restrictions. Use a local server (or just deploy — GitHub Pages serves everything over https).</li>
+</ul>
+
+<h2 id="renaming-on-import-or-export">Renaming on import or export<a href="#renaming-on-import-or-export" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Use <code>as</code> to rename something, which is handy for avoiding naming collisions between files:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>export { add as sum };
+
+import { sum as addNumbers } from "./math.js";
+addNumbers(2, 3); // 5</code></pre></div>
+
+<h2 id="importing-everything-as-a-namespace">Importing everything as a namespace<a href="#importing-everything-as-a-namespace" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>import * as MathUtils from "./math.js";
+
+MathUtils.add(2, 3);
+MathUtils.PI;</code></pre></div>
+
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Prefer named exports for most things — they make it clear at the import line exactly what a file provides, and tools can catch typos. Reserve a default export for a file that has one obvious "main" thing to offer, like a single class or component.</p>
+</div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>Each module file has its own scope — nothing leaks into the global scope unless explicitly exported and imported.</li>
+    <li><code>export</code>/<code>export default</code> share values; <code>import</code> brings them into another file, optionally renamed with <code>as</code>.</li>
+    <li>Browser module scripts (<code>type="module"</code>) are strict-mode and deferred by default, and require serving over http(s), not opened directly from disk.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/fetch-forms-storage.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">Fetch, Forms &amp; Storage</span></a><a class="prev-next-link next" href="../docs/iterators-generators-collections.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Iterators, Generators &amp; Collections</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#the-problem-one-shared-global-scope" data-toc-link="the-problem-one-shared-global-scope">The problem: one shared global scope</a></li><li class="toc-level-2"><a href="#exporting" data-toc-link="exporting">Exporting</a></li><li class="toc-level-2"><a href="#importing" data-toc-link="importing">Importing</a></li><li class="toc-level-2"><a href="#using-modules-in-the-browser" data-toc-link="using-modules-in-the-browser">Using modules in the browser</a></li><li class="toc-level-2"><a href="#renaming-on-import-or-export" data-toc-link="renaming-on-import-or-export">Renaming on import or export</a></li><li class="toc-level-2"><a href="#importing-everything-as-a-namespace" data-toc-link="importing-everything-as-a-namespace">Importing everything as a namespace</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<p class="page-kicker">Get Started</p>
+<h1>Introduction</h1>
+<p class="lede">Before you write a single line of code, it helps to know what JavaScript actually is, where it runs, and why it behaves the way it does. This page gives you that big picture — every later chapter builds on it.</p>
+
+<h2>What is JavaScript?</h2>
+<p>JavaScript is a programming language originally built to make web pages interactive. It was created in 1995 by Brendan Eich at Netscape — reportedly in about ten days — and has since grown into one of the most widely used programming languages in the world.</p>
+<p>Today JavaScript is no longer just "the scripting language in web pages." It runs:</p>
+<ul>
+  <li><strong>In the browser</strong>, where it can change what's on the page, react to clicks, talk to servers, and build entire applications (Gmail, Figma, and Google Docs are all JavaScript apps at their core).</li>
+  <li><strong>On servers</strong>, via runtimes like <strong>Node.js</strong> or <strong>Deno</strong>, which let you use JavaScript to build APIs, command-line tools, and backend services.</li>
+  <li><strong>Almost everywhere else</strong> — mobile apps (React Native), desktop apps (Electron), even on microcontrollers.</li>
+</ul>
+<p>This guide focuses on the language itself and how it's used in the browser, since that's where nearly every JavaScript developer starts.</p>
+
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>JavaScript has almost nothing to do with Java. The name was a marketing decision by Netscape in the 90s, when Java was popular. They are unrelated languages with different design goals.</p>
+</div>
+
+<h2>JavaScript and ECMAScript</h2>
+<p>The language itself is standardized under the name <strong>ECMAScript (ES)</strong>. "JavaScript" is the popular name for implementations of that standard. You'll see version names like <strong>ES5</strong> and <strong>ES6</strong> (also called <strong>ES2015</strong>) thrown around a lot — here's what they mean in practice:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Version</th><th>Year</th><th>Why it matters</th></tr></thead>
+  <tbody>
+    <tr><td>ES5</td><td>2009</td><td>The baseline nearly every browser supports: <code>Array.prototype.map</code>, strict mode, JSON support.</td></tr>
+    <tr><td>ES6 / ES2015</td><td>2015</td><td>The big one: <code>let</code>/<code>const</code>, classes, arrow functions, promises, modules, template literals.</td></tr>
+    <tr><td>ES2016&ndash;ES2026</td><td>yearly</td><td>Smaller, focused additions each year — <code>async</code>/<code>await</code>, optional chaining, top-level <code>await</code>, and more.</td></tr>
+  </tbody>
+</table>
+</div>
+<p>You don't need to memorize version numbers. This guide teaches modern JavaScript as one continuous language and calls out which features are relatively new when it matters.</p>
+
+<h2>How JavaScript actually runs</h2>
+<p>When you write JavaScript, you're not writing machine code directly — you're writing instructions for a <strong>JavaScript engine</strong>: a program that reads your code and executes it. Every browser ships one:</p>
+<ul>
+  <li><strong>V8</strong> &mdash; Chrome, Edge, and Node.js</li>
+  <li><strong>SpiderMonkey</strong> &mdash; Firefox</li>
+  <li><strong>JavaScriptCore</strong> &mdash; Safari</li>
+</ul>
+<p>These engines use <strong>Just-In-Time (JIT) compilation</strong>: they compile your code to machine code right before running it, rather than ahead of time like C++ or purely interpreting it line-by-line like an old-school scripting language. That's why modern JavaScript is fast enough to build entire applications with — it's a hybrid of "interpreted" and "compiled."</p>
+<p>Every engine also gives JavaScript a <strong>single call stack</strong> — it does one thing at a time — plus extra machinery (a task queue, an event loop) to handle things that take time, like network requests, without freezing everything else. That model is central enough that it gets its own chapter later: <a href="event-loop.html">The Event Loop</a>.</p>
+
+<h2>What makes JavaScript, JavaScript</h2>
+<p>A handful of design decisions show up again and again throughout this guide. Knowing them now will make later chapters click faster:</p>
+<ul>
+  <li><strong>Dynamically typed.</strong> A variable can hold a number today and a string tomorrow — the type lives on the value, not the variable. See <a href="variables-data-types.html">Variables &amp; Data Types</a>.</li>
+  <li><strong>Functions are first-class values.</strong> You can store a function in a variable, pass it into another function, or return it from one — this single idea powers callbacks, promises, and most of modern JS. See <a href="functions.html">Functions</a>.</li>
+  <li><strong>Objects use prototypes, not classical classes.</strong> Even the <code>class</code> keyword is a friendlier syntax over this underlying model. See <a href="prototypes.html">Prototypes &amp; Inheritance</a>.</li>
+  <li><strong>Single-threaded, but asynchronous.</strong> JavaScript runs one instruction at a time, yet handles timers, network calls, and user input without blocking, using the event loop.</li>
+</ul>
+
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Don't worry about fully understanding all four ideas right now — they're previews. Each one gets a full, dedicated explanation later in this guide.</p>
+</div>
+
+<h2>How to use this guide</h2>
+<p>A few conventions you'll see on every page:</p>
+<ul>
+  <li>Code blocks have a <strong>Copy</strong> button and a language label — paste them straight into your browser console or a file.</li>
+  <li><strong>Key Takeaways</strong> boxes close out every page with a quick summary you can scan later.</li>
+  <li>Colored callouts (like the ones above) flag notes, tips, warnings, and pitfalls.</li>
+  <li>The right-hand panel is a table of contents for the current page; the left panel is the full course, grouped by section. Press <kbd>/</kbd> anywhere to search.</li>
+</ul>
+<p>Pages are ordered as a path: Get Started → Language Basics → Scope &amp; Closures → Working with Data → Object-Oriented JS → Asynchronous JS → Browser APIs → Modern JS → Errors → Advanced Topics → Ecosystem. Follow it top to bottom for a full course, or use search/sidebar to jump around.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JavaScript began as a browser scripting language and is now used on servers, mobile, and desktop too.</li>
+    <li>"ECMAScript" is the language standard; "JavaScript" is its most common implementation.</li>
+    <li>A JavaScript engine (V8, SpiderMonkey, JavaScriptCore) JIT-compiles your code — a hybrid between interpreted and compiled execution.</li>
+    <li>JavaScript is dynamically typed, treats functions as values, uses prototypes for inheritance, and runs on a single thread with an event loop for async work.</li>
+  </ul>
+</div>

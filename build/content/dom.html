@@ -1,0 +1,109 @@
+<p class="page-kicker">Browser &amp; Web APIs</p>
+<h1>The DOM</h1>
+<p class="lede">The DOM (Document Object Model) is the browser's live, in-memory representation of your HTML page — and it's what JavaScript actually manipulates when it changes what a user sees. This page is where "the language" meets "the browser."</p>
+
+<h2>The DOM is a tree</h2>
+<p>The browser parses your HTML and builds a tree of <strong>node</strong> objects — one for the document itself, one for each element, and more for text and attributes. Every element node has a parent, and can have children, mirroring the nesting of your HTML.</p>
+[[code lang="html"]]
+<body>
+  <h1>Title</h1>
+  <p>Some <strong>text</strong>.</p>
+</body>
+[[/code]]
+<p>...becomes a tree: <code>body</code> has two children, <code>h1</code> and <code>p</code>; <code>p</code> itself has two children, a text node and a <code>strong</code> element. JavaScript's job is to read and rewrite this tree — the browser re-renders the page automatically whenever it changes.</p>
+
+<h2>Selecting elements</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>Returns</th></tr></thead>
+  <tbody>
+    <tr><td><code>document.getElementById("id")</code></td><td>A single element, or <code>null</code>.</td></tr>
+    <tr><td><code>document.querySelector("css-selector")</code></td><td>The first matching element, or <code>null</code>.</td></tr>
+    <tr><td><code>document.querySelectorAll("css-selector")</code></td><td>A static list (<code>NodeList</code>) of every match.</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+const title = document.getElementById("main-title");
+const firstButton = document.querySelector(".btn");
+const allButtons = document.querySelectorAll(".btn");
+
+allButtons.forEach(btn => console.log(btn.textContent));
+[[/code]]
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p><code>querySelector</code>/<code>querySelectorAll</code> accept any real CSS selector — <code>".card > h2"</code>, <code>"#form input[type='email']"</code>, and so on. Learn CSS selectors once and reuse that knowledge here.</p>
+</div>
+
+<h2>Reading and changing content</h2>
+[[code lang="js"]]
+const el = document.querySelector("#greeting");
+
+el.textContent;             // reads all text inside, ignoring any HTML tags
+el.textContent = "Hello!";  // replaces the content with plain text (safe)
+
+el.innerHTML;                // reads the content AS an HTML string
+el.innerHTML = "<b>Hi!</b>"; // parses the string and inserts real elements
+[[/code]]
+<div class="admonition danger">
+  <p class="admonition-title">Danger</p>
+  <p>Never set <code>innerHTML</code> using text that came from a user or an external source without sanitizing it first — it will parse and execute any <code>&lt;script&gt;</code> or event-handler attributes it contains. This is the most common source of <strong>XSS (Cross-Site Scripting)</strong> vulnerabilities. If you're just inserting text, use <code>textContent</code> instead — it's both safer and usually what you meant.</p>
+</div>
+
+<h2>Changing styles and classes</h2>
+[[code lang="js"]]
+const box = document.querySelector(".box");
+
+box.style.backgroundColor = "tomato"; // inline style — fine for one-off tweaks
+box.style.display = "none";
+
+box.classList.add("active");     // preferred: toggle CSS classes, not inline styles
+box.classList.remove("hidden");
+box.classList.toggle("open");     // adds it if absent, removes it if present
+box.classList.contains("active"); // true
+[[/code]]
+<p>Prefer <code>classList</code> over direct <code>style</code> edits for anything beyond a quick one-off change — it keeps your visual states defined in CSS, where they're easier to see and maintain.</p>
+
+<h2>Creating and removing elements</h2>
+[[code lang="js"]]
+const list = document.querySelector("#todo-list");
+
+const item = document.createElement("li");
+item.textContent = "Buy milk";
+list.append(item); // adds it as the last child
+
+item.remove(); // removes it from the DOM entirely
+[[/code]]
+
+<h2>Traversing the tree</h2>
+[[code lang="js"]]
+const item = document.querySelector("li");
+
+item.parentElement;       // the <ul> or <ol> containing it
+item.children;             // its own child elements
+item.nextElementSibling;   // the next <li>, if any
+item.previousElementSibling;
+[[/code]]
+
+<h2>Attributes and data-* attributes</h2>
+[[code lang="js"]]
+const link = document.querySelector("a");
+
+link.getAttribute("href");
+link.setAttribute("href", "/new-page");
+
+// data-* attributes are made for storing custom data on an element
+// <button data-user-id="42">Delete</button>
+const button = document.querySelector("button");
+button.dataset.userId; // "42" — camelCased automatically from "data-user-id"
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>The DOM is a live tree of node objects the browser builds from your HTML; JavaScript reads and rewrites it to change the page.</li>
+    <li><code>querySelector</code>/<code>querySelectorAll</code> accept full CSS selectors and are the most flexible way to find elements.</li>
+    <li>Use <code>textContent</code> for plain text and <code>classList</code> for styling; avoid <code>innerHTML</code> with untrusted input — it's a common XSS vector.</li>
+    <li><code>createElement</code> + <code>append</code> build new elements; <code>.remove()</code> takes them back out.</li>
+  </ul>
+</div>

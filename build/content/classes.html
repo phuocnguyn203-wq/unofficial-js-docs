@@ -1,0 +1,154 @@
+<p class="page-kicker">Object-Oriented JS</p>
+<h1>Classes</h1>
+<p class="lede">ES6 introduced the class keyword as a cleaner, more familiar syntax for the constructor-function-plus-prototype pattern from the previous chapter. If you've used classes in another language, most of this will look immediately familiar — with a few JavaScript-specific twists.</p>
+
+<h2>Defining a class</h2>
+[[code lang="js"]]
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  greet() {
+    console.log(`Hi, I'm ${this.name} and I'm ${this.age}.`);
+  }
+}
+
+const ava = new Person("Ava", 29);
+ava.greet(); // "Hi, I'm Ava and I'm 29."
+[[/code]]
+<p>The <code>constructor</code> method runs automatically when you call <code>new Person(...)</code> — it's where you set up the instance's own properties. Every other method (like <code>greet</code>) is added to <code>Person.prototype</code>, shared by every instance, exactly as in the previous chapter.</p>
+
+<h2>Inheritance with extends and super</h2>
+<p><code>extends</code> creates a subclass that inherits everything from a parent class. Inside a subclass's constructor, <code>super(...)</code> calls the parent's constructor and must run before you can use <code>this</code>.</p>
+[[code lang="js"]]
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  speak() {
+    console.log(`${this.name} makes a sound.`);
+  }
+}
+
+class Dog extends Animal {
+  constructor(name, breed) {
+    super(name); // must be called before using `this` below
+    this.breed = breed;
+  }
+  speak() {
+    super.speak();               // call the parent's version too
+    console.log(`${this.name} barks.`);
+  }
+}
+
+const rex = new Dog("Rex", "Labrador");
+rex.speak();
+// "Rex makes a sound."
+// "Rex barks."
+
+rex instanceof Dog;    // true
+rex instanceof Animal; // true — Dog's prototype chain includes Animal
+[[/code]]
+
+<h2>Static members</h2>
+<p><code>static</code> methods and properties belong to the class itself, not to individual instances — useful for utility functions related to the class, or factory methods.</p>
+[[code lang="js"]]
+class Circle {
+  static PI = 3.14159;
+
+  static fromDiameter(diameter) {
+    return new Circle(diameter / 2);
+  }
+
+  constructor(radius) {
+    this.radius = radius;
+  }
+
+  area() {
+    return Circle.PI * this.radius ** 2;
+  }
+}
+
+Circle.PI;                    // 3.14159 — accessed on the class, not an instance
+const c = Circle.fromDiameter(10);
+c.area();                      // 78.53975
+[[/code]]
+
+<h2>Getters and setters</h2>
+<p>Define methods that act like properties — useful for computed values or validation on write.</p>
+[[code lang="js"]]
+class Rectangle {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
+  }
+
+  get area() {
+    return this.width * this.height;
+  }
+
+  set width(value) {
+    if (value <= 0) throw new Error("Width must be positive");
+    this._width = value;
+  }
+  get width() {
+    return this._width;
+  }
+}
+
+const rect = new Rectangle(4, 5);
+rect.area;   // 20 — called like a property, no parentheses
+[[/code]]
+
+<h2>Private fields</h2>
+<p>Fields prefixed with <code>#</code> are truly private — accessible only from inside the class body, not from outside code, and not even visible via <code>Object.keys()</code>. This is a real language feature (unlike the closure-based privacy from the earlier <a href="closures.html">Closures</a> chapter).</p>
+[[code lang="js"]]
+class BankAccount {
+  #balance; // private field declaration
+
+  constructor(initialBalance) {
+    this.#balance = initialBalance;
+  }
+
+  deposit(amount) {
+    this.#balance += amount;
+    return this.#balance;
+  }
+
+  get balance() {
+    return this.#balance;
+  }
+}
+
+const account = new BankAccount(100);
+account.deposit(50);
+account.balance;    // 150
+account.#balance;   // SyntaxError — #balance isn't accessible outside the class
+[[/code]]
+
+<h2>Classes are always strict mode, and never hoisted like functions</h2>
+<p>Class bodies run in strict mode automatically, and unlike function declarations, classes are <strong>not</strong> usable before their declaration line (they sit in the temporal dead zone, same as <code>let</code>/<code>const</code> — see <a href="scope-hoisting.html">Scope &amp; Hoisting</a>).</p>
+[[code lang="js"]]
+new Person("Ava"); // ReferenceError: Cannot access 'Person' before initialization
+
+class Person {
+  constructor(name) { this.name = name; }
+}
+[[/code]]
+
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Everything here is still built on prototypes underneath. If <code>super</code>, <code>instanceof</code>, or method sharing ever feels surprising, re-reading <a href="prototypes.html">Prototypes &amp; Inheritance</a> usually clears it up — <code>class</code> doesn't add a new object model, just a cleaner syntax for the same one.</p>
+</div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li><code>class</code> defines a <code>constructor</code> for instance setup, plus methods that are automatically shared via the prototype.</li>
+    <li><code>extends</code> sets up inheritance; <code>super(...)</code> calls the parent constructor and must run before <code>this</code> is used.</li>
+    <li><code>static</code> members belong to the class itself; getters/setters let methods act like properties.</li>
+    <li>Fields prefixed with <code>#</code> are genuinely private — inaccessible from outside the class, unlike regular properties.</li>
+  </ul>
+</div>

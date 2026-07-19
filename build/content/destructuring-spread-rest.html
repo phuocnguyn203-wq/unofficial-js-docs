@@ -1,0 +1,104 @@
+<p class="page-kicker">Working with Data</p>
+<h1>Destructuring, Spread &amp; Rest</h1>
+<p class="lede">Three closely related ES6 features that all revolve around one goal: pulling data apart or putting it together with less boilerplate. They show up constantly in modern JavaScript, including in most of the code examples elsewhere in this guide.</p>
+
+<h2>Array destructuring</h2>
+<p>Unpack array values into named variables, positionally.</p>
+[[code lang="js"]]
+const coordinates = [10, 20, 30];
+const [x, y, z] = coordinates;
+// x = 10, y = 20, z = 30
+
+const [first, , third] = coordinates; // skip an item with an empty slot
+// first = 10, third = 30
+
+const [a = 100, b = 100] = [5];
+// a = 5 (provided), b = 100 (default, since [5] has no second item)
+[[/code]]
+<p>A famous one-liner this enables: swapping two variables without a temporary one.</p>
+[[code lang="js"]]
+let m = 1;
+let n = 2;
+[m, n] = [n, m];
+// m = 2, n = 1
+[[/code]]
+
+<h2>Object destructuring</h2>
+<p>Unpack object properties into variables, by name instead of position.</p>
+[[code lang="js"]]
+const user = { name: "Ava", age: 29, city: "Tokyo" };
+
+const { name, age } = user;
+// name = "Ava", age = 29
+
+const { name: fullName } = user;    // rename while destructuring
+// fullName = "Ava"
+
+const { country = "Unknown" } = user; // default value for a missing key
+// country = "Unknown"
+[[/code]]
+<p>Destructuring can also go deep into nested objects in a single expression:</p>
+[[code lang="js"]]
+const response = {
+  data: {
+    user: { name: "Ava", role: "admin" },
+  },
+};
+
+const { data: { user: { name, role } } } = response;
+// name = "Ava", role = "admin"
+[[/code]]
+
+<h2>Destructuring in function parameters</h2>
+<p>This is one of the most common places you'll see destructuring — it turns a "big options object" into named, self-documenting parameters.</p>
+[[code lang="js"]]
+function createUser({ name, age, isAdmin = false }) {
+  console.log(`${name}, age ${age}, admin: ${isAdmin}`);
+}
+
+createUser({ name: "Ava", age: 29 });
+// "Ava, age 29, admin: false"
+[[/code]]
+<p>Callers don't need to remember argument order, and the function signature itself documents exactly what fields it expects.</p>
+
+<h2>The spread operator (...)</h2>
+<p><code>...</code> expands an iterable (array, string) or an object's own properties into individual elements. You've already seen it copy and merge objects in <a href="objects.html">Objects Deep Dive</a> — it works the same way for arrays.</p>
+[[code lang="js"]]
+const nums = [1, 2, 3];
+const moreNums = [...nums, 4, 5]; // [1, 2, 3, 4, 5] — a new array
+
+const combined = [...nums, ...[4, 5]]; // merge two arrays
+
+Math.max(...nums); // 3 — spread an array into individual function arguments
+[[/code]]
+[[code lang="js"]]
+const defaults = { theme: "dark" };
+const overrides = { fontSize: 16 };
+const settings = { ...defaults, ...overrides }; // { theme: "dark", fontSize: 16 }
+[[/code]]
+
+<h2>The rest pattern (...)</h2>
+<p>Confusingly, the exact same <code>...</code> syntax means the <em>opposite</em> thing depending on where it appears: instead of expanding values, it <strong>gathers</strong> the leftover ones into a new array or object.</p>
+[[code lang="js"]]
+const [first, ...rest] = [1, 2, 3, 4];
+// first = 1, rest = [2, 3, 4]
+
+const { name, ...otherFields } = { name: "Ava", age: 29, city: "Tokyo" };
+// name = "Ava", otherFields = { age: 29, city: "Tokyo" }
+[[/code]]
+<p>The rule of thumb: on the <strong>right</strong> side of an assignment (or in a function call), <code>...</code> is <strong>spread</strong> — it expands. On the <strong>left</strong> side (destructuring) or in a function's parameter list, <code>...</code> is <strong>rest</strong> — it gathers. Rest parameters in function definitions work exactly like the rest pattern here — see <a href="functions.html">Functions</a> for that use case.</p>
+
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Spread and rest use identical syntax on purpose — they're the same underlying idea (a list of values ↔ many individual values) applied in opposite directions. Once that clicks, the syntax stops feeling like two separate features to memorize.</p>
+</div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>Array destructuring unpacks by position; object destructuring unpacks by key name — both support defaults and renaming.</li>
+    <li>Destructuring function parameters turns an options object into clear, self-documenting named parameters.</li>
+    <li>Spread (<code>...</code>) expands an array/object into individual values — used to copy, merge, or pass many arguments at once.</li>
+    <li>Rest (<code>...</code>) gathers remaining values into a new array or object — the mirror image of spread.</li>
+  </ul>
+</div>

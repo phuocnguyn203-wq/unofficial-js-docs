@@ -1,0 +1,116 @@
+<p class="page-kicker">Asynchronous JavaScript</p>
+<h1>Async/Await</h1>
+<p class="lede">async/await, added in ES2017, is syntax sugar over promises that lets asynchronous code read almost exactly like synchronous code — no <code>.then()</code> chains required. Underneath, it's still promises all the way down.</p>
+
+<h2>The async keyword</h2>
+<p>Adding <code>async</code> before a function declaration does two things: it lets you use <code>await</code> inside the function, and it makes the function <strong>always return a promise</strong>, even if you just <code>return</code> a plain value.</p>
+[[code lang="js"]]
+async function getGreeting() {
+  return "Hello!";
+}
+
+getGreeting(); // a Promise, not the string directly
+getGreeting().then(msg => console.log(msg)); // "Hello!"
+[[/code]]
+
+<h2>The await keyword</h2>
+<p><code>await</code> pauses execution of the <em>current async function</em> (not the whole program) until the promise to its right settles, then unwraps the result. If the promise rejects, <code>await</code> throws — which is what makes <code>try</code>/<code>catch</code> work naturally with it.</p>
+[[code lang="js"]]
+async function getUser(id) {
+  const response = await fetch(`/api/users/${id}`);
+  const user = await response.json();
+  return user;
+}
+[[/code]]
+<p>Compare this directly to the promise-chain version of the same logic:</p>
+[[code lang="js"]]
+// Promise chain
+function getUser(id) {
+  return fetch(`/api/users/${id}`)
+    .then(response => response.json())
+    .then(user => user);
+}
+
+// async/await — same behavior, reads top to bottom
+async function getUser(id) {
+  const response = await fetch(`/api/users/${id}`);
+  return await response.json();
+}
+[[/code]]
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p><code>await</code> can only be used inside a function marked <code>async</code> (modern JavaScript modules also allow "top-level await" directly at the top of a module file). Using it elsewhere is a syntax error.</p>
+</div>
+
+<h2>Error handling: try/catch</h2>
+<p>Because a rejected <code>await</code> throws, you handle async errors with the exact same <code>try</code>/<code>catch</code> you'd use for synchronous code (see <a href="errors-debugging.html">Error Handling &amp; Debugging</a>) — no special async-only syntax to learn.</p>
+[[code lang="js"]]
+async function getUser(id) {
+  try {
+    const response = await fetch(`/api/users/${id}`);
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Could not load user:", error.message);
+    return null;
+  }
+}
+[[/code]]
+
+<h2>A common pitfall: accidentally serial awaits</h2>
+<p>Every <code>await</code> pauses the function until that specific promise resolves. If you <code>await</code> three independent requests one after another, you needlessly force them to run in sequence instead of in parallel.</p>
+[[code lang="js"]]
+// Slow — each request waits for the previous one to finish first
+async function loadAll() {
+  const user = await fetchUser();       // waits ~1s
+  const posts = await fetchPosts();     // then waits another ~1s
+  const comments = await fetchComments(); // then another ~1s
+  return { user, posts, comments };     // total: ~3s
+}
+[[/code]]
+<p>If the three requests don't actually depend on each other, start them all at once and only <code>await</code> the combined result with <code>Promise.all()</code> (see <a href="callbacks-promises.html">Callbacks &amp; Promises</a>):</p>
+[[code lang="js"]]
+// Fast — all three requests fire immediately, running in parallel
+async function loadAll() {
+  const [user, posts, comments] = await Promise.all([
+    fetchUser(),
+    fetchPosts(),
+    fetchComments(),
+  ]);
+  return { user, posts, comments }; // total: ~1s, limited by the slowest request
+}
+[[/code]]
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Only await sequentially when a later request genuinely needs data from an earlier one (like fetching posts that require a user ID first). Otherwise, kick off independent requests together and await them as a group.</p>
+</div>
+
+<h2>It's still promises underneath</h2>
+<p>async/await doesn't introduce a new concurrency model — it's parsed into the same promise machinery from the previous two chapters. That means everything you learned about the event loop still applies: an <code>await</code> point yields control back to the event loop and resumes as a microtask once its promise settles.</p>
+[[code lang="js"]]
+console.log("1: start");
+
+async function delayedLog() {
+  await null; // even awaiting a non-promise value yields once, as a microtask
+  console.log("3: after await");
+}
+
+delayedLog();
+console.log("2: sync code after calling delayedLog");
+
+// "1: start"
+// "2: sync code after calling delayedLog"
+// "3: after await"
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>An <code>async</code> function always returns a promise; <code>await</code> pauses that function (not the whole program) until a promise settles.</li>
+    <li><code>await</code>ing a rejected promise throws, so ordinary <code>try</code>/<code>catch</code> handles async errors.</li>
+    <li>Sequential <code>await</code>s on independent operations waste time — start them together and <code>await Promise.all(...)</code> instead.</li>
+    <li>async/await is syntax sugar over promises; the event loop and microtask rules from the previous chapters still apply underneath.</li>
+  </ul>
+</div>

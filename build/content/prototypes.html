@@ -1,0 +1,94 @@
+<p class="page-kicker">Object-Oriented JS</p>
+<h1>Prototypes &amp; Inheritance</h1>
+<p class="lede">Underneath the friendly class syntax you'll usually write, JavaScript's object model works completely differently from Java or C++. Objects don't inherit from classes — they link directly to other objects. This is prototypal inheritance, and understanding it demystifies a lot of "why does JavaScript do that?" moments.</p>
+
+<h2>Every object has a prototype</h2>
+<p>Almost every object in JavaScript has an internal link to another object, called its <strong>prototype</strong>. When you access a property, and it's not found directly on the object, JavaScript automatically checks the prototype — and then <em>its</em> prototype, and so on, until it finds the property or runs out of prototypes.</p>
+[[code lang="js"]]
+const animal = {
+  eats: true,
+  walk() {
+    console.log("Animal walks");
+  },
+};
+
+const rabbit = Object.create(animal); // rabbit's prototype is `animal`
+rabbit.jumps = true;
+
+rabbit.jumps; // true — own property
+rabbit.eats;  // true — not on rabbit itself; found on its prototype, `animal`
+rabbit.walk(); // "Animal walks" — methods are inherited the same way
+[[/code]]
+<p>This chain of "if not found here, check the prototype" is called the <strong>prototype chain</strong> — it's the exact same lookup idea as the scope chain (see <a href="scope-hoisting.html">Scope &amp; Hoisting</a>), just for object properties instead of variables.</p>
+
+<h2>Where the chain ends</h2>
+<p>Every plain object's prototype chain eventually reaches <code>Object.prototype</code>, which is where common methods like <code>.toString()</code> or <code>.hasOwnProperty()</code> actually live — not duplicated on every single object.</p>
+[[code lang="js"]]
+const obj = {};
+obj.toString(); // "[object Object]" — inherited from Object.prototype
+
+Object.getPrototypeOf(obj) === Object.prototype; // true
+Object.getPrototypeOf(Object.prototype);          // null — the chain ends here
+[[/code]]
+
+<h2>Constructor functions</h2>
+<p>Before the <code>class</code> keyword existed (and still, underneath it today), JavaScript created many similar objects using a regular function called with <code>new</code>, plus a shared <code>.prototype</code> object for methods.</p>
+[[code lang="js"]]
+function Person(name) {
+  this.name = name; // own property, unique to each instance
+}
+
+// Shared across every instance — added once, used everywhere
+Person.prototype.greet = function () {
+  console.log(`Hi, I'm ${this.name}`);
+};
+
+const ava = new Person("Ava");
+const noah = new Person("Noah");
+
+ava.greet();  // "Hi, I'm Ava"
+noah.greet(); // "Hi, I'm Noah"
+
+ava.greet === noah.greet; // true — it's the exact same function, shared via the prototype
+[[/code]]
+<p>This sharing is the whole point: instead of every object carrying its own copy of every method (wasting memory), all instances share one set of methods through the prototype, and only keep their own unique data (like <code>name</code>) directly on themselves.</p>
+<p>Calling a function with <code>new</code> does four things automatically: creates a new empty object, sets that object's prototype to the constructor's <code>.prototype</code>, sets <code>this</code> to the new object for the duration of the function (see <a href="this-keyword.html">The this Keyword</a>), and returns the new object.</p>
+
+<h2>instanceof</h2>
+<p><code>instanceof</code> checks whether an object's prototype chain includes a given constructor's <code>.prototype</code>:</p>
+[[code lang="js"]]
+ava instanceof Person; // true
+ava instanceof Object;  // true — Person.prototype itself inherits from Object.prototype
+[[/code]]
+
+<h2>Why this matters even though you'll mostly write class</h2>
+<p>Modern JavaScript almost always uses the <code>class</code> keyword (next chapter) instead of hand-writing constructor functions. But <code>class</code> is <strong>syntax sugar</strong> — under the hood, it does exactly what's described on this page: a constructor function plus a shared prototype object for methods.</p>
+[[code lang="js"]]
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+  greet() {
+    console.log(`Hi, I'm ${this.name}`);
+  }
+}
+
+typeof Person;                       // "function" — classes are functions underneath
+Person.prototype.greet;               // the exact greet method, living on the prototype
+[[/code]]
+<p>Knowing this makes class behavior — like why methods are shared across instances, or what <code>instanceof</code> actually checks — predictable instead of magical.</p>
+
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>You may see <code>obj.__proto__</code> used to read or set a prototype directly. It works, but it's a legacy accessor — prefer <code>Object.getPrototypeOf(obj)</code> and <code>Object.create(proto)</code> in real code.</p>
+</div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JavaScript objects link to other objects via a prototype; missing properties are looked up along this prototype chain.</li>
+    <li>The chain for plain objects ends at <code>Object.prototype</code>, which is where inherited methods like <code>.toString()</code> live.</li>
+    <li>Constructor functions plus a shared <code>.prototype</code> object let many instances share methods without duplicating them.</li>
+    <li>The <code>class</code> keyword is syntax sugar over exactly this mechanism — not a different object model.</li>
+  </ul>
+</div>

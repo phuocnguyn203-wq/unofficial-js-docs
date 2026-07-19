@@ -1,0 +1,116 @@
+<p class="page-kicker">Advanced Topics</p>
+<h1>Regular Expressions</h1>
+<p class="lede">A regular expression (regex) is a pattern for matching text — validating an email's shape, finding every number in a string, replacing all occurrences of a word. This page covers enough to read and write the regexes you'll actually run into.</p>
+
+<h2>Creating a regex</h2>
+[[code lang="js"]]
+const pattern1 = /hello/;         // literal syntax — most common
+const pattern2 = new RegExp("hello"); // constructor — useful when built from a variable
+
+const dynamic = new RegExp(userInput); // only real use case for the constructor form
+[[/code]]
+
+<h2>The building blocks</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Pattern</th><th>Matches</th></tr></thead>
+  <tbody>
+    <tr><td><code>\d</code></td><td>Any digit (0-9)</td></tr>
+    <tr><td><code>\w</code></td><td>Any word character (letters, digits, underscore)</td></tr>
+    <tr><td><code>\s</code></td><td>Any whitespace (space, tab, newline)</td></tr>
+    <tr><td><code>.</code></td><td>Any single character except a newline</td></tr>
+    <tr><td><code>^</code></td><td>The start of the string (or line, with the <code>m</code> flag)</td></tr>
+    <tr><td><code>$</code></td><td>The end of the string (or line, with the <code>m</code> flag)</td></tr>
+    <tr><td><code>[abc]</code></td><td>Any one of <code>a</code>, <code>b</code>, or <code>c</code></td></tr>
+    <tr><td><code>(abc)</code></td><td>A group — also captures the match for later use</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Quantifiers control how many times the preceding thing can repeat:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Quantifier</th><th>Means</th></tr></thead>
+  <tbody>
+    <tr><td><code>*</code></td><td>Zero or more</td></tr>
+    <tr><td><code>+</code></td><td>One or more</td></tr>
+    <tr><td><code>?</code></td><td>Zero or one (optional)</td></tr>
+    <tr><td><code>{2,4}</code></td><td>Between 2 and 4 times</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+/\d+/;         // one or more digits, e.g. "42" or "7"
+/colou?r/;     // matches "color" AND "colour" — the u is optional
+/^\d{3}-\d{4}$/; // exactly a 3-digit dash 4-digit pattern, start to end
+[[/code]]
+
+<h2>Flags</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Flag</th><th>Effect</th></tr></thead>
+  <tbody>
+    <tr><td><code>g</code></td><td>Global — find every match, not just the first.</td></tr>
+    <tr><td><code>i</code></td><td>Case-insensitive.</td></tr>
+    <tr><td><code>m</code></td><td>Multiline — <code>^</code>/<code>$</code> match the start/end of each line, not just the whole string.</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+/hello/i.test("HELLO there"); // true — case-insensitive
+[[/code]]
+
+<h2>Using a regex with strings</h2>
+[[code lang="js"]]
+const pattern = /\d+/;
+
+pattern.test("Room 42");        // true — does it match at all?
+
+"Room 42".match(pattern);       // ["42"] — the matched text, as an array-like result
+"Room 42, Bed 7".match(/\d+/g); // ["42", "7"] — every match, with the g flag
+
+"Hello World".replace(/o/g, "0"); // "Hell0 W0rld" — replace every match
+
+"a1 b2 c3".split(/\d/);            // ["a", " b", " c", ""] — split on a pattern, not just a string
+[[/code]]
+
+<h2>Capture groups</h2>
+<p>Parentheses <code>( )</code> don't just group a pattern — they capture that piece of the match separately, which is especially useful with <code>replace</code>:</p>
+[[code lang="js"]]
+const date = "2026-07-19";
+const match = date.match(/(\d{4})-(\d{2})-(\d{2})/);
+match[1]; // "2026" — year
+match[2]; // "07"   — month
+match[3]; // "19"   — day
+
+// Reformat using captured groups in the replacement string ($1, $2, $3)
+date.replace(/(\d{4})-(\d{2})-(\d{2})/, "$2/$3/$1");
+// "07/19/2026"
+[[/code]]
+
+<h2>A couple of practical patterns</h2>
+[[code lang="js"]]
+// Loose email shape check — good enough for a quick client-side hint,
+// NOT a substitute for real server-side validation
+/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test("ava@example.com"); // true
+
+// Extract every number from a string of text
+"I have 3 cats and 12 fish".match(/\d+/g); // ["3", "12"]
+
+// Strip everything except letters and spaces
+"Hello, World! 123".replace(/[^a-zA-Z\s]/g, ""); // "Hello World "
+[[/code]]
+
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Regex gets hard to read fast. For anything beyond a simple pattern, write a comment above it explaining what it's meant to match — future you (and everyone else) will thank you. And when a pattern feels too complex to write by hand, it's fine to look one up rather than reinvent it.</p>
+</div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>A regex is a text pattern built from character classes (<code>\d</code>, <code>\w</code>, <code>\s</code>), quantifiers (<code>*</code>, <code>+</code>, <code>?</code>, <code>{n,m}</code>), and anchors (<code>^</code>, <code>$</code>).</li>
+    <li><code>.test()</code> checks for a match; <code>.match()</code>/<code>.matchAll()</code> retrieve matches; <code>.replace()</code> substitutes them.</li>
+    <li>The <code>g</code>, <code>i</code>, and <code>m</code> flags control global matching, case sensitivity, and multiline anchors.</li>
+    <li>Capture groups <code>( )</code> let you pull out and reuse specific pieces of a match, including inside a replacement string.</li>
+  </ul>
+</div>

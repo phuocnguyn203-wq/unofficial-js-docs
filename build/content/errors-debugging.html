@@ -1,0 +1,130 @@
+<p class="page-kicker">Errors &amp; Debugging</p>
+<h1>Error Handling &amp; Debugging</h1>
+<p class="lede">Things go wrong: a server times out, a user submits bad data, a value is unexpectedly null. This page covers handling failure gracefully instead of letting it crash your app, plus the everyday tools for tracking bugs down in the first place.</p>
+
+<h2>try / catch / finally</h2>
+<p><code>try</code> runs code that might fail; if it throws, execution jumps straight to <code>catch</code> instead of crashing the program. <code>finally</code> runs regardless of whether an error occurred.</p>
+[[code lang="js"]]
+try {
+  const data = JSON.parse("{ invalid json");
+  console.log(data);
+} catch (error) {
+  console.error("Failed to parse:", error.message);
+} finally {
+  console.log("This always runs, error or not.");
+}
+[[/code]]
+<p>Anything that throws inside the <code>try</code> block — a bad function call, an intentional <code>throw</code>, a rejected <code>await</code> (see <a href="async-await.html">Async/Await</a>) — is caught. Code after the failure point inside <code>try</code> does <em>not</em> run.</p>
+
+<h2>The Error object</h2>
+<p>JavaScript's built-in errors all share the same basic shape: a <code>message</code> describing what went wrong, a <code>name</code> identifying the error type, and a <code>stack</code> trace for debugging.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Error type</th><th>Thrown when&hellip;</th></tr></thead>
+  <tbody>
+    <tr><td><code>TypeError</code></td><td>An operation is performed on the wrong type — calling a non-function, reading a property of <code>null</code>.</td></tr>
+    <tr><td><code>RangeError</code></td><td>A number is outside an allowed range — like an invalid array length.</td></tr>
+    <tr><td><code>ReferenceError</code></td><td>A variable doesn't exist, or is accessed in its temporal dead zone.</td></tr>
+    <tr><td><code>SyntaxError</code></td><td>Invalid syntax — including from <code>JSON.parse</code> on malformed JSON.</td></tr>
+    <tr><td><code>Error</code></td><td>The generic base type — also what you'll throw yourself, most of the time.</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+try {
+  null.name;
+} catch (error) {
+  error instanceof TypeError; // true
+  error.message;                // "Cannot read properties of null (reading 'name')"
+}
+[[/code]]
+
+<h2>Throwing your own errors</h2>
+<p>Use <code>throw</code> with a real <code>Error</code> object (not a plain string) so callers get a consistent shape to inspect, including a stack trace.</p>
+[[code lang="js"]]
+function withdraw(balance, amount) {
+  if (amount > balance) {
+    throw new Error("Insufficient funds");
+  }
+  return balance - amount;
+}
+
+try {
+  withdraw(100, 150);
+} catch (error) {
+  console.error(error.message); // "Insufficient funds"
+}
+[[/code]]
+
+<h2>Custom error types</h2>
+<p>For larger apps, extending the built-in <code>Error</code> class (see <a href="classes.html">Classes</a>) lets you distinguish different failure kinds with <code>instanceof</code>, instead of parsing message strings.</p>
+[[code lang="js"]]
+class ValidationError extends Error {
+  constructor(message, field) {
+    super(message);
+    this.name = "ValidationError";
+    this.field = field;
+  }
+}
+
+function setAge(age) {
+  if (age < 0) {
+    throw new ValidationError("Age cannot be negative", "age");
+  }
+}
+
+try {
+  setAge(-5);
+} catch (error) {
+  if (error instanceof ValidationError) {
+    console.error(`Invalid ${error.field}: ${error.message}`);
+  } else {
+    throw error; // not ours to handle — let it propagate
+  }
+}
+[[/code]]
+
+<h2>Debugging with the console</h2>
+<p><code>console.log()</code> is just the start. A few methods worth knowing:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>console.warn()</code></td><td>Logs with a warning icon/color — easier to spot.</td></tr>
+    <tr><td><code>console.error()</code></td><td>Logs as an error, with a full stack trace.</td></tr>
+    <tr><td><code>console.table(data)</code></td><td>Renders an array of objects as a readable table.</td></tr>
+    <tr><td><code>console.group()</code> / <code>groupEnd()</code></td><td>Indents a related block of logs together.</td></tr>
+    <tr><td><code>console.time(label)</code> / <code>timeEnd(label)</code></td><td>Measures how long code between the two calls took.</td></tr>
+  </tbody>
+</table>
+</div>
+[[code lang="js"]]
+console.table([
+  { name: "Ava", age: 29 },
+  { name: "Noah", age: 34 },
+]);
+
+console.time("fetch");
+await fetchData();
+console.timeEnd("fetch"); // "fetch: 342.15ms"
+[[/code]]
+
+<h2>Breakpoints and the debugger statement</h2>
+<p>Console logging is fast, but a real breakpoint lets you pause execution and inspect every variable in scope at that exact moment. In your browser's devtools <strong>Sources</strong> tab, click a line number to set one — or add this directly in your code:</p>
+[[code lang="js"]]
+function processOrder(order) {
+  debugger; // execution pauses here whenever devtools is open
+  // ...
+}
+[[/code]]
+<p>Once paused, you can step through code line by line, inspect the current call stack, and evaluate expressions live in the console — usually far faster than adding and removing <code>console.log</code> calls.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li><code>try</code>/<code>catch</code>/<code>finally</code> handles failures gracefully instead of crashing; <code>finally</code> always runs.</li>
+    <li>Built-in errors share a common shape (<code>message</code>, <code>name</code>, <code>stack</code>); <code>TypeError</code>, <code>RangeError</code>, and <code>ReferenceError</code> cover most cases.</li>
+    <li>Extend <code>Error</code> for custom error types you can distinguish with <code>instanceof</code>.</li>
+    <li><code>console.table</code>, <code>console.group</code>, and breakpoints (via <code>debugger</code> or devtools) go far beyond <code>console.log</code> for real debugging.</li>
+  </ul>
+</div>

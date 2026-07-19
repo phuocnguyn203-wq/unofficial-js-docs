@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory & Performance — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class=" active">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Advanced Topics</p>
+<h1>Memory &amp; Performance</h1>
+<p class="lede">Most everyday JavaScript never requires thinking about memory directly — the engine handles it. But knowing roughly how it works helps you recognize the handful of situations where it doesn't, and picks up two small techniques that solve a very common performance problem.</p>
+
+<h2 id="how-javascript-manages-memory">How JavaScript manages memory<a href="#how-javascript-manages-memory" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>JavaScript allocates memory for every value you create, and automatically frees it later through a background process called <strong>garbage collection</strong>. The core idea it uses is <strong>reachability</strong>: a value is kept in memory as long as something can still get to it, starting from a set of always-reachable "roots" (global variables, and anything currently on the call stack).</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>let user = { name: "Ava" }; // reachable — referenced by `user`
+user = null;                 // the object is now unreachable — nothing points to it
+// the garbage collector will eventually free that memory</code></pre></div>
+<p>This is also exactly why closures (see <a href="closures.html">Closures</a>) can keep variables alive long after their outer function has returned — as long as an inner function still references them, they're still reachable, so they aren't collected.</p>
+
+<h2 id="common-ways-to-accidentally-leak-memory">Common ways to accidentally leak memory<a href="#common-ways-to-accidentally-leak-memory" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>A "leak" happens when something stays reachable that you actually meant to be done with. A few classic causes:</p>
+<ul>
+  <li><strong>Forgotten timers or listeners.</strong> A <code>setInterval</code> or an event listener that's never cleared keeps referencing everything its callback closes over, indefinitely.</li>
+  <li><strong>Growing caches with no eviction.</strong> An object or <code>Map</code> used as a cache that only ever grows, never removing old entries.</li>
+  <li><strong>Detached DOM nodes.</strong> Removing an element from the page with <code>.remove()</code> but still holding a reference to it in a variable — the DOM node is gone visually, but not memory-wise.</li>
+</ul>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function startPolling() {
+  const id = setInterval(() =&gt; {
+    console.log("polling...");
+  }, 1000);
+  // if `id` is never passed to clearInterval, this runs forever,
+  // keeping everything the callback references alive too
+}</code></pre></div>
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Whenever you create a timer or add an event listener, ask where it gets cleaned up — <code>clearInterval</code>/<code>clearTimeout</code>, or <code>removeEventListener</code> (see <a href="events.html">Events &amp; Delegation</a>). If the answer is "nowhere," that's worth a second look.</p>
+</div>
+
+<h2 id="debouncing-waiting-for-a-pause">Debouncing: waiting for a pause<a href="#debouncing-waiting-for-a-pause" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Some events fire far more often than you actually need to react to — <code>input</code> on every keystroke, <code>resize</code> dozens of times a second. <strong>Debouncing</strong> delays running a function until a pause of silence has passed, canceling any earlier scheduled run.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function debounce(fn, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId); // cancel the previous pending call
+    timeoutId = setTimeout(() =&gt; fn(...args), delay);
+  };
+}
+
+const search = debounce(function (query) {
+  console.log("Searching for:", query);
+}, 300);
+
+// Rapid calls while typing only actually run `search` once,
+// 300ms after the user stops typing
+input.addEventListener("input", e =&gt; search(e.target.value));</code></pre></div>
+
+<h2 id="throttling-at-most-once-per-interval">Throttling: at most once per interval<a href="#throttling-at-most-once-per-interval" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p><strong>Throttling</strong> is similar but different: instead of waiting for silence, it guarantees a function runs at most once every fixed interval, no matter how often it's triggered.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function throttle(fn, interval) {
+  let lastRun = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - lastRun &gt;= interval) {
+      lastRun = now;
+      fn(...args);
+    }
+  };
+}
+
+const onScroll = throttle(function () {
+  console.log("scroll position:", window.scrollY);
+}, 200);
+
+window.addEventListener("scroll", onScroll); // runs at most every 200ms</code></pre></div>
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>Debounce = "wait until they stop" (search-as-you-type). Throttle = "run regularly, but not too often" (scroll position tracking). Picking the wrong one is a common source of janky UI.</p>
+</div>
+
+<h2 id="minimizing-unnecessary-dom-work">Minimizing unnecessary DOM work<a href="#minimizing-unnecessary-dom-work" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Reading and writing to the DOM (see <a href="dom.html">The DOM</a>) is far slower than plain JavaScript operations, because the browser may need to recalculate layout and repaint the screen. Batch your changes instead of interleaving many small reads and writes:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// Slower — forces the browser to recalculate layout on every iteration
+items.forEach(item =&gt; {
+  list.innerHTML += `&lt;li&gt;${item}&lt;/li&gt;`;
+});
+
+// Faster — build the full string once, touch the DOM a single time
+const html = items.map(item =&gt; `&lt;li&gt;${item}&lt;/li&gt;`).join("");
+list.innerHTML = html;</code></pre></div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JavaScript frees memory automatically based on reachability — a value is kept alive only as long as something can still reference it.</li>
+    <li>Forgotten timers, listeners, and unbounded caches are the most common real-world memory leaks.</li>
+    <li>Debounce delays a function until activity pauses (search input); throttle caps it to run at most once per interval (scroll handlers).</li>
+    <li>Batch DOM reads/writes together instead of interleaving many small ones inside a loop.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/design-patterns.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">Design Patterns</span></a><a class="prev-next-link next" href="../docs/regular-expressions.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Regular Expressions</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#how-javascript-manages-memory" data-toc-link="how-javascript-manages-memory">How JavaScript manages memory</a></li><li class="toc-level-2"><a href="#common-ways-to-accidentally-leak-memory" data-toc-link="common-ways-to-accidentally-leak-memory">Common ways to accidentally leak memory</a></li><li class="toc-level-2"><a href="#debouncing-waiting-for-a-pause" data-toc-link="debouncing-waiting-for-a-pause">Debouncing: waiting for a pause</a></li><li class="toc-level-2"><a href="#throttling-at-most-once-per-interval" data-toc-link="throttling-at-most-once-per-interval">Throttling: at most once per interval</a></li><li class="toc-level-2"><a href="#minimizing-unnecessary-dom-work" data-toc-link="minimizing-unnecessary-dom-work">Minimizing unnecessary DOM work</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

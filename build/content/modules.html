@@ -1,0 +1,88 @@
+<p class="page-kicker">Modern JavaScript (ES6+)</p>
+<h1>Modules</h1>
+<p class="lede">As a project grows past one script file, you need a way to split code up while still letting different files share functions and values safely. ES6 modules are the standardized answer, replacing a decade of ad-hoc workarounds.</p>
+
+<h2>The problem: one shared global scope</h2>
+<p>Before modules, every <code>&lt;script&gt;</code> tag on a page shared one single global scope. Two scripts that happened to declare a variable with the same name would silently clash and overwrite each other.</p>
+[[code lang="html"]]
+<script src="a.js"></script>
+<script src="b.js"></script>
+[[/code]]
+[[code lang="js"]]
+// a.js
+var user = "Ava";
+
+// b.js
+var user = "Noah"; // silently overwrites a.js's variable — same global scope
+[[/code]]
+<p>Modules fix this by giving <strong>every file its own scope</strong>. Nothing is shared between files unless it's explicitly exported and imported.</p>
+
+<h2>Exporting</h2>
+<p>A module shares values using <code>export</code>. A file can have any number of <strong>named exports</strong>, plus at most one <strong>default export</strong>.</p>
+[[code lang="js"]]
+// math.js
+export const PI = 3.14159;
+
+export function add(a, b) {
+  return a + b;
+}
+
+export default function multiply(a, b) {  // the default export
+  return a * b;
+}
+[[/code]]
+
+<h2>Importing</h2>
+[[code lang="js"]]
+// app.js
+import multiply, { PI, add } from "./math.js";
+
+add(2, 3);       // 5
+multiply(2, 3);   // 6
+PI;               // 3.14159
+[[/code]]
+<p>Named exports are imported with <code>{ }</code> and must match the exported name exactly (though they can be renamed — see below). A default export is imported without braces, and the importing file can call it whatever it wants.</p>
+
+<h2>Using modules in the browser</h2>
+<p>Add <code>type="module"</code> to your script tag to opt into module behavior:</p>
+[[code lang="html"]]
+<script type="module" src="app.js"></script>
+[[/code]]
+<p>Module scripts get a few automatic behaviors worth knowing:</p>
+<ul>
+  <li>They always run in strict mode.</li>
+  <li>They're deferred automatically — no need for the <code>defer</code> attribute (see <a href="getting-started.html">Your First Script</a>).</li>
+  <li>Top-level <code>await</code> is allowed directly in a module, outside any <code>async</code> function.</li>
+  <li>They must be served over <code>http(s)://</code> — opening an HTML file directly from disk (<code>file://</code>) will block module imports due to browser security restrictions. Use a local server (or just deploy — GitHub Pages serves everything over https).</li>
+</ul>
+
+<h2>Renaming on import or export</h2>
+<p>Use <code>as</code> to rename something, which is handy for avoiding naming collisions between files:</p>
+[[code lang="js"]]
+export { add as sum };
+
+import { sum as addNumbers } from "./math.js";
+addNumbers(2, 3); // 5
+[[/code]]
+
+<h2>Importing everything as a namespace</h2>
+[[code lang="js"]]
+import * as MathUtils from "./math.js";
+
+MathUtils.add(2, 3);
+MathUtils.PI;
+[[/code]]
+
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Prefer named exports for most things — they make it clear at the import line exactly what a file provides, and tools can catch typos. Reserve a default export for a file that has one obvious "main" thing to offer, like a single class or component.</p>
+</div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>Each module file has its own scope — nothing leaks into the global scope unless explicitly exported and imported.</li>
+    <li><code>export</code>/<code>export default</code> share values; <code>import</code> brings them into another file, optionally renamed with <code>as</code>.</li>
+    <li>Browser module scripts (<code>type="module"</code>) are strict-mode and deferred by default, and require serving over http(s), not opened directly from disk.</li>
+  </ul>
+</div>

@@ -1,0 +1,73 @@
+<p class="page-kicker">Beyond the Basics</p>
+<h1>The Ecosystem &amp; Next Steps</h1>
+<p class="lede">Everything so far has been the JavaScript language itself. This closing page is a map of what surrounds it — the tools, formats, and frameworks you'll keep hearing about — so none of it feels unfamiliar when you meet it in a real project.</p>
+
+<h2>Package managers &amp; npm</h2>
+<p><strong>npm</strong> (Node Package Manager) is a public registry of reusable JavaScript code, plus a command-line tool for installing it. Instead of writing every utility from scratch, you declare what your project needs in a <code>package.json</code> file, and npm downloads it into a <code>node_modules</code> folder.</p>
+[[code lang="bash"]]
+npm init            # creates a package.json for a new project
+npm install lodash   # adds a package as a dependency
+npm run build         # runs a script defined in package.json
+[[/code]]
+<p><strong>Yarn</strong> and <strong>pnpm</strong> are popular alternatives that do the same core job, with different performance and disk-usage tradeoffs.</p>
+
+<h2>Bundlers &amp; build tools</h2>
+<p>Browsers load one file at a time, but real projects are split across dozens or hundreds of files, often using syntax the browser doesn't support natively yet. A <strong>bundler</strong> (Vite, webpack, esbuild, Rollup) solves this: it combines your files into a small number of optimized bundles, and can transform modern syntax into something more widely supported along the way.</p>
+<p>What a typical bundler gives you:</p>
+<ul>
+  <li><strong>Bundling</strong> — combining many files/modules into one (or a few) for the browser to load efficiently.</li>
+  <li><strong>Transpilation</strong> — converting newer syntax into older, more broadly compatible syntax (via <strong>Babel</strong> or built into the bundler).</li>
+  <li><strong>Minification</strong> — stripping whitespace and shortening variable names to reduce file size.</li>
+  <li><strong>A dev server</strong> — instantly reloading the browser as you save changes.</li>
+</ul>
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>None of this is required to use JavaScript — everything in this guide runs directly in a browser with zero tooling. Bundlers become valuable once a project grows large enough that organizing, optimizing, and supporting older browsers by hand becomes impractical.</p>
+</div>
+
+<h2>TypeScript: a sneak peek</h2>
+<p><strong>TypeScript</strong> is a superset of JavaScript that adds optional static types, then compiles down to plain JavaScript before it runs. It catches an entire category of mistakes — passing the wrong type of value — while you're writing code, instead of when it runs.</p>
+[[code lang="js"]]
+// TypeScript
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+add(2, "3"); // caught immediately by the TypeScript compiler, before you even run it
+[[/code]]
+<p>Every concept in this guide — closures, prototypes, promises, destructuring — carries over directly into TypeScript; it's an additive layer on top of the same language, not a different one.</p>
+
+<h2>JavaScript beyond the browser</h2>
+<p>As mentioned back in <a href="getting-started.html">Your First Script</a>, <strong>Node.js</strong> runs the same JavaScript language outside the browser — for servers, command-line tools, and build scripts (bundlers themselves are usually Node programs). <strong>Deno</strong> and <strong>Bun</strong> are newer runtimes aiming to improve on parts of Node's design, but all three run the same core language covered in this guide.</p>
+
+<h2>The frameworks landscape</h2>
+<p>Once you're comfortable with the DOM and events (see <a href="dom.html">The DOM</a> and <a href="events.html">Events &amp; Delegation</a>), you'll likely meet a frontend framework — a library that manages rendering and state for you, so you describe <em>what</em> the UI should look like rather than manually updating it step by step.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Framework</th><th>Known for</th></tr></thead>
+  <tbody>
+    <tr><td>React</td><td>Component-based UI, a huge ecosystem, widely used in industry.</td></tr>
+    <tr><td>Vue</td><td>Approachable syntax, gentle learning curve, all-in-one tooling.</td></tr>
+    <tr><td>Svelte</td><td>Compiles away at build time, resulting in less runtime code.</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Every one of these is built entirely on the JavaScript covered in this guide — closures for state, prototypes/classes under the hood, promises for data loading, modules for organization. Learning a framework is mostly learning its specific conventions, layered on a foundation you already have.</p>
+
+<h2>Where to go next</h2>
+<ul>
+  <li><strong>Build something small end to end</strong> — a to-do list, a weather app using <code>fetch</code>, a quiz game. Applying several chapters together locks them in far faster than reading alone.</li>
+  <li><strong>Keep MDN Web Docs bookmarked</strong> — it's the authoritative, detailed reference for every method and API mentioned in this guide.</li>
+  <li><strong>Read other people's code.</strong> Open source projects on GitHub are full of real patterns from this guide in production use.</li>
+  <li><strong>Revisit the harder chapters.</strong> Closures, <code>this</code>, and the event loop tend to click a little more each time you see them applied in a new context.</li>
+</ul>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>npm manages reusable packages; bundlers (Vite, webpack) combine and optimize files for the browser — neither is required to start writing JavaScript.</li>
+    <li>TypeScript adds optional static types on top of the exact language covered in this guide, catching type mistakes before runtime.</li>
+    <li>Node.js (and Deno/Bun) run JavaScript outside the browser, using the same core language.</li>
+    <li>Frontend frameworks like React, Vue, and Svelte are built on the fundamentals from this guide — they're a layer on top, not a different language.</li>
+  </ul>
+</div>

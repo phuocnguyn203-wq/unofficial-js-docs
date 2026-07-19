@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototypes & Inheritance — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class=" active">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class="">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Object-Oriented JS</p>
+<h1>Prototypes &amp; Inheritance</h1>
+<p class="lede">Underneath the friendly class syntax you'll usually write, JavaScript's object model works completely differently from Java or C++. Objects don't inherit from classes — they link directly to other objects. This is prototypal inheritance, and understanding it demystifies a lot of "why does JavaScript do that?" moments.</p>
+
+<h2 id="every-object-has-a-prototype">Every object has a prototype<a href="#every-object-has-a-prototype" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Almost every object in JavaScript has an internal link to another object, called its <strong>prototype</strong>. When you access a property, and it's not found directly on the object, JavaScript automatically checks the prototype — and then <em>its</em> prototype, and so on, until it finds the property or runs out of prototypes.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const animal = {
+  eats: true,
+  walk() {
+    console.log("Animal walks");
+  },
+};
+
+const rabbit = Object.create(animal); // rabbit's prototype is `animal`
+rabbit.jumps = true;
+
+rabbit.jumps; // true — own property
+rabbit.eats;  // true — not on rabbit itself; found on its prototype, `animal`
+rabbit.walk(); // "Animal walks" — methods are inherited the same way</code></pre></div>
+<p>This chain of "if not found here, check the prototype" is called the <strong>prototype chain</strong> — it's the exact same lookup idea as the scope chain (see <a href="scope-hoisting.html">Scope &amp; Hoisting</a>), just for object properties instead of variables.</p>
+
+<h2 id="where-the-chain-ends">Where the chain ends<a href="#where-the-chain-ends" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Every plain object's prototype chain eventually reaches <code>Object.prototype</code>, which is where common methods like <code>.toString()</code> or <code>.hasOwnProperty()</code> actually live — not duplicated on every single object.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>const obj = {};
+obj.toString(); // "[object Object]" — inherited from Object.prototype
+
+Object.getPrototypeOf(obj) === Object.prototype; // true
+Object.getPrototypeOf(Object.prototype);          // null — the chain ends here</code></pre></div>
+
+<h2 id="constructor-functions">Constructor functions<a href="#constructor-functions" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Before the <code>class</code> keyword existed (and still, underneath it today), JavaScript created many similar objects using a regular function called with <code>new</code>, plus a shared <code>.prototype</code> object for methods.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>function Person(name) {
+  this.name = name; // own property, unique to each instance
+}
+
+// Shared across every instance — added once, used everywhere
+Person.prototype.greet = function () {
+  console.log(`Hi, I'm ${this.name}`);
+};
+
+const ava = new Person("Ava");
+const noah = new Person("Noah");
+
+ava.greet();  // "Hi, I'm Ava"
+noah.greet(); // "Hi, I'm Noah"
+
+ava.greet === noah.greet; // true — it's the exact same function, shared via the prototype</code></pre></div>
+<p>This sharing is the whole point: instead of every object carrying its own copy of every method (wasting memory), all instances share one set of methods through the prototype, and only keep their own unique data (like <code>name</code>) directly on themselves.</p>
+<p>Calling a function with <code>new</code> does four things automatically: creates a new empty object, sets that object's prototype to the constructor's <code>.prototype</code>, sets <code>this</code> to the new object for the duration of the function (see <a href="this-keyword.html">The this Keyword</a>), and returns the new object.</p>
+
+<h2 id="instanceof">instanceof<a href="#instanceof" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p><code>instanceof</code> checks whether an object's prototype chain includes a given constructor's <code>.prototype</code>:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>ava instanceof Person; // true
+ava instanceof Object;  // true — Person.prototype itself inherits from Object.prototype</code></pre></div>
+
+<h2 id="why-this-matters-even-though-youll-mostly-write-class">Why this matters even though you'll mostly write class<a href="#why-this-matters-even-though-youll-mostly-write-class" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Modern JavaScript almost always uses the <code>class</code> keyword (next chapter) instead of hand-writing constructor functions. But <code>class</code> is <strong>syntax sugar</strong> — under the hood, it does exactly what's described on this page: a constructor function plus a shared prototype object for methods.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>class Person {
+  constructor(name) {
+    this.name = name;
+  }
+  greet() {
+    console.log(`Hi, I'm ${this.name}`);
+  }
+}
+
+typeof Person;                       // "function" — classes are functions underneath
+Person.prototype.greet;               // the exact greet method, living on the prototype</code></pre></div>
+<p>Knowing this makes class behavior — like why methods are shared across instances, or what <code>instanceof</code> actually checks — predictable instead of magical.</p>
+
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>You may see <code>obj.__proto__</code> used to read or set a prototype directly. It works, but it's a legacy accessor — prefer <code>Object.getPrototypeOf(obj)</code> and <code>Object.create(proto)</code> in real code.</p>
+</div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JavaScript objects link to other objects via a prototype; missing properties are looked up along this prototype chain.</li>
+    <li>The chain for plain objects ends at <code>Object.prototype</code>, which is where inherited methods like <code>.toString()</code> live.</li>
+    <li>Constructor functions plus a shared <code>.prototype</code> object let many instances share methods without duplicating them.</li>
+    <li>The <code>class</code> keyword is syntax sugar over exactly this mechanism — not a different object model.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/json.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">Working with JSON</span></a><a class="prev-next-link next" href="../docs/classes.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">Classes</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#every-object-has-a-prototype" data-toc-link="every-object-has-a-prototype">Every object has a prototype</a></li><li class="toc-level-2"><a href="#where-the-chain-ends" data-toc-link="where-the-chain-ends">Where the chain ends</a></li><li class="toc-level-2"><a href="#constructor-functions" data-toc-link="constructor-functions">Constructor functions</a></li><li class="toc-level-2"><a href="#instanceof" data-toc-link="instanceof">instanceof</a></li><li class="toc-level-2"><a href="#why-this-matters-even-though-youll-mostly-write-class" data-toc-link="why-this-matters-even-though-youll-mostly-write-class">Why this matters even though you'll mostly write class</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

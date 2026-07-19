@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Async/Await — JS Docs</title>
+<meta name="description" content="A friendly, complete guide to JavaScript — from your first console.log() to the concepts that power modern web apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23f2c94c'/%3E%3Ctext x='12' y='17' font-family='monospace' font-weight='700' font-size='12' text-anchor='middle' fill='%2314151a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="page-doc">
+<script>window.ROOT_PREFIX = "../";</script>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">JS</span>
+    <span class="brand-name">JS Docs</span>
+  </a>
+
+  <div class="header-search">
+    <button class="search-trigger" id="search-trigger" aria-label="Search documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <span>Search docs</span>
+      <kbd>/</kbd>
+    </button>
+  </div>
+
+  <nav class="header-links">
+    <a href="../docs/introduction.html">Docs</a>
+    <a href="https://github.com/your-username/your-repo" target="_blank" rel="noopener" class="header-github" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </nav>
+</header>
+
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input type="text" id="search-input" placeholder="Search topics, functions, concepts&hellip;" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results">
+      <p class="search-hint">Type to search across the whole guide &mdash; try &ldquo;closures&rdquo;, &ldquo;promise&rdquo; or &ldquo;array&rdquo;.</p>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" aria-label="Documentation sections">
+<div class="nav-home"><a href="../index.html" class="">&#8962; Home</a></div><div class="nav-section"><p class="nav-section-title">Get Started</p><ul><li><a href="../docs/introduction.html" class="">Introduction</a></li><li><a href="../docs/getting-started.html" class="">Your First Script</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Language Basics</p><ul><li><a href="../docs/variables-data-types.html" class="">Variables &amp; Data Types</a></li><li><a href="../docs/operators-expressions.html" class="">Operators &amp; Expressions</a></li><li><a href="../docs/control-flow.html" class="">Control Flow</a></li><li><a href="../docs/functions.html" class="">Functions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Scope, Closures &amp; this</p><ul><li><a href="../docs/scope-hoisting.html" class="">Scope &amp; Hoisting</a></li><li><a href="../docs/closures.html" class="">Closures</a></li><li><a href="../docs/this-keyword.html" class="">The this Keyword</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Working with Data</p><ul><li><a href="../docs/arrays.html" class="">Arrays &amp; Array Methods</a></li><li><a href="../docs/strings.html" class="">Strings &amp; Template Literals</a></li><li><a href="../docs/objects.html" class="">Objects Deep Dive</a></li><li><a href="../docs/destructuring-spread-rest.html" class="">Destructuring, Spread &amp; Rest</a></li><li><a href="../docs/json.html" class="">Working with JSON</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Object-Oriented JS</p><ul><li><a href="../docs/prototypes.html" class="">Prototypes &amp; Inheritance</a></li><li><a href="../docs/classes.html" class="">Classes</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Asynchronous JavaScript</p><ul><li><a href="../docs/event-loop.html" class="">The Event Loop</a></li><li><a href="../docs/callbacks-promises.html" class="">Callbacks &amp; Promises</a></li><li><a href="../docs/async-await.html" class=" active">Async/Await</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Browser &amp; Web APIs</p><ul><li><a href="../docs/dom.html" class="">The DOM</a></li><li><a href="../docs/events.html" class="">Events &amp; Delegation</a></li><li><a href="../docs/fetch-forms-storage.html" class="">Fetch, Forms &amp; Storage</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Modern JavaScript (ES6+)</p><ul><li><a href="../docs/modules.html" class="">Modules</a></li><li><a href="../docs/iterators-generators-collections.html" class="">Iterators, Generators &amp; Collections</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Errors &amp; Debugging</p><ul><li><a href="../docs/errors-debugging.html" class="">Error Handling &amp; Debugging</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Advanced Topics</p><ul><li><a href="../docs/functional-programming.html" class="">Functional Programming</a></li><li><a href="../docs/design-patterns.html" class="">Design Patterns</a></li><li><a href="../docs/memory-performance.html" class="">Memory &amp; Performance</a></li><li><a href="../docs/regular-expressions.html" class="">Regular Expressions</a></li></ul></div><div class="nav-section"><p class="nav-section-title">Beyond the Basics</p><ul><li><a href="../docs/ecosystem-next-steps.html" class="">The Ecosystem &amp; Next Steps</a></li></ul></div>
+    </nav>
+  </aside>
+
+  <main class="content" id="main-content">
+    <div class="content-inner">
+<p class="page-kicker">Asynchronous JavaScript</p>
+<h1>Async/Await</h1>
+<p class="lede">async/await, added in ES2017, is syntax sugar over promises that lets asynchronous code read almost exactly like synchronous code — no <code>.then()</code> chains required. Underneath, it's still promises all the way down.</p>
+
+<h2 id="the-async-keyword">The async keyword<a href="#the-async-keyword" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Adding <code>async</code> before a function declaration does two things: it lets you use <code>await</code> inside the function, and it makes the function <strong>always return a promise</strong>, even if you just <code>return</code> a plain value.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>async function getGreeting() {
+  return "Hello!";
+}
+
+getGreeting(); // a Promise, not the string directly
+getGreeting().then(msg =&gt; console.log(msg)); // "Hello!"</code></pre></div>
+
+<h2 id="the-await-keyword">The await keyword<a href="#the-await-keyword" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p><code>await</code> pauses execution of the <em>current async function</em> (not the whole program) until the promise to its right settles, then unwraps the result. If the promise rejects, <code>await</code> throws — which is what makes <code>try</code>/<code>catch</code> work naturally with it.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>async function getUser(id) {
+  const response = await fetch(`/api/users/${id}`);
+  const user = await response.json();
+  return user;
+}</code></pre></div>
+<p>Compare this directly to the promise-chain version of the same logic:</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// Promise chain
+function getUser(id) {
+  return fetch(`/api/users/${id}`)
+    .then(response =&gt; response.json())
+    .then(user =&gt; user);
+}
+
+// async/await — same behavior, reads top to bottom
+async function getUser(id) {
+  const response = await fetch(`/api/users/${id}`);
+  return await response.json();
+}</code></pre></div>
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p><code>await</code> can only be used inside a function marked <code>async</code> (modern JavaScript modules also allow "top-level await" directly at the top of a module file). Using it elsewhere is a syntax error.</p>
+</div>
+
+<h2 id="error-handling-trycatch">Error handling: try/catch<a href="#error-handling-trycatch" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Because a rejected <code>await</code> throws, you handle async errors with the exact same <code>try</code>/<code>catch</code> you'd use for synchronous code (see <a href="errors-debugging.html">Error Handling &amp; Debugging</a>) — no special async-only syntax to learn.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>async function getUser(id) {
+  try {
+    const response = await fetch(`/api/users/${id}`);
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Could not load user:", error.message);
+    return null;
+  }
+}</code></pre></div>
+
+<h2 id="a-common-pitfall-accidentally-serial-awaits">A common pitfall: accidentally serial awaits<a href="#a-common-pitfall-accidentally-serial-awaits" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Every <code>await</code> pauses the function until that specific promise resolves. If you <code>await</code> three independent requests one after another, you needlessly force them to run in sequence instead of in parallel.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// Slow — each request waits for the previous one to finish first
+async function loadAll() {
+  const user = await fetchUser();       // waits ~1s
+  const posts = await fetchPosts();     // then waits another ~1s
+  const comments = await fetchComments(); // then another ~1s
+  return { user, posts, comments };     // total: ~3s
+}</code></pre></div>
+<p>If the three requests don't actually depend on each other, start them all at once and only <code>await</code> the combined result with <code>Promise.all()</code> (see <a href="callbacks-promises.html">Callbacks &amp; Promises</a>):</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// Fast — all three requests fire immediately, running in parallel
+async function loadAll() {
+  const [user, posts, comments] = await Promise.all([
+    fetchUser(),
+    fetchPosts(),
+    fetchComments(),
+  ]);
+  return { user, posts, comments }; // total: ~1s, limited by the slowest request
+}</code></pre></div>
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>Only await sequentially when a later request genuinely needs data from an earlier one (like fetching posts that require a user ID first). Otherwise, kick off independent requests together and await them as a group.</p>
+</div>
+
+<h2 id="its-still-promises-underneath">It's still promises underneath<a href="#its-still-promises-underneath" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>async/await doesn't introduce a new concurrency model — it's parsed into the same promise machinery from the previous two chapters. That means everything you learned about the event loop still applies: an <code>await</code> point yields control back to the event loop and resumes as a microtask once its promise settles.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>console.log("1: start");
+
+async function delayedLog() {
+  await null; // even awaiting a non-promise value yields once, as a microtask
+  console.log("3: after await");
+}
+
+delayedLog();
+console.log("2: sync code after calling delayedLog");
+
+// "1: start"
+// "2: sync code after calling delayedLog"
+// "3: after await"</code></pre></div>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>An <code>async</code> function always returns a promise; <code>await</code> pauses that function (not the whole program) until a promise settles.</li>
+    <li><code>await</code>ing a rejected promise throws, so ordinary <code>try</code>/<code>catch</code> handles async errors.</li>
+    <li>Sequential <code>await</code>s on independent operations waste time — start them together and <code>await Promise.all(...)</code> instead.</li>
+    <li>async/await is syntax sugar over promises; the event loop and microtask rules from the previous chapters still apply underneath.</li>
+  </ul>
+</div>
+
+<nav class="prev-next" aria-label="Page navigation"><a class="prev-next-link prev" href="../docs/callbacks-promises.html"><span class="prev-next-label">&larr; Previous</span><span class="prev-next-title">Callbacks &amp; Promises</span></a><a class="prev-next-link next" href="../docs/dom.html"><span class="prev-next-label">Next &rarr;</span><span class="prev-next-title">The DOM</span></a></nav>
+      <footer class="page-footer">
+        <p>Built as a static, open guide to JavaScript &mdash; no backend, just HTML, CSS &amp; JS. &copy; 2026.</p>
+      </footer>
+    </div>
+  </main>
+
+  <aside class="toc" id="toc">
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#the-async-keyword" data-toc-link="the-async-keyword">The async keyword</a></li><li class="toc-level-2"><a href="#the-await-keyword" data-toc-link="the-await-keyword">The await keyword</a></li><li class="toc-level-2"><a href="#error-handling-trycatch" data-toc-link="error-handling-trycatch">Error handling: try/catch</a></li><li class="toc-level-2"><a href="#a-common-pitfall-accidentally-serial-awaits" data-toc-link="a-common-pitfall-accidentally-serial-awaits">A common pitfall: accidentally serial awaits</a></li><li class="toc-level-2"><a href="#its-still-promises-underneath" data-toc-link="its-still-promises-underneath">It's still promises underneath</a></li></ul>
+  </aside>
+</div>
+
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<script src="../assets/js/search-index.js"></script>
+<script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

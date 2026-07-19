@@ -1,0 +1,136 @@
+<p class="page-kicker">Working with Data</p>
+<h1>Objects Deep Dive</h1>
+<p class="lede">Objects are JavaScript's core way of grouping related data and behavior together under one value — key/value pairs, where a value can be anything, including another object or a function.</p>
+
+<h2>Object literals</h2>
+[[code lang="js"]]
+const user = {
+  name: "Ava",
+  age: 29,
+  isAdmin: false,
+  address: {
+    city: "Tokyo",
+    country: "Japan",
+  },
+};
+[[/code]]
+
+<h2>Accessing and updating properties</h2>
+<p>Two ways to read or write a property: dot notation and bracket notation.</p>
+[[code lang="js"]]
+user.name;          // "Ava" — dot notation, most common
+user["name"];       // "Ava" — bracket notation, needed for dynamic keys
+
+user.age = 30;       // update
+user.email = "ava@example.com"; // add a brand-new property
+
+const key = "age";
+user[key];           // 30 — bracket notation lets the key be a variable
+[[/code]]
+<p>Dot notation is more readable and is the default choice. Bracket notation is required whenever the key is stored in a variable, computed, or contains characters that aren't valid in an identifier (like a space or a hyphen).</p>
+
+<h2>Shorthand syntax</h2>
+<p>Two conveniences added in ES6 that you'll see everywhere:</p>
+[[code lang="js"]]
+const name = "Ava";
+const age = 29;
+
+// Property shorthand: when the variable name matches the key name
+const user = { name, age }; // same as { name: name, age: age }
+
+// Method shorthand: skip `function` for methods
+const calculator = {
+  add(a, b) {       // same as add: function(a, b) { ... }
+    return a + b;
+  },
+};
+[[/code]]
+
+<h2>Computed property names</h2>
+<p>Wrap an expression in <code>[ ]</code> as a key to compute it dynamically at creation time:</p>
+[[code lang="js"]]
+const field = "email";
+const user = {
+  name: "Ava",
+  [field]: "ava@example.com", // key becomes "email"
+};
+// { name: "Ava", email: "ava@example.com" }
+[[/code]]
+
+<h2>Object.keys, values, and entries</h2>
+<p>Three static methods for turning an object into an array you can loop over with familiar array methods:</p>
+[[code lang="js"]]
+const user = { name: "Ava", age: 29, admin: true };
+
+Object.keys(user);    // ["name", "age", "admin"]
+Object.values(user);  // ["Ava", 29, true]
+Object.entries(user); // [["name", "Ava"], ["age", 29], ["admin", true]]
+
+// entries() pairs nicely with destructuring in a for...of loop
+for (const [key, value] of Object.entries(user)) {
+  console.log(`${key}: ${value}`);
+}
+[[/code]]
+
+<h2>Checking if a property exists</h2>
+[[code lang="js"]]
+const user = { name: "Ava", age: undefined };
+
+"name" in user;               // true
+"age" in user;                // true — the key exists, even though its value is undefined
+"email" in user;               // false
+
+user.hasOwnProperty("name");   // true — ignores inherited properties (see Prototypes)
+user.age !== undefined;        // false — unreliable if a value can legitimately be undefined
+[[/code]]
+<p>Prefer <code>in</code> or <code>hasOwnProperty</code> over checking <code>!== undefined</code> when you specifically care whether the key exists, not just whether it currently holds a value.</p>
+
+<h2>Copying objects</h2>
+<p>Assigning an object to a new variable copies the <em>reference</em>, not the object (see <a href="variables-data-types.html">Variables &amp; Data Types</a>). To actually copy the properties, use the spread operator or <code>Object.assign</code>:</p>
+[[code lang="js"]]
+const original = { name: "Ava", age: 29 };
+
+const copy = { ...original };     // spread — the modern, common way
+const copy2 = Object.assign({}, original); // older, equivalent approach
+
+copy.name = "Nora";
+original.name; // "Ava" — unaffected, copy is a separate object
+[[/code]]
+<div class="admonition warning">
+  <p class="admonition-title">Warning</p>
+  <p>Both approaches only make a <strong>shallow</strong> copy — nested objects are still shared by reference. If <code>original.address</code> is an object, <code>copy.address</code> points at the exact same nested object. For a true deep copy, you'd copy each nested level yourself, use <code>structuredClone(original)</code> (available in modern browsers), or a library.</p>
+</div>
+[[code lang="js"]]
+const original = { name: "Ava", address: { city: "Tokyo" } };
+const copy = { ...original };
+
+copy.address.city = "Osaka";
+original.address.city; // "Osaka" — changed! address was shared, not copied
+[[/code]]
+
+<h2>Merging objects</h2>
+<p>Spreading multiple objects together merges them, with later keys overwriting earlier ones:</p>
+[[code lang="js"]]
+const defaults = { theme: "light", fontSize: 14 };
+const userPrefs = { fontSize: 18 };
+
+const settings = { ...defaults, ...userPrefs };
+// { theme: "light", fontSize: 18 }
+[[/code]]
+
+<h2>Deleting a property</h2>
+[[code lang="js"]]
+const user = { name: "Ava", temp: "remove me" };
+delete user.temp;
+user; // { name: "Ava" }
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>Dot notation is the default; bracket notation is required for dynamic or non-identifier keys.</li>
+    <li>Property/method shorthand and computed property names are standard ES6+ conveniences.</li>
+    <li><code>Object.keys()</code>, <code>.values()</code>, and <code>.entries()</code> turn an object into an array for iteration.</li>
+    <li>Spreading (<code>{ ...obj }</code>) or <code>Object.assign</code> copies an object, but only shallowly — nested objects are still shared.</li>
+  </ul>
+</div>

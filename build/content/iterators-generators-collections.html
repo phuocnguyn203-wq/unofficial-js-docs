@@ -1,0 +1,106 @@
+<p class="page-kicker">Modern JavaScript (ES6+)</p>
+<h1>Iterators, Generators &amp; Collections</h1>
+<p class="lede">This page covers a handful of ES6 additions that don't always get equal billing but show up throughout modern codebases: what actually makes something work with <code>for...of</code>, a compact way to write custom iteration logic, and two collection types that solve real limitations of plain objects and arrays.</p>
+
+<h2>What makes something "iterable"</h2>
+<p>You've used <code>for...of</code> on arrays and strings since early in this guide (see <a href="control-flow.html">Control Flow</a>). It works because both types implement the <strong>iterable protocol</strong> — they have a special method (keyed by <code>Symbol.iterator</code>) that produces an iterator: an object with a <code>.next()</code> method that hands back one value at a time.</p>
+[[code lang="js"]]
+const iterator = [10, 20, 30][Symbol.iterator]();
+
+iterator.next(); // { value: 10, done: false }
+iterator.next(); // { value: 20, done: false }
+iterator.next(); // { value: 30, done: false }
+iterator.next(); // { value: undefined, done: true }
+[[/code]]
+<p><code>for...of</code>, spread (<code>...</code>), and destructuring all work by repeatedly calling <code>.next()</code> like this behind the scenes, until <code>done</code> is <code>true</code>. Plain objects don't implement this protocol by default, which is exactly why <code>for...of</code> doesn't work on them directly.</p>
+
+<h2>Generators: an easier way to write iterators</h2>
+<p>Writing an object with a manual <code>.next()</code> method is tedious. A <strong>generator function</strong> (declared with <code>function*</code>) lets you write iteration logic that reads like a normal loop, using <code>yield</code> to hand out one value at a time and pause.</p>
+[[code lang="js"]]
+function* countTo(max) {
+  for (let i = 1; i <= max; i++) {
+    yield i;
+  }
+}
+
+for (const n of countTo(3)) {
+  console.log(n);
+}
+// 1, 2, 3
+[[/code]]
+<p>Calling a generator function doesn't run its body immediately — it returns a generator object (itself iterable). Each call to <code>.next()</code> runs the function until the next <code>yield</code>, then pauses there until the next call.</p>
+[[code lang="js"]]
+function* idGenerator() {
+  let id = 1;
+  while (true) {          // an infinite generator is fine — it only runs on demand
+    yield id;
+    id++;
+  }
+}
+
+const gen = idGenerator();
+gen.next().value; // 1
+gen.next().value; // 2
+gen.next().value; // 3
+[[/code]]
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>Generators are a niche tool day-to-day, but they're worth recognizing — they're what powers custom iteration logic, and they're the historical foundation async/await was designed on top of.</p>
+</div>
+
+<h2>Map: key/value pairs done right</h2>
+<p>A plain object is often used as a key/value store, but it has real limitations: keys are always coerced to strings, and it inherits properties from <code>Object.prototype</code> which can occasionally cause collisions. <code>Map</code> fixes both.</p>
+[[code lang="js"]]
+const scores = new Map();
+
+scores.set("Ava", 95);
+scores.set("Noah", 88);
+scores.set(42, "the answer"); // any value can be a key, not just strings
+
+scores.get("Ava");  // 95
+scores.has("Noah"); // true
+scores.size;         // 3
+scores.delete("Noah");
+
+for (const [name, score] of scores) {
+  console.log(name, score);
+}
+[[/code]]
+<p>Use <code>Map</code> over a plain object whenever keys aren't known ahead of time, aren't always strings, or when you need a reliable <code>.size</code> and guaranteed insertion order.</p>
+
+<h2>Set: unique values</h2>
+<p>A <code>Set</code> stores unique values — adding a duplicate is silently ignored. The single most common use case: deduplicating an array in one line.</p>
+[[code lang="js"]]
+const numbers = [1, 2, 2, 3, 3, 3];
+const unique = [...new Set(numbers)];
+// [1, 2, 3]
+
+const tags = new Set();
+tags.add("js");
+tags.add("js"); // ignored — already present
+tags.size;       // 1
+tags.has("js");  // true
+[[/code]]
+
+<h2>WeakMap and WeakSet, briefly</h2>
+<p><code>WeakMap</code> and <code>WeakSet</code> work like their non-weak counterparts, but only accept objects as keys/values, and hold those references <strong>weakly</strong> — meaning they don't prevent the object from being garbage collected once nothing else references it (see <a href="memory-performance.html">Memory &amp; Performance</a>). They're a niche tool, mainly used to attach metadata to an object without causing a memory leak.</p>
+
+<h2>Symbols, briefly</h2>
+<p>A <code>Symbol</code> is a primitive value that's guaranteed unique — even two symbols created with the same description are never equal. They're most often used as object property keys that are guaranteed not to collide with any string key, including ones added later by other code.</p>
+[[code lang="js"]]
+const id = Symbol("id");
+const user = { name: "Ava", [id]: 12345 };
+
+user[id]; // 12345
+Symbol("id") === Symbol("id"); // false — always unique
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li><code>for...of</code>, spread, and destructuring all rely on the iterable protocol (<code>Symbol.iterator</code>) under the hood.</li>
+    <li>Generator functions (<code>function*</code>/<code>yield</code>) are an easy way to write custom, pausable iteration logic.</li>
+    <li><code>Map</code> is a key/value store that accepts any key type and preserves insertion order — often a better fit than a plain object.</li>
+    <li><code>Set</code> stores unique values and is the standard one-liner for deduplicating an array.</li>
+  </ul>
+</div>

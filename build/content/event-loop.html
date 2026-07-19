@@ -1,0 +1,106 @@
+<p class="page-kicker">Asynchronous JavaScript</p>
+<h1>The Event Loop</h1>
+<p class="lede">JavaScript runs on a single thread — it can only do one thing at a time. Yet it downloads data, runs timers, and responds to clicks without ever freezing the page. The event loop is the mechanism that makes that possible, and understanding it makes every async pattern in this guide click into place.</p>
+
+<h2>The call stack</h2>
+<p>The <strong>call stack</strong> is where JavaScript tracks what function is currently running. Every time a function is called, a frame is pushed onto the stack; when it returns, its frame is popped off. JavaScript can only ever execute the function on top of the stack — this is what "single-threaded" actually means in practice.</p>
+[[code lang="js"]]
+function multiply(a, b) {
+  return a * b;
+}
+function square(n) {
+  return multiply(n, n);
+}
+function printSquare(n) {
+  console.log(square(n));
+}
+
+printSquare(5);
+// stack grows: printSquare -> square -> multiply
+// then unwinds as each function returns its result
+[[/code]]
+<p>If code keeps calling deeper and deeper without returning (like a function that calls itself forever), the stack fills up and the engine throws a <code>RangeError: Maximum call stack size exceeded</code> — a stack overflow.</p>
+
+<h2>So how does JavaScript avoid blocking?</h2>
+<p>If the call stack is busy, nothing else can run — including things like a <code>setTimeout</code> callback or the response to a network request. Slow operations (timers, network requests, file access, user events) aren't handled by the JavaScript engine itself at all. They're handed off to APIs provided by the <strong>environment</strong> — the browser or Node.js — which run them in the background, completely outside the call stack.</p>
+[[code lang="js"]]
+console.log("1: start");
+
+setTimeout(() => {
+  console.log("2: timeout finished");
+}, 1000);
+
+console.log("3: end");
+
+// Logs, in order:
+// "1: start"
+// "3: end"
+// "2: timeout finished"   <- appears ~1 second later
+[[/code]]
+<p><code>setTimeout</code> doesn't pause anything. It hands the timer off to the browser, and immediately continues to the next line. A second later, once the timer finishes in the background, its callback needs to run — but it can't just interrupt the stack. It waits in line.</p>
+
+<h2>The callback queue and the event loop</h2>
+<p>When a background task (a timer, a finished network request) completes, its callback is placed in a <strong>queue</strong>, not run immediately. The <strong>event loop</strong> is a simple, continuously running check:</p>
+<ol>
+  <li>Is the call stack completely empty?</li>
+  <li>If yes, take the first callback waiting in the queue and push it onto the stack to run.</li>
+  <li>Repeat, forever.</li>
+</ol>
+<p>This is why, in the example above, <code>"3: end"</code> always logs before <code>"2: timeout finished"</code> — even with a timeout of <code>0</code>. The queued callback can only run once the stack is empty, which means <em>after</em> all currently running synchronous code has finished.</p>
+[[code lang="js"]]
+console.log("first");
+setTimeout(() => console.log("third"), 0);
+console.log("second");
+// "first", "second", "third" — even a 0ms timeout waits for the stack to clear
+[[/code]]
+
+<h2>Microtasks vs. macrotasks</h2>
+<p>There isn't just one queue — there are two, with different priority. <strong>Promises</strong> (see <a href="callbacks-promises.html">Callbacks &amp; Promises</a>) schedule their callbacks on the <strong>microtask queue</strong>, which the event loop always fully drains before touching the regular <strong>macrotask queue</strong> that <code>setTimeout</code> and DOM events use.</p>
+[[code lang="js"]]
+console.log("1: sync");
+
+setTimeout(() => console.log("2: macrotask (setTimeout)"), 0);
+
+Promise.resolve().then(() => console.log("3: microtask (promise)"));
+
+console.log("4: sync");
+
+// Order:
+// "1: sync"
+// "4: sync"
+// "3: microtask (promise)"    <- microtasks run before the next macrotask
+// "2: macrotask (setTimeout)"
+[[/code]]
+<p>The rule: after each piece of synchronous code finishes, the event loop empties the <em>entire</em> microtask queue before it processes even one macrotask. This is why promise callbacks reliably run sooner than <code>setTimeout</code> callbacks, even a <code>0ms</code> one.</p>
+
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p><code>async</code>/<code>await</code> (covered two chapters from now) is built entirely on promises, so everything on this page applies to it too — an <code>await</code> point is, under the hood, a microtask.</p>
+</div>
+
+<h2>Putting it all together</h2>
+[[code lang="js"]]
+console.log("A");
+
+setTimeout(() => console.log("B"), 0);
+
+Promise.resolve()
+  .then(() => console.log("C"))
+  .then(() => console.log("D"));
+
+console.log("E");
+
+// A, E   — synchronous code runs first, top to bottom
+// C, D   — then the whole microtask queue drains (even chained .then calls)
+// B      — only then does the event loop move on to the macrotask queue
+[[/code]]
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JavaScript runs on one call stack and can only execute one thing at a time.</li>
+    <li>Slow operations (timers, network requests) are handled outside the engine by the browser/Node, which queues their callbacks instead of running them immediately.</li>
+    <li>The event loop moves queued callbacks onto the stack only once the stack is completely empty.</li>
+    <li>Promise callbacks (microtasks) always run before the next timer or event callback (macrotask) — the whole microtask queue drains first.</li>
+  </ul>
+</div>

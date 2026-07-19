@@ -1,0 +1,93 @@
+<p class="page-kicker">Working with Data</p>
+<h1>Working with JSON</h1>
+<p class="lede">JSON (JavaScript Object Notation) is a lightweight, text-based data format. It was inspired by JavaScript's object syntax, but it's language-independent — nearly every programming language can read and write it, which is exactly why it's the default format for APIs and config files.</p>
+
+<h2>What JSON looks like</h2>
+<p>JSON looks almost like a JavaScript object literal, but it's stricter:</p>
+[[code lang="json"]]
+{
+  "name": "Ava",
+  "age": 29,
+  "isAdmin": false,
+  "tags": ["admin", "editor"],
+  "address": {
+    "city": "Tokyo"
+  }
+}
+[[/code]]
+<p>The rules that make it stricter than a JS object literal:</p>
+<ul>
+  <li>Property names <strong>must</strong> be double-quoted strings — <code>name</code> alone or <code>'name'</code> is invalid.</li>
+  <li>No trailing commas after the last item.</li>
+  <li>No comments.</li>
+  <li>Values can only be: strings, numbers, booleans, <code>null</code>, arrays, or other JSON objects — no functions, no <code>undefined</code>, no <code>Symbol</code>.</li>
+</ul>
+
+<h2>JSON.stringify — JavaScript value → JSON text</h2>
+<p>Use <code>JSON.stringify()</code> whenever you need to send a JavaScript value somewhere that only understands text — an HTTP request body, <code>localStorage</code>, a file.</p>
+[[code lang="js"]]
+const user = { name: "Ava", age: 29, isAdmin: false };
+
+JSON.stringify(user);
+// '{"name":"Ava","age":29,"isAdmin":false}'  <- this is now a plain string
+[[/code]]
+<p>A third argument adds indentation, which is invaluable for logging or writing readable config files:</p>
+[[code lang="js"]]
+JSON.stringify(user, null, 2);
+// {
+//   "name": "Ava",
+//   "age": 29,
+//   "isAdmin": false
+// }
+[[/code]]
+
+<h2>JSON.parse — JSON text → JavaScript value</h2>
+<p>The reverse operation: turn a JSON-formatted string back into a real, usable JavaScript object.</p>
+[[code lang="js"]]
+const raw = '{"name":"Ava","age":29}';
+const user = JSON.parse(raw);
+
+user.name; // "Ava" — a real object now, not a string
+[[/code]]
+<div class="admonition warning">
+  <p class="admonition-title">Warning</p>
+  <p><code>JSON.parse</code> throws a <code>SyntaxError</code> if the string isn't valid JSON — always wrap it in a <code>try</code>/<code>catch</code> when parsing data you don't fully control (like a server response or user input). See <a href="errors-debugging.html">Error Handling &amp; Debugging</a>.</p>
+</div>
+
+<h2>What doesn't survive the round trip</h2>
+<p>Because JSON is a smaller format than JavaScript's full type system, some things are dropped or transformed silently by <code>JSON.stringify</code>:</p>
+[[code lang="js"]]
+const data = {
+  name: "Ava",
+  greet: function () { },   // functions are dropped entirely
+  missing: undefined,        // undefined properties are dropped entirely
+  when: new Date(),          // Date objects become ISO date strings
+  id: Symbol("id"),          // symbols are dropped entirely
+};
+
+JSON.stringify(data);
+// '{"name":"Ava","when":"2026-07-19T00:00:00.000Z"}'
+[[/code]]
+<p>This is worth remembering: if you serialize an object and parse it back, you get a <em>plain data</em> copy — no functions, no <code>Date</code> instances (just strings that look like dates), no class instances with their prototype intact (see <a href="prototypes.html">Prototypes &amp; Inheritance</a>).</p>
+
+<h2>A common use case: persisting data</h2>
+<p><code>localStorage</code> can only store strings, so JSON is the standard way to save structured data in the browser:</p>
+[[code lang="js"]]
+const cart = [{ item: "Book", price: 15 }];
+
+localStorage.setItem("cart", JSON.stringify(cart));
+
+const restored = JSON.parse(localStorage.getItem("cart"));
+// restored is a real array again, equal in content to the original cart
+[[/code]]
+<p>This exact pattern — <code>stringify</code> to save, <code>parse</code> to restore — is covered in context in <a href="fetch-forms-storage.html">Fetch, Forms &amp; Storage</a>, alongside sending JSON to a server with <code>fetch</code>.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>JSON is a text format for data — it looks like a JS object literal but requires double-quoted keys and allows only a limited set of value types.</li>
+    <li><code>JSON.stringify()</code> turns a JS value into a JSON string; <code>JSON.parse()</code> turns it back.</li>
+    <li>Functions, <code>undefined</code>, and symbols are silently dropped during <code>stringify</code>; <code>Date</code> objects become plain strings.</li>
+    <li>Always <code>try</code>/<code>catch</code> around <code>JSON.parse()</code> for data you don't fully trust — malformed JSON throws.</li>
+  </ul>
+</div>

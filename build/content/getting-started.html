@@ -1,0 +1,94 @@
+<p class="page-kicker">Get Started</p>
+<h1>Your First Script</h1>
+<p class="lede">You don't need to install anything to start writing JavaScript. This page covers the three places you'll run it while learning: the browser console, a linked script file, and (briefly) Node.js.</p>
+
+<h2>The browser console</h2>
+<p>Every browser ships a set of developer tools with a JavaScript console built in. It's the fastest way to try something out.</p>
+<ul>
+  <li><strong>Chrome / Edge:</strong> <kbd>F12</kbd> or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd>, then the <strong>Console</strong> tab.</li>
+  <li><strong>Firefox:</strong> <kbd>F12</kbd>, then the <strong>Console</strong> tab.</li>
+  <li><strong>Safari:</strong> enable the Develop menu in Preferences, then <kbd>Cmd</kbd>+<kbd>Option</kbd>+<kbd>C</kbd>.</li>
+</ul>
+<p>Open one now and type this directly into it:</p>
+[[code lang="js"]]
+console.log("Hello, JavaScript!");
+[[/code]]
+[[code lang="console"]]
+Hello, JavaScript!
+[[/code]]
+<p><code>console.log()</code> prints a value to the console. You'll use it constantly to inspect what your code is doing — it's the most common debugging tool in JavaScript.</p>
+
+<h2>Linking JavaScript to a web page</h2>
+<p>In a real project, JavaScript lives in its own <code>.js</code> file and gets linked into an HTML page with a <code>&lt;script&gt;</code> tag.</p>
+[[code lang="html"]]
+<!doctype html>
+<html>
+  <head>
+    <title>My Page</title>
+  </head>
+  <body>
+    <h1>Hello!</h1>
+
+    <!-- Placed at the end of <body>, or use "defer" -->
+    <script src="script.js" defer></script>
+  </body>
+</html>
+[[/code]]
+[[code lang="js"]]
+// script.js
+console.log("script.js has loaded");
+document.querySelector("h1").style.color = "tomato";
+[[/code]]
+<p>Two details matter here:</p>
+<ul>
+  <li><strong>Where the script tag goes.</strong> The browser reads HTML top to bottom. If your script runs before the rest of the page exists, it can't find elements like <code>&lt;h1&gt;</code> yet. Putting the script at the end of <code>&lt;body&gt;</code>, or using the <code>defer</code> attribute, avoids this.</li>
+  <li><strong><code>defer</code> vs <code>async</code>.</strong> <code>defer</code> downloads the script in the background and runs it after the page is fully parsed, in order. <code>async</code> downloads in the background too, but runs the script the instant it's ready — possibly before the page finishes parsing, and not necessarily in order relative to other scripts. For most page scripts, <code>defer</code> is the safer default.</li>
+</ul>
+
+<div class="admonition tip">
+  <p class="admonition-title">Tip</p>
+  <p>You can also skip the file entirely for quick experiments with an inline <code>&lt;script&gt;&hellip;&lt;/script&gt;</code> block directly in your HTML. It's fine for learning, but real projects almost always use separate <code>.js</code> files.</p>
+</div>
+
+<h2>Strict mode</h2>
+<p>Add <code>"use strict";</code> at the top of a script or function to opt into a stricter variant of JavaScript that catches common mistakes — like accidentally creating a global variable by forgetting <code>let</code> — and turns them into errors instead of silent bugs.</p>
+[[code lang="js"]]
+"use strict";
+
+function example() {
+  x = 10; // ReferenceError: x is not defined (without strict mode, this
+          // would silently create a global variable named x)
+}
+[[/code]]
+<p>Modern JavaScript modules (see <a href="modules.html">Modules</a>) and classes are automatically in strict mode — you'll increasingly write strict-mode code without ever typing the directive yourself.</p>
+
+<h2>Comments</h2>
+<p>Comments are ignored by the engine and exist purely for humans reading the code later (including future you).</p>
+[[code lang="js"]]
+// A single-line comment
+
+/*
+ * A multi-line comment,
+ * often used for short explanations above a function.
+ */
+function add(a, b) {
+  return a + b; // inline comments work too
+}
+[[/code]]
+
+<h2>A quick look at Node.js</h2>
+<p>Everything in this guide runs in the browser, but it's worth knowing that <strong>Node.js</strong> lets you run the exact same JavaScript language outside the browser — on a server, in a terminal, in build tools. If you have Node installed, you can run a file directly:</p>
+[[code lang="bash"]]
+node script.js
+[[/code]]
+<p>Node adds its own APIs for things browsers don't need (reading files, starting servers), while removing browser-only APIs like <code>document</code>. The core language — variables, functions, closures, promises — is identical either way, which is exactly why this guide's syntax and concept chapters apply regardless of where you eventually run your code.</p>
+
+<div class="key-takeaways">
+  <p class="kt-title">Key Takeaways</p>
+  <ul>
+    <li>The browser console is the fastest way to experiment — open devtools and start typing.</li>
+    <li>Real projects link JavaScript via <code>&lt;script src="..." defer&gt;</code>, usually placed so it runs after the page has parsed.</li>
+    <li><code>"use strict"</code> catches common mistakes early; modules and classes use it automatically.</li>
+    <li>Node.js runs the same JavaScript language outside the browser, with different built-in APIs.</li>
+  </ul>
+</div>
