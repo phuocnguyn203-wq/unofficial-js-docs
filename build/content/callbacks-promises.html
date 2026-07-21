@@ -40,6 +40,32 @@ getUser(1, function (user) {
   <li><strong>rejected</strong> — failed, with a reason (usually an <code>Error</code>).</li>
 </ul>
 <p>Once a promise settles (fulfills or rejects), it stays that way forever — it can't change state again.</p>
+<div class="promise-diagram">
+  <div class="pd-box pd-pending">
+    <span class="pd-icon">&#9675;</span>
+    <span class="pd-name">Pending</span>
+    <span class="pd-hint">Working&hellip;</span>
+  </div>
+  <div class="pd-arrow" aria-hidden="true">&#8250;</div>
+  <div class="pd-outcomes">
+    <div class="pd-outcome">
+      <span class="pd-trigger">resolve(value)</span>
+      <div class="pd-box pd-fulfilled">
+        <span class="pd-icon">&#10003;</span>
+        <span class="pd-name">Fulfilled</span>
+        <span class="pd-hint"><code>.then()</code> runs</span>
+      </div>
+    </div>
+    <div class="pd-outcome">
+      <span class="pd-trigger">reject(error)</span>
+      <div class="pd-box pd-rejected">
+        <span class="pd-icon">&#10007;</span>
+        <span class="pd-name">Rejected</span>
+        <span class="pd-hint"><code>.catch()</code> runs</span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <h2>Creating a promise</h2>
 <p>Most of the time you'll <em>consume</em> promises returned by built-in functions like <code>fetch()</code>, not create your own. But knowing how they're built removes the mystery:</p>
@@ -66,6 +92,42 @@ fetchUserName(1)
   .finally(() => console.log("Done, either way"));
 [[/code]]
 <p><code>.then()</code> runs when the promise fulfills; <code>.catch()</code> runs when it rejects (or when an earlier <code>.then()</code> throws); <code>.finally()</code> runs regardless of the outcome — perfect for cleanup like hiding a loading spinner.</p>
+
+<p><strong>Watch the timing:</strong> step through that exact chain and see when each callback actually runs — including why <code>.catch</code> gets skipped entirely on the success path.</p>
+<div class="sim" id="sim-promise-flow">
+  <div class="sim-code"><pre><code></code></pre></div>
+  <div class="sim-stage">
+    <div class="sim-lane" data-lane="stack">
+      <p class="sim-lane-title">Call Stack</p>
+      <div class="sim-lane-body" data-lane-body="stack"></div>
+    </div>
+    <div class="sim-lane" data-lane="webapi">
+      <p class="sim-lane-title">Web APIs</p>
+      <div class="sim-lane-body" data-lane-body="webapi"></div>
+    </div>
+    <div class="sim-queues">
+      <div class="sim-lane" data-lane="micro">
+        <p class="sim-lane-title">Microtask Queue <span class="sim-tag">runs first</span></p>
+        <div class="sim-lane-body" data-lane-body="micro"></div>
+      </div>
+      <div class="sim-lane" data-lane="macro">
+        <p class="sim-lane-title">Macrotask Queue <span class="sim-tag">runs last</span></p>
+        <div class="sim-lane-body" data-lane-body="macro"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sim-console">
+    <p class="sim-lane-title">Console output</p>
+    <div class="sim-console-body" data-lane-body="console"></div>
+  </div>
+  <div class="sim-controls">
+    <button type="button" class="sim-btn" data-sim-action="reset">&#8634; Reset</button>
+    <button type="button" class="sim-btn" data-sim-action="prev">&larr; Back</button>
+    <button type="button" class="sim-btn sim-btn-primary" data-sim-action="next">Next step &rarr;</button>
+    <span class="sim-step-indicator">Step 0 / 9</span>
+  </div>
+  <p class="sim-explain">Click "Next step" to call fetchUserName(1).</p>
+</div>
 
 <h2>Chaining: solving callback hell</h2>
 <p>The real payoff: each <code>.then()</code> returns a <em>new</em> promise, so you can chain steps in a flat, readable sequence instead of nesting them.</p>
@@ -120,3 +182,30 @@ Promise.allSettled(requests).then(results => {
     <li><code>Promise.all</code>, <code>.allSettled</code>, <code>.race</code>, and <code>.any</code> each combine multiple promises with different failure behavior.</li>
   </ul>
 </div>
+
+<script>
+(function () {
+  "use strict";
+
+  var PROMISE_STEPS = [
+    { lines: [], stack: [], webapi: [], micro: [], macro: [], consoleLog: [], note: "Click “Next step” to call fetchUserName(1)." },
+    { lines: [1], stack: ['fetchUserName(1)'], webapi: [], micro: [], macro: [], consoleLog: [], note: "fetchUserName(1) is called — pushed onto the stack." },
+    { lines: [1], stack: [], webapi: ['timer (1000ms)'], micro: [], macro: [], consoleLog: [], note: "Inside, setTimeout hands a 1000ms timer to the browser. fetchUserName returns a pending Promise immediately." },
+    { lines: [2, 3, 4], stack: [], webapi: ['timer (1000ms)'], micro: [], macro: [], consoleLog: [], note: "The .then/.catch/.finally chain (lines 2-4) just registers callbacks on that pending promise. Nothing runs yet — this only wires up “what happens later.”" },
+    { lines: [], stack: [], webapi: [], micro: [], macro: ['timer callback → resolve(…)'], consoleLog: [], note: "~1000ms pass. The timer elapses, moving its callback into the macrotask queue." },
+    { lines: [], stack: ['timer callback'], webapi: [], micro: [], macro: [], consoleLog: [], note: "The event loop takes it from the macrotask queue and runs it — calling resolve({ id: 1, name: “Ava” }), which settles the promise as fulfilled." },
+    { lines: [2], stack: [], webapi: [], micro: ['then(user => …)'], macro: [], consoleLog: [], note: "Resolving the promise immediately schedules the first .then callback (line 2) as a microtask." },
+    { lines: [2], stack: ['then(user => …)'], webapi: [], micro: [], macro: [], consoleLog: ["Got user: Ava"], note: "The microtask runs, logging “Got user: Ava”. It didn't throw, so .catch (line 3) is skipped entirely — and .finally is scheduled next." },
+    { lines: [4], stack: [], webapi: [], micro: ['finally(() => …)'], macro: [], consoleLog: ["Got user: Ava"], note: ".finally always runs, success or failure — it's now scheduled as the next microtask." },
+    { lines: [4], stack: ['finally(() => …)'], webapi: [], micro: [], macro: [], consoleLog: ["Got user: Ava", "Done, either way"], note: ".finally runs last, logging “Done, either way”. Notice .catch never ran — it only fires if something upstream rejects or throws." }
+  ];
+
+  document.addEventListener("DOMContentLoaded", function () {
+    JSDocsSim.init({
+      id: "sim-promise-flow",
+      code: 'fetchUserName(1)\n  .then(user => console.log(`Got user: ${user.name}`))\n  .catch(error => console.error("Failed:", error.message))\n  .finally(() => console.log("Done, either way"));',
+      steps: PROMISE_STEPS
+    });
+  });
+})();
+</script>

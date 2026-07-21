@@ -121,5 +121,5 @@
     });
   }
 
-  window.JSDocsHighlight = { highlightAll: highlightAll };
+  window.JSDocsHighlight = { highlightAll: highlightAll, highlightLine: highlightJS };
 })();

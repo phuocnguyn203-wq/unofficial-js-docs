@@ -2,6 +2,12 @@
 <h1>The Event Loop</h1>
 <p class="lede">JavaScript runs on a single thread — it can only do one thing at a time. Yet it downloads data, runs timers, and responds to clicks without ever freezing the page. The event loop is the mechanism that makes that possible, and understanding it makes every async pattern in this guide click into place.</p>
 
+<div class="admonition tip">
+  <p class="admonition-title">ELI5: a one-chef kitchen</p>
+  <p>There's exactly <strong>one chef</strong>, and they can only cook one dish at a time, start to finish — that's the call stack. If an order takes a while (something's marinating, a delivery hasn't arrived), the chef doesn't stand around — they hand it to a <strong>prep station</strong> that works in the background (that's <code>setTimeout</code>, a network request, anything slow). The finished order doesn't interrupt the chef; it's placed on a <strong>tray</strong> and waits. A runner keeps doing exactly one job, forever: check if the chef is free, and if so, hand them the next order from the tray. That runner is the <strong>event loop</strong>.</p>
+  <p>Every term below — call stack, Web APIs, queue, event loop — maps directly onto a piece of this picture. Keep it in mind as you read.</p>
+</div>
+
 <h2>The call stack</h2>
 <p>The <strong>call stack</strong> is where JavaScript tracks what function is currently running. Every time a function is called, a frame is pushed onto the stack; when it returns, its frame is popped off. JavaScript can only ever execute the function on top of the stack — this is what "single-threaded" actually means in practice.</p>
 [[code lang="js"]]
@@ -19,6 +25,29 @@ printSquare(5);
 // stack grows: printSquare -> square -> multiply
 // then unwinds as each function returns its result
 [[/code]]
+
+<p><strong>Watch the stack grow and shrink:</strong> step through the exact call above, one frame at a time.</p>
+<div class="sim" id="sim-callstack">
+  <div class="sim-code"><pre><code></code></pre></div>
+  <div class="sim-stage sim-stage-solo">
+    <div class="sim-lane" data-lane="stack">
+      <p class="sim-lane-title">Call Stack</p>
+      <div class="sim-lane-body" data-lane-body="stack"></div>
+    </div>
+  </div>
+  <div class="sim-console">
+    <p class="sim-lane-title">Console output</p>
+    <div class="sim-console-body" data-lane-body="console"></div>
+  </div>
+  <div class="sim-controls">
+    <button type="button" class="sim-btn" data-sim-action="reset">&#8634; Reset</button>
+    <button type="button" class="sim-btn" data-sim-action="prev">&larr; Back</button>
+    <button type="button" class="sim-btn sim-btn-primary" data-sim-action="next">Next step &rarr;</button>
+    <span class="sim-step-indicator">Step 0 / 7</span>
+  </div>
+  <p class="sim-explain">Click "Next step" to call printSquare(5) and watch frames get pushed and popped.</p>
+</div>
+
 <p>If code keeps calling deeper and deeper without returning (like a function that calls itself forever), the stack fills up and the engine throws a <code>RangeError: Maximum call stack size exceeded</code> — a stack overflow.</p>
 
 <h2>So how does JavaScript avoid blocking?</h2>
@@ -46,6 +75,24 @@ console.log("3: end");
   <li>If yes, take the first callback waiting in the queue and push it onto the stack to run.</li>
   <li>Repeat, forever.</li>
 </ol>
+<div class="diagram">
+  <div class="diagram-row">
+    <div class="diagram-box">
+      <h4>Call Stack</h4>
+      <p>Where synchronous code actually executes — one frame at a time, top to bottom.</p>
+    </div>
+    <div class="diagram-box">
+      <h4>Web APIs (background)</h4>
+      <p>Timers, network requests, and file reads run out here — outside the call stack entirely.</p>
+    </div>
+  </div>
+  <div class="diagram-arrowrow"><span class="arrow-line"></span>finished background work is placed in a queue<span class="arrow-line"></span></div>
+  <div class="diagram-box">
+    <h4>Callback Queue</h4>
+    <p>Finished callbacks wait here, in order, until the call stack is completely empty.</p>
+  </div>
+  <div class="diagram-loop">&#8635; The event loop just repeats one question: &ldquo;Is the stack empty? Then take the next thing from the queue.&rdquo;</div>
+</div>
 <p>This is why, in the example above, <code>"3: end"</code> always logs before <code>"2: timeout finished"</code> — even with a timeout of <code>0</code>. The queued callback can only run once the stack is empty, which means <em>after</em> all currently running synchronous code has finished.</p>
 [[code lang="js"]]
 console.log("first");
@@ -55,7 +102,21 @@ console.log("second");
 [[/code]]
 
 <h2>Microtasks vs. macrotasks</h2>
-<p>There isn't just one queue — there are two, with different priority. <strong>Promises</strong> (see <a href="callbacks-promises.html">Callbacks &amp; Promises</a>) schedule their callbacks on the <strong>microtask queue</strong>, which the event loop always fully drains before touching the regular <strong>macrotask queue</strong> that <code>setTimeout</code> and DOM events use.</p>
+<p>The examples below use two things this page hasn't formally introduced yet — a quick, ELI5-sized primer before the code:</p>
+<div class="diagram">
+  <div class="diagram-row">
+    <div class="diagram-box">
+      <h4>A callback</h4>
+      <p>Just a regular function you hand to something else, to be run <em>later</em> instead of right now. You've already seen one — the arrow function inside <code>setTimeout(() => &hellip;, 0)</code> is a callback: a note that says &ldquo;run this whenever the timer's done.&rdquo;</p>
+    </div>
+    <div class="diagram-box">
+      <h4>A promise</h4>
+      <p>An object that stands in for a value that isn't ready yet. It starts <strong>pending</strong>, then settles as either <strong>resolved</strong> (success) or <strong>rejected</strong> (failure). <code>.then(callback)</code> attaches a callback to run once it resolves — and that callback is exactly what gets scheduled on the microtask queue.</p>
+    </div>
+  </div>
+</div>
+<p><code>Promise.resolve()</code> below just creates a promise that's already resolved on the spot — a shortcut for demonstrating timing, standing in for something like a real <code>fetch()</code> call. Creating promises, chaining them, and handling errors is the full subject of the next chapter, <a href="callbacks-promises.html">Callbacks &amp; Promises</a> — everything here is just enough to follow along.</p>
+<p>With that vocabulary: there isn't just one queue — there are two, with different priority. Promises schedule their callbacks on the <strong>microtask queue</strong>, which the event loop always fully drains before touching the regular <strong>macrotask queue</strong> that <code>setTimeout</code> and DOM events use.</p>
 [[code lang="js"]]
 console.log("1: sync");
 
@@ -73,9 +134,50 @@ console.log("4: sync");
 [[/code]]
 <p>The rule: after each piece of synchronous code finishes, the event loop empties the <em>entire</em> microtask queue before it processes even one macrotask. This is why promise callbacks reliably run sooner than <code>setTimeout</code> callbacks, even a <code>0ms</code> one.</p>
 
+<p><strong>Watch it happen, step by step:</strong> click through the exact example above and see the call stack, both queues, and the console update in real time.</p>
+<div class="sim" id="sim-microvsmacro">
+  <div class="sim-code"><pre><code></code></pre></div>
+  <div class="sim-stage">
+    <div class="sim-lane" data-lane="stack">
+      <p class="sim-lane-title">Call Stack</p>
+      <div class="sim-lane-body" data-lane-body="stack"></div>
+    </div>
+    <div class="sim-lane" data-lane="webapi">
+      <p class="sim-lane-title">Web APIs</p>
+      <div class="sim-lane-body" data-lane-body="webapi"></div>
+    </div>
+    <div class="sim-queues">
+      <div class="sim-lane" data-lane="micro">
+        <p class="sim-lane-title">Microtask Queue <span class="sim-tag">runs first</span></p>
+        <div class="sim-lane-body" data-lane-body="micro"></div>
+      </div>
+      <div class="sim-lane" data-lane="macro">
+        <p class="sim-lane-title">Macrotask Queue <span class="sim-tag">runs last</span></p>
+        <div class="sim-lane-body" data-lane-body="macro"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sim-console">
+    <p class="sim-lane-title">Console output</p>
+    <div class="sim-console-body" data-lane-body="console"></div>
+  </div>
+  <div class="sim-controls">
+    <button type="button" class="sim-btn" data-sim-action="reset">&#8634; Reset</button>
+    <button type="button" class="sim-btn" data-sim-action="prev">&larr; Back</button>
+    <button type="button" class="sim-btn sim-btn-primary" data-sim-action="next">Next step &rarr;</button>
+    <span class="sim-step-indicator">Step 0 / 8</span>
+  </div>
+  <p class="sim-explain">Click "Next step" to run the script from the top.</p>
+</div>
+
 <div class="admonition note">
   <p class="admonition-title">Note</p>
   <p><code>async</code>/<code>await</code> (covered two chapters from now) is built entirely on promises, so everything on this page applies to it too — an <code>await</code> point is, under the hood, a microtask.</p>
+</div>
+
+<div class="admonition note">
+  <p class="admonition-title">Going deeper</p>
+  <p>You can schedule a microtask directly, without a promise, using <code>queueMicrotask(callback)</code> — useful when you want "run this right after the current code, before anything else" without the ceremony of a promise. And browsers fit a rendering step in too: after the microtask queue drains, the browser <em>may</em> paint the screen before picking up the next macrotask, which is part of why heavy synchronous work makes a page feel like it's stuttering. Node.js follows this same core model but adds several more queue phases (timers, I/O callbacks, <code>setImmediate</code>) — the browser picture on this page is the 90% version that transfers directly.</p>
 </div>
 
 <h2>Putting it all together</h2>
@@ -95,6 +197,42 @@ console.log("E");
 // B      — only then does the event loop move on to the macrotask queue
 [[/code]]
 
+<p><strong>The trickiest part is D:</strong> it isn't scheduled at the same time as C — it only gets queued once C finishes running. Step through it below to see exactly when.</p>
+<div class="sim" id="sim-together">
+  <div class="sim-code"><pre><code></code></pre></div>
+  <div class="sim-stage">
+    <div class="sim-lane" data-lane="stack">
+      <p class="sim-lane-title">Call Stack</p>
+      <div class="sim-lane-body" data-lane-body="stack"></div>
+    </div>
+    <div class="sim-lane" data-lane="webapi">
+      <p class="sim-lane-title">Web APIs</p>
+      <div class="sim-lane-body" data-lane-body="webapi"></div>
+    </div>
+    <div class="sim-queues">
+      <div class="sim-lane" data-lane="micro">
+        <p class="sim-lane-title">Microtask Queue <span class="sim-tag">runs first</span></p>
+        <div class="sim-lane-body" data-lane-body="micro"></div>
+      </div>
+      <div class="sim-lane" data-lane="macro">
+        <p class="sim-lane-title">Macrotask Queue <span class="sim-tag">runs last</span></p>
+        <div class="sim-lane-body" data-lane-body="macro"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sim-console">
+    <p class="sim-lane-title">Console output</p>
+    <div class="sim-console-body" data-lane-body="console"></div>
+  </div>
+  <div class="sim-controls">
+    <button type="button" class="sim-btn" data-sim-action="reset">&#8634; Reset</button>
+    <button type="button" class="sim-btn" data-sim-action="prev">&larr; Back</button>
+    <button type="button" class="sim-btn sim-btn-primary" data-sim-action="next">Next step &rarr;</button>
+    <span class="sim-step-indicator">Step 0 / 9</span>
+  </div>
+  <p class="sim-explain">Click "Next step" to run this script from the top.</p>
+</div>
+
 <div class="key-takeaways">
   <p class="kt-title">Key Takeaways</p>
   <ul>
@@ -102,5 +240,66 @@ console.log("E");
     <li>Slow operations (timers, network requests) are handled outside the engine by the browser/Node, which queues their callbacks instead of running them immediately.</li>
     <li>The event loop moves queued callbacks onto the stack only once the stack is completely empty.</li>
     <li>Promise callbacks (microtasks) always run before the next timer or event callback (macrotask) — the whole microtask queue drains first.</li>
+    <li>The kitchen picture: one chef (call stack) cooks one order at a time, slow orders go to a background prep station (Web APIs), finished orders wait on a tray (the queue), and a runner (the event loop) only ever hands the chef the next order once they're free.</li>
   </ul>
 </div>
+
+<script>
+(function () {
+  "use strict";
+
+  var CALLSTACK_STEPS = [
+    { lines: [], stack: [], consoleLog: [], note: "Click “Next step” to call printSquare(5)." },
+    { lines: [11], stack: ['printSquare(5)'], consoleLog: [], note: "printSquare(5) is called — its frame is pushed onto the stack." },
+    { lines: [8], stack: ['printSquare(5)', 'square(5)'], consoleLog: [], note: "Inside printSquare, square(5) is called — a new frame goes on top." },
+    { lines: [5], stack: ['printSquare(5)', 'square(5)', 'multiply(5, 5)'], consoleLog: [], note: "Inside square, multiply(5, 5) is called — another frame on top. Three deep now." },
+    { lines: [2], stack: ['printSquare(5)', 'square(5)', 'multiply(5, 5)'], consoleLog: [], note: "multiply runs its one line, return a * b, and produces 25." },
+    { lines: [5], stack: ['printSquare(5)', 'square(5)'], consoleLog: [], note: "multiply returns 25 and its frame is popped off the stack." },
+    { lines: [8], stack: ['printSquare(5)'], consoleLog: [], note: "square returns 25 to printSquare and its own frame is popped." },
+    { lines: [8], stack: [], consoleLog: ["25"], note: "console.log(25) runs, then printSquare returns — the last frame pops and the stack is empty again." }
+  ];
+
+  var MICROVMACRO_STEPS = [
+    { lines: [], stack: [], webapi: [], micro: [], macro: [], consoleLog: [], note: "Click “Next step” to run the script from the top." },
+    { lines: [1], stack: ['console.log("1: sync")'], webapi: [], micro: [], macro: [], consoleLog: ["1: sync"], note: "Line 1 is synchronous — it runs immediately and logs “1: sync”." },
+    { lines: [3], stack: ['setTimeout(…)'], webapi: ['timer (0ms)'], micro: [], macro: [], consoleLog: ["1: sync"], note: "setTimeout hands its callback to the browser's timer (a background Web API) and returns immediately — it does NOT run the callback now." },
+    { lines: [5], stack: ['Promise.resolve().then(…)'], webapi: ['timer (0ms)'], micro: ['() => console.log("3: microtask")'], macro: [], consoleLog: ["1: sync"], note: "The promise is already resolved, so its .then callback is scheduled on the microtask queue right away — but still not run yet." },
+    { lines: [7], stack: ['console.log("4: sync")'], webapi: ['timer (0ms)'], micro: ['() => console.log("3: microtask")'], macro: [], consoleLog: ["1: sync", "4: sync"], note: "Line 7 runs and logs “4: sync”. The main script is now finished — time for the event loop to take over." },
+    { lines: [], stack: [], webapi: [], micro: ['() => console.log("3: microtask")'], macro: ['() => console.log("2: macrotask")'], consoleLog: ["1: sync", "4: sync"], note: "Stack is empty. In the background, the 0ms timer already elapsed, moving its callback into the macrotask queue — but the event loop always drains microtasks first." },
+    { lines: [], stack: ['() => console.log("3: microtask")'], webapi: [], micro: [], macro: ['() => console.log("2: macrotask")'], consoleLog: ["1: sync", "4: sync", "3: microtask (promise)"], note: "The microtask runs, logging “3: microtask (promise)”." },
+    { lines: [], stack: [], webapi: [], micro: [], macro: ['() => console.log("2: macrotask")'], consoleLog: ["1: sync", "4: sync", "3: microtask (promise)"], note: "The microtask queue is now empty. Only now does the event loop move to the macrotask queue." },
+    { lines: [], stack: ['() => console.log("2: macrotask")'], webapi: [], micro: [], macro: [], consoleLog: ["1: sync", "4: sync", "3: microtask (promise)", "2: macrotask (setTimeout)"], note: "The timer's callback finally runs. Final order: 1, 4, 3, 2 — sync first, then all microtasks, then macrotasks." }
+  ];
+
+  var TOGETHER_STEPS = [
+    { lines: [], stack: [], webapi: [], micro: [], macro: [], consoleLog: [], note: "Click “Next step” to run this script from the top." },
+    { lines: [1], stack: ['console.log("A")'], webapi: [], micro: [], macro: [], consoleLog: ["A"], note: "Line 1 runs synchronously and logs “A”." },
+    { lines: [3], stack: ['setTimeout(…)'], webapi: ['timer (0ms)'], micro: [], macro: [], consoleLog: ["A"], note: "setTimeout schedules its callback in the background and returns immediately — “B” hasn't logged yet." },
+    { lines: [5, 6, 7], stack: ['Promise.resolve().then(…).then(…)'], webapi: ['timer (0ms)'], micro: ['() => console.log("C")'], macro: [], consoleLog: ["A"], note: "Promise.resolve() is already resolved, so the FIRST .then (logging “C”) is scheduled as a microtask right now. The SECOND .then (“D”) is NOT scheduled yet — it's chained onto a promise that only resolves once C finishes running." },
+    { lines: [9], stack: ['console.log("E")'], webapi: ['timer (0ms)'], micro: ['() => console.log("C")'], macro: [], consoleLog: ["A", "E"], note: "Line 9 runs and logs “E”. The synchronous script is done." },
+    { lines: [], stack: [], webapi: [], micro: ['() => console.log("C")'], macro: ['() => console.log("B")'], consoleLog: ["A", "E"], note: "Stack is empty. In the background, the timer already elapsed, so “B”'s callback is now waiting in the macrotask queue — but microtasks go first." },
+    { lines: [], stack: ['() => console.log("C")'], webapi: [], micro: [], macro: ['() => console.log("B")'], consoleLog: ["A", "E", "C"], note: "The microtask queue is processed: this callback runs and logs “C” — and because it just finished, the promise it returned resolves, which immediately schedules the SECOND .then (“D”) as a brand-new microtask." },
+    { lines: [], stack: [], webapi: [], micro: ['() => console.log("D")'], macro: ['() => console.log("B")'], consoleLog: ["A", "E", "C"], note: "“D”'s callback is now in the microtask queue. Crucially: the event loop doesn't move on to macrotasks yet — it keeps draining microtasks, even ones just added." },
+    { lines: [], stack: ['() => console.log("D")'], webapi: [], micro: [], macro: ['() => console.log("B")'], consoleLog: ["A", "E", "C", "D"], note: "“D” runs and logs. The microtask queue is finally, truly empty." },
+    { lines: [], stack: ['() => console.log("B")'], webapi: [], micro: [], macro: [], consoleLog: ["A", "E", "C", "D", "B"], note: "Only now does the event loop move to the macrotask queue. “B” runs last. Final order: A, E, C, D, B." }
+  ];
+
+  document.addEventListener("DOMContentLoaded", function () {
+    JSDocsSim.init({
+      id: "sim-callstack",
+      code: 'function multiply(a, b) {\n  return a * b;\n}\nfunction square(n) {\n  return multiply(n, n);\n}\nfunction printSquare(n) {\n  console.log(square(n));\n}\n\nprintSquare(5);',
+      steps: CALLSTACK_STEPS
+    });
+    JSDocsSim.init({
+      id: "sim-microvsmacro",
+      code: 'console.log("1: sync");\n\nsetTimeout(() => console.log("2: macrotask (setTimeout)"), 0);\n\nPromise.resolve().then(() => console.log("3: microtask (promise)"));\n\nconsole.log("4: sync");',
+      steps: MICROVMACRO_STEPS
+    });
+    JSDocsSim.init({
+      id: "sim-together",
+      code: 'console.log("A");\n\nsetTimeout(() => console.log("B"), 0);\n\nPromise.resolve()\n  .then(() => console.log("C"))\n  .then(() => console.log("D"));\n\nconsole.log("E");',
+      steps: TOGETHER_STEPS
+    });
+  });
+})();
+</script>

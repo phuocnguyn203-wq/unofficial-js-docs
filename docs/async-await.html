@@ -131,6 +131,22 @@ async function loadAll() {
   ]);
   return { user, posts, comments }; // total: ~1s, limited by the slowest request
 }</code></pre></div>
+<p>Visually, the difference is the gap between three bars run end-to-end versus stacked on top of each other:</p>
+<div class="timeline-diagram">
+  <div class="td-group td-group-sequential">
+    <p class="td-group-title">Sequential awaits &mdash; <span class="td-time">~3s total</span></p>
+    <div class="td-lane"><div class="td-bar" style="width: 33.3%;">fetchUser()</div></div>
+    <div class="td-lane"><div class="td-bar" style="width: 33.3%; margin-left: 33.3%;">fetchPosts()</div></div>
+    <div class="td-lane"><div class="td-bar" style="width: 33.4%; margin-left: 66.6%;">fetchComments()</div></div>
+  </div>
+  <div class="td-group td-group-parallel">
+    <p class="td-group-title">Promise.all (parallel) &mdash; <span class="td-time">~1s total</span></p>
+    <div class="td-lane"><div class="td-bar" style="width: 33.3%;">fetchUser()</div></div>
+    <div class="td-lane"><div class="td-bar" style="width: 33.3%;">fetchPosts()</div></div>
+    <div class="td-lane"><div class="td-bar" style="width: 33.3%;">fetchComments()</div></div>
+  </div>
+  <div class="td-axis"><span>0s</span><span>1s</span><span>2s</span><span>3s</span></div>
+</div>
 <div class="admonition tip">
   <p class="admonition-title">Tip</p>
   <p>Only await sequentially when a later request genuinely needs data from an earlier one (like fetching posts that require a user ID first). Otherwise, kick off independent requests together and await them as a group.</p>
@@ -178,6 +194,7 @@ console.log("2: sync code after calling delayedLog");
 
 <script src="../assets/js/search-index.js"></script>
 <script src="../assets/js/highlight.js"></script>
+<script src="../assets/js/sim.js"></script>
 <script src="../assets/js/search.js"></script>
 <script src="../assets/js/main.js"></script>
 </body>
