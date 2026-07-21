@@ -2,6 +2,8 @@
 
 A complete, dark-themed, FastAPI/MkDocs-style documentation site for learning JavaScript from beginner to advanced. 30 pages across 11 sections, a sidebar, an on-page table of contents, client-side search, and syntax-highlighted code — all **plain static HTML/CSS/JS**. No backend, no build tooling required to host it.
 
+[Docs](https://phuocnguyn203-wq.github.io/unofficial-js-docs/)
+
 ## Project structure
 
 ```
