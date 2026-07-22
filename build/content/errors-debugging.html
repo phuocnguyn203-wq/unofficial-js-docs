@@ -120,6 +120,25 @@ async function saveOrder(order) {
 </table>
 </div>
 <p>The reason this distinction matters: catching a programmer error and handling it like an operational one doesn't fix the bug — it just hides it until it fails again later, in a more confusing way, further from where it actually went wrong. A <code>try</code>/<code>catch</code> around code that reads <code>user.address.city</code> won't fix a missing <code>address</code>; it'll just mask the real bug (the caller forgot to validate the shape of <code>user</code>) behind a generic error message.</p>
+<p>Concretely, that means two different reflexes coexist in the same app:</p>
+[[code lang="js"]]
+// Operational: an anticipated failure mode — catch it specifically, right where it happens
+function parseOrderPayload(raw) {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new ValidationError("Request body must be valid JSON", "body");
+  }
+}
+
+// Programmer error: NOT anticipated, so nothing in the request path tries to
+// catch it. It's left to propagate all the way up to a process-level net.
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught exception — crashing on purpose:", error);
+  process.exit(1); // let a process manager (pm2, systemd, Kubernetes) restart a clean instance
+});
+[[/code]]
+<p>That's the "let it crash" reflex: operational errors get a specific <code>catch</code> and a graceful response; genuine bugs get <em>no</em> catch anywhere in the request path, so they surface immediately at the process level instead of leaving the app limping along in a state nobody planned for. Trying to keep the process alive after an uncaught exception is worse than crashing — you don't know what else it left half-updated.</p>
 
 <h2>Where to catch: pick a boundary, not every layer</h2>
 <p>In any app with more than one layer — say, a typical <strong>3-tier</strong> backend split into routes/controllers, services, and a data-access/repository layer — the same question comes up constantly: which layer should have the <code>try</code>/<code>catch</code>? The answer follows directly from the principle above: catch at whichever layer has enough context to actually do something, and let every other layer stay clean.</p>
@@ -184,11 +203,26 @@ async function registerUser({ email, password }) {
 
 <h3>Controller layer — one centralized boundary</h3>
 <p>Routes shouldn't each carry their own <code>try</code>/<code>catch</code> — that scatters the same "what status code does this error mean" logic across every handler. Instead, wrap route handlers once so a thrown or rejected error is forwarded to a single error-handling middleware, which is the one real decision point for turning an error into an HTTP response.</p>
+<p>The wrapper that does this is a <strong>higher-order function</strong> — a function that takes a function and hands back a new one. It does <em>not</em> take a function that "returns" <code>(req, res, next)</code>; it takes your actual route handler, which is a function whose <em>parameters</em> are <code>(req, res, next)</code>, and gives back a replacement function with that same signature. Written without the arrow-function shorthand, it's exactly this:</p>
 [[code lang="js"]]
-// asyncHandler.js — forwards a thrown or rejected error to Express instead of crashing the process
+function asyncHandler(fn) {
+  // This is the function Express actually calls as the route handler —
+  // same (req, res, next) shape as fn, so Express can't tell them apart.
+  return function (req, res, next) {
+    // Run the real handler. Promise.resolve(...) normalizes the result,
+    // whether fn is an async function (already returns a promise) or a
+    // plain function that just happens to throw synchronously.
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+}
+[[/code]]
+<p>The one-line arrow version is the same function, curried: <code>asyncHandler</code> receives <code>fn</code> and immediately returns <code>(req, res, next) =&gt; ...</code>. Read it as "a function of <code>fn</code>, that returns a function of <code>(req, res, next)</code>" — not the other way around:</p>
+[[code lang="js"]]
+// asyncHandler.js
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
-// user.controller.js
+// user.controller.js — the async arrow function below is `fn`;
+// asyncHandler(fn) is the wrapped function Express actually registers and calls.
 router.post("/users", asyncHandler(async (req, res) => {
   const user = await userService.registerUser(req.body);
   res.status(201).json(user);
@@ -209,7 +243,25 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: "Something went wrong" });
 });
 [[/code]]
+<p>Why bother at all: inside an <code>async</code> route handler, a thrown error or a rejected <code>await</code> becomes a rejected promise. Express 4.x (still what most apps run in production) never looks at what a handler returns, so that rejection just goes unhandled — the request hangs until it times out, and the <code>app.use((error, ...) =&gt; ...)</code> above never runs at all. <code>asyncHandler</code>'s <code>.catch(next)</code> is what bridges that gap, once, for every route, instead of every handler needing its own <code>try</code>/<code>catch</code> that calls <code>next(error)</code> manually.</p>
+<div class="admonition note">
+  <p class="admonition-title">Express 5</p>
+  <p>Express 5 forwards a rejected promise from a route handler to the error middleware automatically, so <code>asyncHandler</code> isn't needed there. It's still worth understanding: the same gap — "a rejected promise doesn't route itself to an error handler unless something explicitly hooks it up" — reappears anywhere you bridge promise-based code into a callback-shaped API.</p>
+</div>
 <p>Notice what each layer does <em>not</em> do: the repository doesn't know about HTTP, the service doesn't know about Postgres error codes, and the controller doesn't know about either — it just trusts that whatever reaches the error middleware is either a domain error it can map to a status code, or a bug worth logging loudly. That separation is what makes the error handling maintainable as the app grows past a handful of routes.</p>
+
+<h3>Tracing one request through all three layers</h3>
+<p>To see the principle actually working end to end, follow what happens when a client tries to register with an email that's already taken:</p>
+<ol>
+  <li>The route <code>await</code>s <code>userService.registerUser(req.body)</code>.</li>
+  <li><code>registerUser</code> validates the email format (fine), then calls <code>userRepository.create(...)</code>.</li>
+  <li>The database rejects the insert with Postgres error code <code>23505</code> (unique violation).</li>
+  <li>The <strong>repository</strong> is the only layer that catches this — it recognizes <code>23505</code> and throws a <code>DuplicateEmailError</code> instead of letting the raw driver error through.</li>
+  <li>The <strong>service</strong> catches <code>DuplicateEmailError</code> specifically, and re-throws it as a <code>ConflictError</code> — its own business-level statement of "this operation can't proceed," keeping the original error attached as <code>cause</code>.</li>
+  <li>The <strong>controller</strong> catches nothing manually. The rejected promise from <code>registerUser</code> is caught by <code>asyncHandler</code>'s built-in <code>.catch(next)</code>, which hands the <code>ConflictError</code> to Express.</li>
+  <li>The <strong>error middleware</strong> — the only place that knows about HTTP status codes — recognizes <code>ConflictError</code> and responds <code>409 Conflict</code> with a safe, client-facing message.</li>
+</ol>
+<p>Every hop either translates the error once, into the vocabulary the layer above it understands, or does nothing and lets it pass through untouched. Nothing catches "just in case," and no layer needs to know about anything more than one hop away — that's the whole pattern, applied.</p>
 <div class="admonition note">
   <p class="admonition-title">Why <code>{ cause: error }</code></p>
   <p>The <code>cause</code> option (ES2022) lets a higher-level error keep a reference to the lower-level one it was translated from, without exposing it in the message. <code>error.cause</code> is still there in logs and debuggers, so translating an error for the caller's benefit doesn't cost you any information for your own.</p>
