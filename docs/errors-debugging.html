@@ -137,6 +137,133 @@ try {
   }
 }</code></pre></div>
 
+<h2 id="the-principle-only-catch-what-you-can-act-on">The principle: only catch what you can act on<a href="#the-principle-only-catch-what-you-can-act-on" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>The syntax is easy; knowing <em>when</em> to reach for it is what actually matters in a real codebase. The most common mistake isn't forgetting a <code>try</code> block — it's wrapping everything in one "just in case." A <code>catch</code> block should only exist if it does one of three things: <strong>recover</strong> (retry, fall back to a default), <strong>translate</strong> (turn a low-level failure into one the caller can understand), or <strong>clean up</strong> (release a lock, close a connection) before letting the error continue on. If a <code>catch</code> block does none of these, delete it and let the error propagate — some other layer up the call stack is better positioned to deal with it.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// Bad: catches an error it can't do anything about, then hides it.
+// The caller has no idea the save failed — it just gets undefined back.
+async function saveOrder(order) {
+  try {
+    return await db.orders.insert(order);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// Good: nothing to add here, so don't catch at all — let it bubble up
+// to a layer that actually knows what to do with a failed save.
+async function saveOrder(order) {
+  return await db.orders.insert(order);
+}</code></pre></div>
+<div class="admonition danger">
+  <p class="admonition-title">The empty catch block</p>
+  <p>A <code>catch</code> block that logs and swallows an error is barely better than one that does nothing at all — the program keeps running in a state the rest of the code assumes is fine, and the failure resurfaces later, somewhere harder to trace back to the real cause. If you can't meaningfully handle an error at a given point, don't catch it there.</p>
+</div>
+
+<h2 id="operational-errors-vs-programmer-errors">Operational errors vs. programmer errors<a href="#operational-errors-vs-programmer-errors" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>Deciding whether to reach for <code>try</code>/<code>catch</code> at all starts with naming what kind of failure you're looking at.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Kind</th><th>Examples</th><th>What to do</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Operational</strong> — expected, not a bug</td><td>Invalid user input, a duplicate email on signup, a timed-out network request, a file that doesn't exist yet.</td><td>Anticipate it. Catch it, and turn it into a clear response, a retry, or a fallback.</td></tr>
+    <tr><td><strong>Programmer</strong> — a bug</td><td>Calling a function that doesn't exist, passing a string where an object was expected, an off-by-one that reads past an array.</td><td>Don't catch and paper over it. Let it crash loudly (or hit a top-level handler that logs and alerts) so it gets fixed at the source.</td></tr>
+  </tbody>
+</table>
+</div>
+<p>The reason this distinction matters: catching a programmer error and handling it like an operational one doesn't fix the bug — it just hides it until it fails again later, in a more confusing way, further from where it actually went wrong. A <code>try</code>/<code>catch</code> around code that reads <code>user.address.city</code> won't fix a missing <code>address</code>; it'll just mask the real bug (the caller forgot to validate the shape of <code>user</code>) behind a generic error message.</p>
+
+<h2 id="where-to-catch-pick-a-boundary-not-every-layer">Where to catch: pick a boundary, not every layer<a href="#where-to-catch-pick-a-boundary-not-every-layer" class="heading-anchor" aria-label="Link to this section">#</a></h2>
+<p>In any app with more than one layer — say, a typical <strong>3-tier</strong> backend split into routes/controllers, services, and a data-access/repository layer — the same question comes up constantly: which layer should have the <code>try</code>/<code>catch</code>? The answer follows directly from the principle above: catch at whichever layer has enough context to actually do something, and let every other layer stay clean.</p>
+<div class="diagram">
+  <div class="diagram-row">
+    <div class="diagram-box">
+      <h4>Repository</h4>
+      <p>Talks to the database. Only this layer understands driver-specific errors (like a Postgres unique-violation code) — so it's the one place that translates them into a domain error.</p>
+    </div>
+    <div class="diagram-box">
+      <h4>Service</h4>
+      <p>Enforces business rules. Catches only the specific domain errors it can act on; everything else passes straight through untouched.</p>
+    </div>
+    <div class="diagram-box">
+      <h4>Controller</h4>
+      <p>Handles the HTTP request. No manual try/catch per route — errors are forwarded to one centralized handler.</p>
+    </div>
+  </div>
+  <div class="diagram-arrowrow"><span class="arrow-line"></span>an uncaught error keeps propagating up, unchanged, until something can act on it<span class="arrow-line"></span></div>
+  <div class="diagram-loop">Rule of thumb: catch where you have enough context to recover, translate, or clean up — not reflexively at every function call.</div>
+</div>
+
+<h3 id="repository-layer-translate-the-errors-only-you-understand">Repository layer — translate the errors only you understand<a href="#repository-layer-translate-the-errors-only-you-understand" class="heading-anchor" aria-label="Link to this section">#</a></h3>
+<p>The database driver's error codes are meaningless outside this layer. Catch them here, where you know what they mean, and convert them into an error the rest of the app can reason about. Preserve the original with the <code>cause</code> option so nothing is lost for debugging.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// user.repository.js
+async function create({ email, passwordHash }) {
+  try {
+    return await db.query(
+      "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING *",
+      [email, passwordHash]
+    );
+  } catch (error) {
+    if (error.code === "23505") {
+      // Postgres unique_violation — only this layer knows what that code means
+      throw new DuplicateEmailError(email, { cause: error });
+    }
+    throw error; // anything else isn't ours to interpret — let it propagate as-is
+  }
+}</code></pre></div>
+
+<h3 id="service-layer-enforce-rules-add-domain-meaning">Service layer — enforce rules, add domain meaning<a href="#service-layer-enforce-rules-add-domain-meaning" class="heading-anchor" aria-label="Link to this section">#</a></h3>
+<p>The service layer works entirely in terms of domain errors, not database errors. It catches <em>only</em> the ones it has a rule for; anything unrecognized passes straight through.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// user.service.js
+async function registerUser({ email, password }) {
+  if (!email.includes("@")) {
+    throw new ValidationError("A valid email is required", "email");
+  }
+
+  try {
+    return await userRepository.create({ email, passwordHash: hash(password) });
+  } catch (error) {
+    if (error instanceof DuplicateEmailError) {
+      throw new ConflictError(`An account with ${email} already exists`, { cause: error });
+    }
+    throw error; // not a case this layer knows how to handle
+  }
+}</code></pre></div>
+
+<h3 id="controller-layer-one-centralized-boundary">Controller layer — one centralized boundary<a href="#controller-layer-one-centralized-boundary" class="heading-anchor" aria-label="Link to this section">#</a></h3>
+<p>Routes shouldn't each carry their own <code>try</code>/<code>catch</code> — that scatters the same "what status code does this error mean" logic across every handler. Instead, wrap route handlers once so a thrown or rejected error is forwarded to a single error-handling middleware, which is the one real decision point for turning an error into an HTTP response.</p>
+<div class="code-block" data-lang="js"><div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" type="button" data-copy-target aria-label="Copy code">Copy</button></div><pre><code>// asyncHandler.js — forwards a thrown or rejected error to Express instead of crashing the process
+const asyncHandler = (fn) =&gt; (req, res, next) =&gt; Promise.resolve(fn(req, res, next)).catch(next);
+
+// user.controller.js
+router.post("/users", asyncHandler(async (req, res) =&gt; {
+  const user = await userService.registerUser(req.body);
+  res.status(201).json(user);
+}));
+
+// error-handler.js — registered last; the only place that decides what the client sees
+app.use((error, req, res, next) =&gt; {
+  if (error instanceof ValidationError) {
+    return res.status(400).json({ error: error.message, field: error.field });
+  }
+  if (error instanceof ConflictError) {
+    return res.status(409).json({ error: error.message });
+  }
+
+  // Not a recognized domain error — treat it as a programmer error:
+  // log the full detail server-side, but never leak internals to the client.
+  console.error(error);
+  res.status(500).json({ error: "Something went wrong" });
+});</code></pre></div>
+<p>Notice what each layer does <em>not</em> do: the repository doesn't know about HTTP, the service doesn't know about Postgres error codes, and the controller doesn't know about either — it just trusts that whatever reaches the error middleware is either a domain error it can map to a status code, or a bug worth logging loudly. That separation is what makes the error handling maintainable as the app grows past a handful of routes.</p>
+<div class="admonition note">
+  <p class="admonition-title">Why <code>{ cause: error }</code></p>
+  <p>The <code>cause</code> option (ES2022) lets a higher-level error keep a reference to the lower-level one it was translated from, without exposing it in the message. <code>error.cause</code> is still there in logs and debuggers, so translating an error for the caller's benefit doesn't cost you any information for your own.</p>
+</div>
+<div class="admonition tip">
+  <p class="admonition-title">Don't use try/catch for control flow</p>
+  <p>If a "failure" is actually an expected, routine outcome — a key that might not be in a map, a record that might not exist yet — check for it directly (an <code>if</code>, <code>.has()</code>, optional chaining) instead of relying on a <code>throw</code>/<code>catch</code> to route normal logic. Exceptions should signal something exceptional; using them for everyday branching makes the code both slower and harder to follow.</p>
+</div>
+
 <h2 id="debugging-with-the-console">Debugging with the console<a href="#debugging-with-the-console" class="heading-anchor" aria-label="Link to this section">#</a></h2>
 <p><code>console.log()</code> is just the start. A few methods worth knowing:</p>
 <div class="table-wrap">
@@ -174,6 +301,9 @@ console.timeEnd("fetch"); // "fetch: 342.15ms"</code></pre></div>
     <li><code>try</code>/<code>catch</code>/<code>finally</code> handles failures gracefully instead of crashing; <code>finally</code> always runs.</li>
     <li>Built-in errors share a common shape (<code>message</code>, <code>name</code>, <code>stack</code>); <code>TypeError</code>, <code>RangeError</code>, and <code>ReferenceError</code> cover most cases.</li>
     <li>Extend <code>Error</code> for custom error types you can distinguish with <code>instanceof</code>.</li>
+    <li>Only catch an error if you'll recover, translate, or clean up — otherwise let it propagate; an empty or log-and-swallow <code>catch</code> just hides a bug until it resurfaces later.</li>
+    <li>Separate operational errors (expected — handle them) from programmer errors (bugs — let them fail loudly and fix the cause).</li>
+    <li>In a layered app, catch at the boundary with enough context to act (e.g. repository translates DB errors, service enforces business rules, controller forwards to one centralized error handler) — not reflexively in every function.</li>
     <li><code>console.table</code>, <code>console.group</code>, and breakpoints (via <code>debugger</code> or devtools) go far beyond <code>console.log</code> for real debugging.</li>
   </ul>
 </div>
@@ -186,7 +316,7 @@ console.timeEnd("fetch"); // "fetch: 342.15ms"</code></pre></div>
   </main>
 
   <aside class="toc" id="toc">
-<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#try-catch-finally" data-toc-link="try-catch-finally">try / catch / finally</a></li><li class="toc-level-2"><a href="#the-error-object" data-toc-link="the-error-object">The Error object</a></li><li class="toc-level-2"><a href="#throwing-your-own-errors" data-toc-link="throwing-your-own-errors">Throwing your own errors</a></li><li class="toc-level-2"><a href="#custom-error-types" data-toc-link="custom-error-types">Custom error types</a></li><li class="toc-level-2"><a href="#debugging-with-the-console" data-toc-link="debugging-with-the-console">Debugging with the console</a></li><li class="toc-level-2"><a href="#breakpoints-and-the-debugger-statement" data-toc-link="breakpoints-and-the-debugger-statement">Breakpoints and the debugger statement</a></li></ul>
+<p class="toc-title">On this page</p><ul class="toc-list"><li class="toc-level-2"><a href="#try-catch-finally" data-toc-link="try-catch-finally">try / catch / finally</a></li><li class="toc-level-2"><a href="#the-error-object" data-toc-link="the-error-object">The Error object</a></li><li class="toc-level-2"><a href="#throwing-your-own-errors" data-toc-link="throwing-your-own-errors">Throwing your own errors</a></li><li class="toc-level-2"><a href="#custom-error-types" data-toc-link="custom-error-types">Custom error types</a></li><li class="toc-level-2"><a href="#the-principle-only-catch-what-you-can-act-on" data-toc-link="the-principle-only-catch-what-you-can-act-on">The principle: only catch what you can act on</a></li><li class="toc-level-2"><a href="#operational-errors-vs-programmer-errors" data-toc-link="operational-errors-vs-programmer-errors">Operational errors vs. programmer errors</a></li><li class="toc-level-2"><a href="#where-to-catch-pick-a-boundary-not-every-layer" data-toc-link="where-to-catch-pick-a-boundary-not-every-layer">Where to catch: pick a boundary, not every layer</a></li><li class="toc-level-3"><a href="#repository-layer-translate-the-errors-only-you-understand" data-toc-link="repository-layer-translate-the-errors-only-you-understand">Repository layer — translate the errors only you understand</a></li><li class="toc-level-3"><a href="#service-layer-enforce-rules-add-domain-meaning" data-toc-link="service-layer-enforce-rules-add-domain-meaning">Service layer — enforce rules, add domain meaning</a></li><li class="toc-level-3"><a href="#controller-layer-one-centralized-boundary" data-toc-link="controller-layer-one-centralized-boundary">Controller layer — one centralized boundary</a></li><li class="toc-level-2"><a href="#debugging-with-the-console" data-toc-link="debugging-with-the-console">Debugging with the console</a></li><li class="toc-level-2"><a href="#breakpoints-and-the-debugger-statement" data-toc-link="breakpoints-and-the-debugger-statement">Breakpoints and the debugger statement</a></li></ul>
   </aside>
 </div>
 
