@@ -217,6 +217,42 @@ Promise.allSettled(requests).then(results =&gt; {
   });
 });</code></pre></div>
 
+<p><strong>Watch three requests race:</strong> step through <code>Promise.all()</code> tracking three timers of different lengths. Each Web API entry shows its elapsed time, and you'll see all three climb <em>together</em> at every checkpoint — proof they're running at the same time, not one after another. Notice too that <code>Promise.all</code> waits for the <em>slowest</em> one before doing anything else, and that the results still come back in the original array order, not the order the timers actually finished in.</p>
+<div class="sim" id="sim-promise-all">
+  <div class="sim-code"><pre><code></code></pre></div>
+  <div class="sim-stage">
+    <div class="sim-lane" data-lane="stack">
+      <p class="sim-lane-title">Call Stack</p>
+      <div class="sim-lane-body" data-lane-body="stack"></div>
+    </div>
+    <div class="sim-lane" data-lane="webapi">
+      <p class="sim-lane-title">Web APIs</p>
+      <div class="sim-lane-body" data-lane-body="webapi"></div>
+    </div>
+    <div class="sim-queues">
+      <div class="sim-lane" data-lane="micro">
+        <p class="sim-lane-title">Microtask Queue <span class="sim-tag">runs first</span></p>
+        <div class="sim-lane-body" data-lane-body="micro"></div>
+      </div>
+      <div class="sim-lane" data-lane="macro">
+        <p class="sim-lane-title">Macrotask Queue <span class="sim-tag">runs last</span></p>
+        <div class="sim-lane-body" data-lane-body="macro"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sim-console">
+    <p class="sim-lane-title">Console output</p>
+    <div class="sim-console-body" data-lane-body="console"></div>
+  </div>
+  <div class="sim-controls">
+    <button type="button" class="sim-btn" data-sim-action="reset">&#8634; Reset</button>
+    <button type="button" class="sim-btn" data-sim-action="prev">&larr; Back</button>
+    <button type="button" class="sim-btn sim-btn-primary" data-sim-action="next">Next step &rarr;</button>
+    <span class="sim-step-indicator">Step 0 / 19</span>
+  </div>
+  <p class="sim-explain">Click "Next step" to build the requests array and call Promise.all.</p>
+</div>
+
 <div class="admonition tip">
   <p class="admonition-title">Tip</p>
   <p><code>Promise.all()</code> is fast but fragile — one rejection cancels the whole batch. <code>Promise.allSettled()</code> is slower to react but never short-circuits, which is usually what you want when the requests are independent of each other.</p>
@@ -254,6 +290,43 @@ Promise.allSettled(requests).then(results =&gt; {
       id: "sim-promise-flow",
       code: 'fetchUserName(1)\n  .then(user => console.log(`Got user: ${user.name}`))\n  .catch(error => console.error("Failed:", error.message))\n  .finally(() => console.log("Done, either way"));',
       steps: PROMISE_STEPS
+    });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  "use strict";
+
+  var PROMISE_ALL_STEPS = [
+    { lines: [], stack: [], webapi: [], micro: [], macro: [], consoleLog: [], note: "Click “Next step” to build the requests array and call Promise.all." },
+    { lines: [7], stack: ['delay(1, 300)'], webapi: ['timer A (300ms, 0ms elapsed)'], micro: [], macro: [], consoleLog: [], note: "delay(1, 300) runs first. Its executor (lines 2-3) runs synchronously and calls setTimeout right away, handing a 300ms timer to the browser — delay returns a pending promise immediately. Timer A's clock starts now, at 0ms elapsed." },
+    { lines: [7], stack: ['delay(2, 100)'], webapi: ['timer A (300ms, 0ms elapsed)', 'timer B (100ms, 0ms elapsed)'], micro: [], macro: [], consoleLog: [], note: "delay(2, 100) runs next, scheduling its own 100ms timer. Timer A hasn't gone anywhere — it's still ticking in the background. Both clocks are now running at the same time, independently of each other and of JS." },
+    { lines: [7], stack: ['delay(3, 200)'], webapi: ['timer A (300ms, 0ms elapsed)', 'timer B (100ms, 0ms elapsed)', 'timer C (200ms, 0ms elapsed)'], micro: [], macro: [], consoleLog: [], note: "delay(3, 200) runs last, scheduling a 200ms timer. All three timers are now armed and counting down simultaneously inside the browser — this is the “parallel” part of Promise.all. requests holds 3 pending promises, none settled yet." },
+    { lines: [9], stack: ['Promise.all(requests)'], webapi: ['timer A (300ms, 0ms elapsed)', 'timer B (100ms, 0ms elapsed)', 'timer C (200ms, 0ms elapsed)'], micro: [], macro: [], consoleLog: [], note: "Promise.all(requests) runs. It doesn't start the timers — they're already running — it just attaches a reaction to each promise and starts a counter at 0 of 3 fulfilled, then returns its own new pending promise. All three clocks keep going, untouched." },
+    { lines: [10, 11], stack: [], webapi: ['timer A (300ms, 0ms elapsed)', 'timer B (100ms, 0ms elapsed)', 'timer C (200ms, 0ms elapsed)'], micro: [], macro: [], consoleLog: [], note: ".then/.catch (lines 10-11) register callbacks on that returned promise. JS itself is now idle — but out in the Web APIs lane, all three clocks keep running at the same time. Watch their elapsed time in the next step." },
+    { lines: [], stack: [], webapi: ['timer A (300ms, 100ms elapsed)', 'timer C (200ms, 100ms elapsed)'], micro: [], macro: ['timer B callback → resolve(“user 2”)'], consoleLog: [], note: "~100ms of real time pass — notice A and C both advanced together, to 100ms elapsed each. Timer B just happens to be the shortest, so it's the first to hit zero — its callback moves into the macrotask queue while A and C keep ticking, undisturbed." },
+    { lines: [], stack: ['timer B callback'], webapi: ['timer A (300ms, 100ms elapsed)', 'timer C (200ms, 100ms elapsed)'], micro: [], macro: [], consoleLog: [], note: "The event loop runs it: resolve(“user 2”) settles delay(2, 100)'s promise as fulfilled. A and C are still out there, unaffected, each still at 100ms elapsed." },
+    { lines: [], stack: [], webapi: ['timer A (300ms, 100ms elapsed)', 'timer C (200ms, 100ms elapsed)'], micro: ['Promise.all reaction (checking 1 of 3)'], macro: [], consoleLog: [], note: "Settling that promise schedules Promise.all's own reaction as a microtask, to update its internal counter." },
+    { lines: [], stack: ['Promise.all reaction'], webapi: ['timer A (300ms, 100ms elapsed)', 'timer C (200ms, 100ms elapsed)'], micro: [], macro: [], consoleLog: [], note: "It runs: counter → 1 of 3 fulfilled. Not enough yet, so Promise.all just keeps waiting — no output, nothing else changes. A and C haven't paused for any of this; they've been counting down in parallel the whole time." },
+    { lines: [], stack: [], webapi: ['timer A (300ms, 200ms elapsed)'], micro: [], macro: ['timer C callback → resolve(“user 3”)'], consoleLog: [], note: "~100ms more pass (200ms total) — timer A advanced right along with C, now at 200ms elapsed too. C reaches its 200ms and fires next, moving its callback to the macrotask queue." },
+    { lines: [], stack: ['timer C callback'], webapi: ['timer A (300ms, 200ms elapsed)'], micro: [], macro: [], consoleLog: [], note: "resolve(“user 3”) settles delay(3, 200)'s promise as fulfilled. Timer A is the only one left, still ticking on its own — no one is waiting on it to “take its turn”; it was running the entire time." },
+    { lines: [], stack: [], webapi: ['timer A (300ms, 200ms elapsed)'], micro: ['Promise.all reaction (checking 2 of 3)'], macro: [], consoleLog: [], note: "Another microtask reaction is scheduled to update the counter." },
+    { lines: [], stack: ['Promise.all reaction'], webapi: ['timer A (300ms, 200ms elapsed)'], micro: [], macro: [], consoleLog: [], note: "It runs: counter → 2 of 3 fulfilled. Still not enough — everything now hinges on timer A, the slowest of the three, which has been running non-stop since step 1." },
+    { lines: [], stack: [], webapi: [], micro: [], macro: ['timer A callback → resolve(“user 1”)'], consoleLog: [], note: "~100ms more pass (300ms total) — timer A finally reaches its full duration and fires, even though it was scheduled first. Its callback moves to the macrotask queue." },
+    { lines: [], stack: ['timer A callback'], webapi: [], micro: [], macro: [], consoleLog: [], note: "resolve(“user 1”) settles the last outstanding promise. All 3 of 3 requests have now fulfilled — and it only took 300ms total (the length of the slowest timer), not 300+200+100=600ms, because they ran at the same time instead of one after another." },
+    { lines: [], stack: [], webapi: [], micro: ['Promise.all reaction (checking 3 of 3)'], macro: [], consoleLog: [], note: "One last reaction microtask is scheduled — this is the one that can finally fulfill the batch." },
+    { lines: [], stack: ['Promise.all reaction'], webapi: [], micro: [], macro: [], consoleLog: [], note: "It runs: counter → 3 of 3. Promise.all's own promise fulfills — with an array in the original order [“user 1”, “user 2”, “user 3”], not the order the timers actually finished in (which was B, then C, then A)." },
+    { lines: [], stack: [], webapi: [], micro: ['then(users => …)'], macro: [], consoleLog: [], note: "Fulfilling that promise immediately schedules the .then callback from line 10 as the next microtask." },
+    { lines: [10], stack: ['then(users => …)'], webapi: [], micro: [], macro: [], consoleLog: ['All loaded: [\"user 1\", \"user 2\", \"user 3\"]'], note: "The microtask runs, logging the full array in request order. .catch (line 11) never runs — nothing rejected." }
+  ];
+
+  document.addEventListener("DOMContentLoaded", function () {
+    JSDocsSim.init({
+      id: "sim-promise-all",
+      code: 'function delay(id, ms) {\n  return new Promise(resolve => {\n    setTimeout(() => resolve(`user ${id}`), ms);\n  });\n}\n\nconst requests = [delay(1, 300), delay(2, 100), delay(3, 200)];\n\nPromise.all(requests)\n  .then(users => console.log("All loaded:", users))\n  .catch(error => console.error("failed:", error));',
+      steps: PROMISE_ALL_STEPS
     });
   });
 })();
